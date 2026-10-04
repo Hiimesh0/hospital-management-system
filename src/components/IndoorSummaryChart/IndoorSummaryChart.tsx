@@ -1,5 +1,5 @@
-import React from 'react';
-import { RefreshCw, X } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { RefreshCw, X, MoreVertical } from 'lucide-react';
 import styles from './IndoorSummaryChart.module.css';
 
 const MOCK_DATA = [
@@ -12,8 +12,21 @@ const MOCK_DATA = [
 ];
 
 const IndoorSummaryChart: React.FC = () => {
+  const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
   
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'All'];
+
+  // Handle clicking outside to close dropdown
+  useEffect(() => {
+    const handleClickOutside = () => setOpenDropdownId(null);
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
+
+  const toggleDropdown = (e: React.MouseEvent, id: number) => {
+    e.stopPropagation();
+    setOpenDropdownId(openDropdownId === id ? null : id);
+  };
 
   const getStatusClass = (status: string) => {
     switch(status) {
@@ -122,6 +135,7 @@ const IndoorSummaryChart: React.FC = () => {
                 <th>MLC</th>
                 <th>CashLess</th>
                 <th>RecNo</th>
+                <th style={{ textAlign: 'center' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -144,6 +158,39 @@ const IndoorSummaryChart: React.FC = () => {
                   <td>{row.mlc}</td>
                   <td>{row.cashless}</td>
                   <td>{row.recNo}</td>
+                  <td className={styles.actionCell}>
+                    <button 
+                      className={styles.actionMenuBtn} 
+                      onClick={(e) => toggleDropdown(e, row.id)}
+                      aria-label="Row Actions"
+                    >
+                      <MoreVertical size={16} />
+                    </button>
+                    {openDropdownId === row.id && (
+                      <div className={styles.dropdownMenu}>
+                        <button className={styles.dropdownItem}>Indoor Register</button>
+                        <button className={styles.dropdownItem}>Deposit</button>
+                        <button className={styles.dropdownItem}>Operation</button>
+                        <button className={styles.dropdownItem}>Additional</button>
+                        <button className={styles.dropdownItem}>Dr Visit & Procedure</button>
+                        <button className={styles.dropdownItem}>Room & Room GST</button>
+                        <button className={styles.dropdownItem}>Patient Room Transfer Detail</button>
+                        <button className={styles.dropdownItem}>Inpatient Bill</button>
+                        <button className={styles.dropdownItem}>Inpatient Receipt</button>
+                        <button className={styles.dropdownItem}>Patient Past Info</button>
+                        <button className={styles.dropdownItem}>Feedback Form</button>
+                        <button className={styles.dropdownItem}>Diagnostics Entry Check</button>
+                        <button className={styles.dropdownItem}>Discharge Card</button>
+                        <button className={styles.dropdownItem}>Endo/Lapro Image Print</button>
+                        <button className={styles.dropdownItem}>Medicine</button>
+                        <button className={styles.dropdownItem}>OT Entry</button>
+                        <button className={styles.dropdownItem}>Estimate Print</button>
+                        <button className={styles.dropdownItem}>IPD Consent Form</button>
+                        <button className={styles.dropdownItem}>CashLess Forms Print</button>
+                        <button className={styles.dropdownItem}>Investigation (To Be Ordered)</button>
+                      </div>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>

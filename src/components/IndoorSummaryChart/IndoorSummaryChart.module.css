@@ -268,3 +268,78 @@
 .legendTextBlue { color: #2563EB; }
 .legendTextRed { color: #DC2626; }
 .legendTextBlack { color: #172033; }
+
+/* Actions Dropdown */
+.actionCell {
+  position: relative;
+  text-align: center;
+}
+
+.actionMenuBtn {
+  background: transparent;
+  border: none;
+  color: #667085;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.actionMenuBtn:hover {
+  background-color: #F1F5F9;
+  color: #172033;
+}
+
+.dropdownMenu {
+  position: absolute;
+  right: 100%; /* Open to the left so it doesn't clip offscreen */
+  top: 0;
+  margin-right: 8px;
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+  width: 240px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.dropdownItem {
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  padding: 8px 16px;
+  font-size: 13px;
+  color: #172033;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  align-items: center;
+}
+
+.dropdownItem:hover {
+  background-color: #F8FAFC;
+  color: #2563EB;
+}
+
+/* Hide scrollbar for dropdown but keep functionality */
+.dropdownMenu::-webkit-scrollbar {
+  width: 6px;
+}
+.dropdownMenu::-webkit-scrollbar-track {
+  background: transparent;
+}
+.dropdownMenu::-webkit-scrollbar-thumb {
+  background-color: #CBD5E1;
+  border-radius: 10px;
+}
+
