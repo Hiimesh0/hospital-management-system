@@ -1,0 +1,270 @@
+.pageContainer {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 24px 32px;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+  color: #172033;
+  background-color: #F7F8FA;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #E2E8F0;
+  padding-bottom: 16px;
+}
+
+.titleArea {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.pageTitle {
+  font-size: 22px;
+  font-weight: 600;
+  color: #172033;
+  margin: 0;
+}
+
+.recordCount {
+  background-color: #EFF6FF;
+  color: #1D4ED8;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid #BFDBFE;
+}
+
+.headerActions {
+  display: flex;
+  gap: 12px;
+}
+
+.actionBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #FFFFFF;
+  color: #475467;
+  border: 1px solid #DDE3EA;
+  border-radius: 6px;
+  height: 36px;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.actionBtn:hover {
+  background-color: #F8FAFC;
+  border-color: #CBD5E1;
+  color: #172033;
+}
+
+/* Main Content Area */
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background-color: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Filters Top Row */
+.filtersRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px 0 24px;
+  flex-wrap: wrap;
+}
+
+.fieldGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #475467;
+  white-space: nowrap;
+}
+
+.input, .select {
+  background-color: #FFFFFF;
+  border: 1px solid #DDE3EA;
+  border-radius: 6px;
+  padding: 0 12px;
+  font-size: 14px;
+  color: #172033;
+  height: 36px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.input:focus, .select:focus {
+  outline: none;
+  border-color: #2563EB;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.wPatient { width: 220px; }
+.wBillNo { width: 140px; }
+.wPrefix { width: 100px; }
+.wRecNo { width: 140px; }
+.wDate { width: 140px; }
+.wYear { width: 100px; }
+
+/* Timeline/Months Row */
+.timelineRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px 20px 24px;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.monthTabs {
+  display: flex;
+  gap: 4px;
+  background-color: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  padding: 4px;
+  overflow-x: auto;
+}
+
+.monthTab {
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #475467;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.monthTab:hover {
+  background-color: #E2E8F0;
+  color: #172033;
+}
+
+.monthTab.active {
+  background-color: #FFFFFF;
+  color: #2563EB;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Table Area */
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 400px;
+}
+
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13px;
+}
+
+.dataTable th {
+  background-color: #F8FAFC;
+  color: #475467;
+  font-weight: 600;
+  padding: 10px 12px;
+  border-bottom: 1px solid #E2E8F0;
+  border-right: 1px solid #E2E8F0;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.dataTable th:last-child {
+  border-right: none;
+}
+
+.dataTable td {
+  padding: 8px 12px;
+  color: #172033;
+  border-bottom: 1px solid #E2E8F0;
+  border-right: 1px solid #E2E8F0;
+  white-space: nowrap;
+}
+
+.dataTable td:last-child {
+  border-right: none;
+}
+
+.dataTable tbody tr:hover {
+  background-color: #F8FAFC;
+}
+
+.rowNum {
+  color: #98A2B3 !important;
+  font-size: 12px;
+  text-align: right;
+  width: 30px;
+}
+
+/* Status row styling (using standard colors instead of extreme neon) */
+.statusGreen td { color: #16A34A; }
+.statusBlue td { color: #2563EB; }
+.statusRed td { color: #DC2626; }
+
+/* Legend / Footer */
+.legendFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background-color: #F8FAFC;
+  border-top: 1px solid #E2E8F0;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legendDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dotGreen { background-color: #16A34A; }
+.dotBlue { background-color: #2563EB; }
+.dotRed { background-color: #DC2626; }
+.dotBlack { background-color: #172033; }
+
+.legendTextGreen { color: #16A34A; }
+.legendTextBlue { color: #2563EB; }
+.legendTextRed { color: #DC2626; }
+.legendTextBlack { color: #172033; }

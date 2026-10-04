@@ -1,0 +1,263 @@
+.pageContainer {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 24px 32px;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+  color: #172033;
+  background-color: #F7F8FA;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.header {
+  border-bottom: 1px solid #E2E8F0;
+  padding-bottom: 16px;
+}
+
+.pageTitle {
+  font-size: 22px;
+  font-weight: 600;
+  color: #172033;
+  margin: 0;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  background-color: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 24px;
+  flex: 1;
+}
+
+/* Context Bar */
+.contextBar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.patientName {
+  font-size: 15px;
+  font-weight: 600;
+  color: #172033;
+  background-color: #F8FAFC;
+  padding: 10px 16px;
+  border-radius: 6px;
+  border: 1px solid #E2E8F0;
+  flex: 2;
+}
+
+.recordId {
+  font-size: 14px;
+  color: #475467;
+  background-color: #F8FAFC;
+  padding: 10px 16px;
+  border-radius: 6px;
+  border: 1px solid #E2E8F0;
+  flex: 1;
+  text-align: center;
+  font-weight: 500;
+}
+
+.companyGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 2;
+  justify-content: flex-end;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #475467;
+}
+
+.input {
+  height: 38px;
+  background-color: #FFFFFF;
+  border: 1px solid #DDE3EA;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #172033;
+  box-sizing: border-box;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #2563EB;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.input[readonly] {
+  background-color: #F8FAFC;
+  color: #667085;
+  border-color: #E2E8F0;
+}
+
+.secondaryBtn {
+  background-color: #FFFFFF;
+  color: #172033;
+  border: 1px solid #DDE3EA;
+  border-radius: 6px;
+  height: 38px;
+  padding: 0 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.secondaryBtn:hover {
+  background-color: #F8FAFC;
+  border-color: #E2E8F0;
+}
+
+/* Service Entry Row */
+.entryRow {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr auto;
+  gap: 16px;
+  align-items: flex-end;
+  background-color: #F8FAFC;
+  padding: 16px;
+  border-radius: 6px;
+  border: 1px solid #E2E8F0;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.iconBtn {
+  height: 38px;
+  width: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #2563EB;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.iconBtn:hover {
+  background-color: #1D4ED8;
+}
+
+/* Table Section */
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  flex: 1;
+}
+
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.dataTable th {
+  background-color: #F8FAFC;
+  color: #475467;
+  font-weight: 500;
+  font-size: 13px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #E5E7EB;
+  white-space: nowrap;
+}
+
+.dataTable td {
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #172033;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.dataTable tbody tr:hover {
+  background-color: #F8FAFC;
+}
+
+.dataTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Footer Section */
+.footerSection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 24px;
+  border-top: 1px solid #E2E8F0;
+  gap: 24px;
+}
+
+.primaryBtn {
+  background-color: #2563EB;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  height: 40px;
+  padding: 0 40px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+  min-width: 200px;
+}
+
+.primaryBtn:hover {
+  background-color: #1D4ED8;
+}
+
+.totalsGroup {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.totalBox {
+  display: flex;
+  align-items: center;
+}
+
+.totalValue {
+  height: 40px;
+  background-color: #F8FAFC;
+  border: 1px solid #DDE3EA;
+  border-radius: 6px;
+  padding: 0 16px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #172033;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 120px;
+}

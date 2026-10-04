@@ -1,0 +1,292 @@
+.pageContainer {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 24px 32px;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+  color: #172033;
+  background-color: #F7F8FA;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.header {
+  border-bottom: 1px solid #E2E8F0;
+  padding-bottom: 16px;
+}
+
+.pageTitle {
+  font-size: 22px;
+  font-weight: 600;
+  color: #172033;
+  margin: 0;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  background-color: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 24px;
+  flex: 1;
+}
+
+/* Sections */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.section:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.sectionHeading {
+  font-size: 15px;
+  font-weight: 600;
+  color: #172033;
+  margin: 0 0 4px 0;
+}
+
+/* Grids */
+.gridRow {
+  display: grid;
+  gap: 16px;
+  align-items: start;
+}
+
+.patientGrid {
+  grid-template-columns: repeat(12, 1fr);
+}
+
+.teamGrid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.timeGrid {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.nurseGrid {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* Field Group */
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Specific Grid Spans for Patient Grid */
+.col2 { grid-column: span 2; }
+.col3 { grid-column: span 3; }
+.col4 { grid-column: span 4; }
+
+.label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #475467;
+}
+
+.input, .select, .textarea {
+  background-color: #FFFFFF;
+  border: 1px solid #DDE3EA;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #172033;
+  box-sizing: border-box;
+  width: 100%;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.input, .select {
+  height: 38px;
+}
+
+.textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.input:focus, .select:focus, .textarea:focus {
+  outline: none;
+  border-color: #2563EB;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.input[readonly] {
+  background-color: #F8FAFC;
+  color: #667085;
+}
+
+/* Input with Addon/Help */
+.inputWithHelp {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.helpBtn {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  color: #98A2B3;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.helpBtn:hover {
+  background-color: #F1F5F9;
+  color: #2563EB;
+}
+
+.inputWithHelp .input,
+.inputWithHelp .textarea {
+  padding-right: 36px;
+}
+
+/* Time Input Wrapper with Checkbox */
+.timeWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #FFFFFF;
+  border: 1px solid #DDE3EA;
+  border-radius: 6px;
+  padding: 0 12px;
+  height: 38px;
+}
+
+.timeWrapper:focus-within {
+  border-color: #2563EB;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.timeWrapper input[type="time"],
+.timeWrapper input[type="text"] {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 14px;
+  color: #172033;
+  padding: 0;
+  background: transparent;
+}
+
+/* Action Bar */
+.actionBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 24px;
+  border-top: 1px solid #E2E8F0;
+  margin-top: 8px;
+}
+
+.navGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navBtn {
+  height: 38px;
+  width: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #FFFFFF;
+  color: #475467;
+  border: 1px solid #DDE3EA;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.navBtn:hover {
+  background-color: #F8FAFC;
+  border-color: #CBD5E1;
+  color: #172033;
+}
+
+.actionGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.primaryBtn {
+  background-color: #2563EB;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  height: 38px;
+  padding: 0 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+}
+
+.primaryBtn:hover {
+  background-color: #1D4ED8;
+}
+
+.secondaryBtn {
+  background-color: #FFFFFF;
+  color: #172033;
+  border: 1px solid #DDE3EA;
+  border-radius: 6px;
+  height: 38px;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.secondaryBtn:hover {
+  background-color: #F8FAFC;
+  border-color: #E2E8F0;
+}
+
+.tertiaryBtn {
+  background: transparent;
+  color: #475467;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  height: 38px;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tertiaryBtn:hover {
+  background-color: #F8FAFC;
+  color: #172033;
+}

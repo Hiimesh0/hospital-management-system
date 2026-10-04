@@ -1,0 +1,346 @@
+.pageContainer {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 24px 32px;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+  color: #172033;
+  background-color: #F7F8FA;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: relative; /* For modal positioning if needed */
+}
+
+.header {
+  border-bottom: 1px solid #E2E8F0;
+  padding-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.patientName {
+  font-size: 22px;
+  font-weight: 600;
+  color: #172033;
+  margin: 0;
+  text-align: center;
+}
+
+.hospitalName {
+  font-size: 13px;
+  color: #667085;
+  font-weight: 500;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  background-color: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+/* Service Entry Row */
+.entryRow {
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr auto;
+  gap: 16px;
+  align-items: flex-end;
+  background-color: #F8FAFC;
+  padding: 16px;
+  border-radius: 6px;
+  border: 1px solid #E2E8F0;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #475467;
+}
+
+.input {
+  height: 38px;
+  background-color: #FFFFFF;
+  border: 1px solid #DDE3EA;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #172033;
+  box-sizing: border-box;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.input:focus, .select:focus {
+  outline: none;
+  border-color: #2563EB;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.input[readonly] {
+  background-color: #F8FAFC;
+  color: #667085;
+  border-color: #E2E8F0;
+}
+
+.select {
+  height: 38px;
+  background-color: #FFFFFF;
+  border: 1px solid #DDE3EA;
+  border-radius: 6px;
+  padding: 0 12px;
+  font-size: 13px;
+  color: #172033;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.iconBtn {
+  height: 38px;
+  width: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #2563EB;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.iconBtn:hover {
+  background-color: #1D4ED8;
+}
+
+/* Main Two-Column Layout */
+.mainGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+/* Tables */
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+}
+
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.dataTable th {
+  background-color: #F8FAFC;
+  color: #475467;
+  font-weight: 500;
+  font-size: 12px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #E5E7EB;
+  border-right: 1px solid #E5E7EB;
+  white-space: nowrap;
+}
+
+.dataTable th:last-child {
+  border-right: none;
+}
+
+.dataTable td {
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #172033;
+  border-bottom: 1px solid #E5E7EB;
+  border-right: 1px solid #E5E7EB;
+}
+
+.dataTable td:last-child {
+  border-right: none;
+}
+
+.dataTable tbody tr:hover {
+  background-color: #F8FAFC;
+}
+
+.dataTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Discount Section */
+.discountSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.discountRow {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 12px;
+}
+
+/* Action Bar */
+.actionBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 24px;
+  border-top: 1px solid #E2E8F0;
+  margin-top: auto;
+}
+
+.actionGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.primaryBtn {
+  background-color: #2563EB;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  height: 38px;
+  padding: 0 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+}
+
+.primaryBtn:hover {
+  background-color: #1D4ED8;
+}
+
+.secondaryBtn {
+  background-color: #FFFFFF;
+  color: #172033;
+  border: 1px solid #DDE3EA;
+  border-radius: 6px;
+  height: 38px;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.secondaryBtn:hover {
+  background-color: #F8FAFC;
+  border-color: #E2E8F0;
+}
+
+.secondaryBtn.active {
+  background-color: #EFF6FF;
+  border-color: #2563EB;
+  color: #1D4ED8;
+}
+
+.checkboxWrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #475467;
+  cursor: pointer;
+}
+
+/* Modal Styling */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(23, 32, 51, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+}
+
+.modalContent {
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 1100px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+}
+
+.modalHeader {
+  padding: 16px 24px;
+  border-bottom: 1px solid #E2E8F0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modalTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2563EB; /* Blue as in the original */
+  margin: 0;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  color: #667085;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.closeBtn:hover {
+  background-color: #F7F8FA;
+  color: #172033;
+}
+
+.modalBody {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modalEntryRow {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr) auto;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.modalActionGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+  justify-content: flex-end;
+}

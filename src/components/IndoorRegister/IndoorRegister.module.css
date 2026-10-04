@@ -1,0 +1,364 @@
+.pageContainer {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 24px 32px;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+  color: #172033;
+  background-color: #F7F8FA;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #E2E8F0;
+  padding-bottom: 16px;
+}
+
+.headerLeft, .headerRight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.recordCount {
+  font-size: 14px;
+  font-weight: 600;
+  color: #172033;
+  background-color: #F1F5F9;
+  padding: 6px 12px;
+  border-radius: 6px;
+}
+
+.userBadge {
+  font-size: 13px;
+  color: #64748B;
+  font-weight: 500;
+}
+
+.pageTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #172033;
+  margin: 0;
+  flex: 1;
+  text-align: center;
+}
+
+.headerField {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.headerField .label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #475467;
+  white-space: nowrap;
+}
+
+.headerField .input, .headerField .select {
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 6px;
+  border: 1px solid #DDE3EA;
+  font-size: 13px;
+}
+
+.headerField .select { width: 90px; }
+.headerField .input { width: 120px; }
+
+
+/* Content Container */
+.content {
+  display: flex;
+  flex-direction: column;
+  background-color: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 24px;
+  gap: 32px; /* Space between sections */
+}
+
+/* Sections */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sectionTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: #172033;
+  margin: 0 0 4px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+/* Grid System */
+.grid {
+  display: grid;
+  gap: 16px;
+  align-items: flex-end;
+}
+
+.grid12 {
+  grid-template-columns: repeat(12, 1fr);
+}
+
+.col2 { grid-column: span 2; }
+.col3 { grid-column: span 3; }
+.col4 { grid-column: span 4; }
+.col5 { grid-column: span 5; }
+.col6 { grid-column: span 6; }
+.col7 { grid-column: span 7; }
+.col12 { grid-column: span 12; }
+
+/* Field Group */
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fieldGroupHorizontal {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #475467;
+}
+
+.input, .select, .textarea {
+  background-color: #FFFFFF;
+  border: 1px solid #DDE3EA;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #172033;
+  box-sizing: border-box;
+  width: 100%;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.input, .select {
+  height: 38px;
+}
+
+.textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.input:focus, .select:focus, .textarea:focus {
+  outline: none;
+  border-color: #2563EB;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.input[readonly] {
+  background-color: #F8FAFC;
+  color: #667085;
+}
+
+/* Checkbox Label */
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #172033;
+  cursor: pointer;
+  height: 38px;
+}
+
+.checkboxLabel input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  border: 1px solid #DDE3EA;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Input with action */
+.inputWithAction {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.inputWithAction .input {
+  flex: 1;
+}
+
+/* Specific buttons inside forms */
+.inlineBtn {
+  background-color: #F8FAFC;
+  border: 1px solid #DDE3EA;
+  border-radius: 6px;
+  height: 38px;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #475467;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.inlineBtn:hover {
+  background-color: #F1F5F9;
+  color: #172033;
+}
+
+.primaryInlineBtn {
+  background-color: #EFF6FF;
+  border: 1px solid #BFDBFE;
+  color: #1D4ED8;
+  border-radius: 6px;
+  height: 38px;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.primaryInlineBtn:hover {
+  background-color: #DBEAFE;
+}
+
+/* Special Pink/Magenta text from screenshot for insurance */
+.insuranceText {
+  color: #BE185D;
+  font-weight: 600;
+}
+
+/* Action Bar */
+.actionBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 24px;
+  border-top: 1px solid #E2E8F0;
+  margin-top: 8px;
+}
+
+.navGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navBtn {
+  height: 38px;
+  width: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #FFFFFF;
+  color: #475467;
+  border: 1px solid #DDE3EA;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.navBtn:hover {
+  background-color: #F8FAFC;
+  border-color: #CBD5E1;
+  color: #172033;
+}
+
+.utilsGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.actionGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.primaryBtn {
+  background-color: #2563EB;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  height: 38px;
+  padding: 0 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+}
+
+.primaryBtn:hover {
+  background-color: #1D4ED8;
+}
+
+.secondaryBtn {
+  background-color: #FFFFFF;
+  color: #172033;
+  border: 1px solid #DDE3EA;
+  border-radius: 6px;
+  height: 38px;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.secondaryBtn:hover {
+  background-color: #F8FAFC;
+  border-color: #E2E8F0;
+}
+
+.secondaryBtn:disabled {
+  color: #98A2B3;
+  cursor: not-allowed;
+  background-color: #F8FAFC;
+}
+
+.tertiaryBtn {
+  background: transparent;
+  color: #475467;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  height: 38px;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tertiaryBtn:hover {
+  background-color: #F8FAFC;
+  color: #172033;
+}

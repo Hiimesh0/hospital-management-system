@@ -1,0 +1,254 @@
+.pageContainer {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #F6F8FB;
+  font-family: 'Inter', sans-serif;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.loginCard {
+  width: 100%;
+  max-width: 420px;
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 40px 32px;
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -2px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* Header Area */
+.header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.logoBox {
+  width: 48px;
+  height: 48px;
+  background-color: #EFF6FF;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2563EB;
+  margin-bottom: 4px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #172033;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #667085;
+  margin: 0;
+}
+
+/* Form Area */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #172033;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input {
+  width: 100%;
+  height: 44px;
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 0 16px;
+  font-size: 14px;
+  color: #172033;
+  transition: all 0.2s;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #2563EB;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.input.error {
+  border-color: #DC2626;
+}
+
+.input.error:focus {
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.passwordToggle {
+  position: absolute;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: #98A2B3;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.passwordToggle:hover {
+  color: #475467;
+  background-color: #F8FAFC;
+}
+
+.inputWrapper input[type="password"] {
+  padding-right: 44px;
+}
+.inputWrapper input[type="text"] {
+  padding-right: 44px;
+}
+
+/* Options */
+.optionsRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: -4px;
+}
+
+.rememberMe {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #475467;
+  cursor: pointer;
+}
+
+.rememberMe input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  border: 1px solid #CBD5E1;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.forgotPassword {
+  font-size: 13px;
+  font-weight: 500;
+  color: #2563EB;
+  text-decoration: none;
+}
+
+.forgotPassword:hover {
+  text-decoration: underline;
+}
+
+/* Action */
+.primaryBtn {
+  width: 100%;
+  height: 46px;
+  background-color: #2563EB;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+  margin-top: 4px;
+}
+
+.primaryBtn:hover {
+  background-color: #1D4ED8;
+}
+
+.primaryBtn:disabled {
+  background-color: #93C5FD;
+  cursor: not-allowed;
+}
+
+.errorMessage {
+  font-size: 13px;
+  color: #DC2626;
+  background-color: #FEF2F2;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #FECACA;
+  text-align: center;
+  margin-bottom: -8px;
+}
+
+/* Demo Credentials */
+.demoInfo {
+  margin-top: 8px;
+  padding: 16px;
+  background-color: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 13px;
+  color: #64748B;
+}
+
+.demoInfo p {
+  margin: 0 0 8px 0;
+  font-weight: 500;
+  color: #475467;
+}
+
+.demoInfo code {
+  font-family: monospace;
+  background-color: #FFFFFF;
+  padding: 2px 6px;
+  border: 1px solid #E2E8F0;
+  border-radius: 4px;
+  font-weight: 600;
+  color: #0F172A;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .pageContainer {
+    padding: 20px;
+    align-items: flex-start;
+  }
+  .loginCard {
+    padding: 32px 24px;
+    box-shadow: none;
+    border-color: #E5E7EB;
+  }
+}
