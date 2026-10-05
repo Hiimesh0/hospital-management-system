@@ -27,20 +27,24 @@ const NavigationBar = () => {
   if (location.pathname === '/login') return null;
 
   const navLinkStyle = ({ isActive }: { isActive: boolean }) => ({
-    padding: '8px 16px',
+    padding: '10px 16px',
     borderRadius: '6px',
-    backgroundColor: isActive ? '#2563EB' : 'transparent',
-    color: isActive ? '#FFFFFF' : '#475467',
+    backgroundColor: isActive ? '#EFF6FF' : 'transparent',
+    color: isActive ? '#1D4ED8' : '#475467',
     textDecoration: 'none',
     fontWeight: 500,
     fontSize: '14px',
     fontFamily: 'Inter, sans-serif',
     transition: 'all 0.2s',
-    whiteSpace: 'nowrap' as const
+    whiteSpace: 'nowrap' as const,
+    display: 'block'
   });
 
   return (
-    <nav style={{ padding: '16px 32px', backgroundColor: '#FFFFFF', borderBottom: '1px solid #E2E8F0', display: 'flex', gap: '16px', overflowX: 'auto' }}>
+    <nav style={{ width: '250px', padding: '24px 16px', backgroundColor: '#FFFFFF', borderRight: '1px solid #E2E8F0', display: 'flex', flexDirection: 'column', gap: '8px', overflowY: 'auto' }}>
+      <div style={{ padding: '0 16px 16px', marginBottom: '16px', borderBottom: '1px solid #E2E8F0', fontSize: '18px', fontWeight: 'bold', color: '#172033' }}>
+        Hospital System
+      </div>
       <NavLink to="/patient-registration" style={navLinkStyle}>
         Patient Registration
       </NavLink>
@@ -108,12 +112,12 @@ function App() {
 
   return (
     <HashRouter>
-      <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', backgroundColor: '#F7F8FA' }}>
+      <div style={{ display: 'flex', flexDirection: 'row', height: '100vh', backgroundColor: '#F7F8FA' }}>
         
         {isAuthenticated && <NavigationBar />}
 
         {/* Main Content Area */}
-        <div style={{ flex: 1, overflow: 'auto' }}>
+        <div style={{ flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column' }}>
           <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center', fontFamily: 'Inter, sans-serif' }}>Loading...</div>}>
             <Routes>
               {!isAuthenticated ? (
