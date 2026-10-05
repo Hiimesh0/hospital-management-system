@@ -18,6 +18,7 @@ const InpatientReceipt = lazy(() => import('./components/InpatientReceipt/Inpati
 const InpatientBill = lazy(() => import('./components/InpatientBill/InpatientBill'));
 const DischargeCard = lazy(() => import('./components/DischargeCard/DischargeCard'));
 const DepositEntry = lazy(() => import('./components/DepositEntry/DepositEntry'));
+const Billing = lazy(() => import('./components/Billing/Billing'));
 
 // Navigation Bar Component (only shown when authenticated)
 const NavigationBar = () => {
@@ -78,6 +79,9 @@ const NavigationBar = () => {
       <NavLink to="/deposit-entry" style={navLinkStyle}>
         Deposit Entry
       </NavLink>
+      <NavLink to="/billing" style={navLinkStyle}>
+        Billing
+      </NavLink>
       <NavLink to="/investigation-ordered" style={navLinkStyle}>
         Investigation Ordered
       </NavLink>
@@ -130,6 +134,7 @@ function App() {
                   <Route path="/inpatient-bill" element={<InpatientBill />} />
                   <Route path="/discharge-card" element={<DischargeCard />} />
                   <Route path="/deposit-entry" element={<DepositEntry />} />
+                  <Route path="/billing" element={<Billing />} />
                   <Route path="/investigation-ordered" element={<InvestigationOrdered />} />
                   <Route path="/indoor-register" element={<IndoorRegister />} />
                   <Route path="*" element={<Navigate to="/patient-registration" replace />} />
