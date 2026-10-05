@@ -16,6 +16,7 @@ const IndoorRegister = lazy(() => import('./components/IndoorRegister/IndoorRegi
 const IndoorOption = lazy(() => import('./components/IndoorOption/IndoorOption'));
 const InpatientReceipt = lazy(() => import('./components/InpatientReceipt/InpatientReceipt'));
 const InpatientBill = lazy(() => import('./components/InpatientBill/InpatientBill'));
+const DischargeCard = lazy(() => import('./components/DischargeCard/DischargeCard'));
 
 // Navigation Bar Component (only shown when authenticated)
 const NavigationBar = () => {
@@ -70,6 +71,9 @@ const NavigationBar = () => {
       <NavLink to="/inpatient-bill" style={navLinkStyle}>
         Inpatient Bill
       </NavLink>
+      <NavLink to="/discharge-card" style={navLinkStyle}>
+        Discharge Card
+      </NavLink>
       <NavLink to="/investigation-ordered" style={navLinkStyle}>
         Investigation Ordered
       </NavLink>
@@ -120,6 +124,7 @@ function App() {
                   <Route path="/indoor-option" element={<IndoorOption />} />
                   <Route path="/inpatient-receipt" element={<InpatientReceipt />} />
                   <Route path="/inpatient-bill" element={<InpatientBill />} />
+                  <Route path="/discharge-card" element={<DischargeCard />} />
                   <Route path="/investigation-ordered" element={<InvestigationOrdered />} />
                   <Route path="/indoor-register" element={<IndoorRegister />} />
                   <Route path="*" element={<Navigate to="/patient-registration" replace />} />
