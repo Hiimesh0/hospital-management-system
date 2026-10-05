@@ -1,8 +1,10 @@
-import React from 'react';
-import { LogOut, ArrowDown, Building2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { LogOut, ArrowDown, Building2, X, Save } from 'lucide-react';
 import styles from './OperationCharges.module.css';
 
 const OperationCharges: React.FC = () => {
+  const [isPackageModalOpen, setIsPackageModalOpen] = useState(false);
+
   return (
     <div className={styles.pageContainer}>
       
@@ -20,7 +22,12 @@ const OperationCharges: React.FC = () => {
         
         {/* Context Bar */}
         <div className={styles.contextBar}>
-          <div className={styles.tagBtn}>Operation Entry</div>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <div className={styles.tagBtn}>Operation Entry</div>
+            <button className={styles.secondaryBtn} onClick={() => setIsPackageModalOpen(true)}>
+              By Package
+            </button>
+          </div>
           
           <div className={styles.patientInfoBox}>
             <div className={`${styles.infoSegment} ${styles.name}`}>SAVITABEN VALLABHBHAI VAGHASIYA</div>
@@ -40,7 +47,7 @@ const OperationCharges: React.FC = () => {
           <div className={styles.formRow}>
             <div className={`${styles.fieldGroup} ${styles.wDate}`}>
               <label className={styles.label}>Date</label>
-              <input type="text" className={styles.input} defaultValue="09-Jan-2023" />
+              <input type="date" className={styles.input} defaultValue="2023-01-09" />
             </div>
             
             <div className={`${styles.fieldGroup} ${styles.wOpType}`}>
@@ -72,7 +79,7 @@ const OperationCharges: React.FC = () => {
 
             <div className={`${styles.fieldGroup} ${styles.wAmount}`}>
               <label className={styles.label}>Amount</label>
-              <input type="text" className={styles.input} />
+              <input type="number" className={styles.input} />
             </div>
 
             <div className={`${styles.fieldGroup} ${styles.wNotes}`}>
@@ -107,7 +114,6 @@ const OperationCharges: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {/* No data shown in screenshot */}
               <tr>
                 <td colSpan={10} className={styles.emptyState}>No operation charges entered yet.</td>
               </tr>
@@ -116,6 +122,91 @@ const OperationCharges: React.FC = () => {
         </div>
 
       </div>
+
+      {/* Package Modal */}
+      {isPackageModalOpen && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent} style={{ width: '900px' }}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>Operation Entry By Package</h2>
+              <button className={styles.closeBtn} onClick={() => setIsPackageModalOpen(false)}>
+                <X size={20} />
+              </button>
+            </div>
+            
+            <div className={styles.modalBody}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 2fr', gap: '16px', marginBottom: '16px' }}>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.label}>Date</label>
+                  <input type="date" className={styles.input} defaultValue="2023-01-09" />
+                </div>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.label}>Room Type</label>
+                  <select className={styles.select} defaultValue="MA">
+                    <option value="MA">MA</option>
+                  </select>
+                </div>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.label}>Operation Group Name</label>
+                  <input type="text" className={styles.input} />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr auto', gap: '16px', alignItems: 'end', marginBottom: '24px' }}>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.label}>Doctor Name</label>
+                  <input type="text" className={styles.input} />
+                </div>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.label}>Anesthetist Name</label>
+                  <input type="text" className={styles.input} />
+                </div>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.label}>Operation Type</label>
+                  <input type="text" className={styles.input} />
+                </div>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.label}>Notes</label>
+                  <input type="text" className={styles.input} />
+                </div>
+                <button className={styles.primaryBtn} style={{ height: '38px' }}>OK</button>
+              </div>
+
+              <div className={styles.tableWrapper} style={{ maxHeight: '300px', overflowY: 'auto', marginBottom: '24px' }}>
+                <table className={styles.dataTable}>
+                  <thead>
+                    <tr>
+                      <th>Charge Type</th>
+                      <th>Doctor Name</th>
+                      <th>Date</th>
+                      <th>Group Name</th>
+                      <th>Amount</th>
+                      <th>Operation Detail</th>
+                      <th>Notes</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td colSpan={7} className={styles.emptyState}>No package charges entered.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '16px' }}>
+                <button className={styles.primaryBtn}>
+                  <Save size={16} /> SAVE
+                </button>
+                <button className={styles.secondaryBtn} onClick={() => setIsPackageModalOpen(false)}>
+                  <LogOut size={16} /> EXIT
+                </button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
