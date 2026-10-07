@@ -41,6 +41,7 @@ const EchoReport = lazy(() => import('./components/EchoReport/EchoReport'));
 const ShortFormMaster = lazy(() => import('./components/ShortFormMaster/ShortFormMaster'));
 const ReportTemplate = lazy(() => import('./components/ReportTemplate/ReportTemplate'));
 const TodayReportDashboard = lazy(() => import('./components/TodayReportDashboard/TodayReportDashboard'));
+const DeathCertificate = lazy(() => import('./components/DeathCertificate/DeathCertificate'));
 
 // Navigation Bar Component (only shown when authenticated)
 const NavigationBar = () => {
@@ -49,6 +50,7 @@ const NavigationBar = () => {
   const [isMasterIpdOpen, setIsMasterIpdOpen] = useState(false);
   const [isMasterOpdOpen, setIsMasterOpdOpen] = useState(false);
   const [isDiagnosticsReportOpen, setIsDiagnosticsReportOpen] = useState(false);
+  const [isCertificateOpen, setIsCertificateOpen] = useState(false);
   const [isUtilityOpen, setIsUtilityOpen] = useState(false);
   
   if (location.pathname === '/login') return null;
@@ -307,6 +309,37 @@ const NavigationBar = () => {
         )}
       </div>
 
+      {/* Nested Certificate Menu */}
+      <div style={{ marginTop: '8px', borderTop: '1px solid #E2E8F0', paddingTop: '8px' }}>
+        <button 
+          onClick={() => setIsCertificateOpen(!isCertificateOpen)}
+          style={{ 
+            width: '100%', 
+            textAlign: 'left', 
+            padding: '10px 16px', 
+            backgroundColor: 'transparent', 
+            border: 'none', 
+            color: '#475467', 
+            fontWeight: 600, 
+            fontSize: '14px', 
+            cursor: 'pointer',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}
+        >
+          Certificate
+          <span style={{ fontSize: '10px' }}>{isCertificateOpen ? '▼' : '▶'}</span>
+        </button>
+        {isCertificateOpen && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '4px' }}>
+            <NavLink to="/death-certificate" style={nestedLinkStyle}>
+              Death Certificate
+            </NavLink>
+          </div>
+        )}
+      </div>
+
       {/* Nested Utility Menu */}
       <div style={{ marginTop: '8px', borderTop: '1px solid #E2E8F0', paddingTop: '8px' }}>
         <button 
@@ -416,6 +449,9 @@ function App() {
                   <Route path="/short-form-master" element={<ShortFormMaster />} />
                   <Route path="/report-template" element={<ReportTemplate />} />
                   <Route path="/today-report-dashboard" element={<TodayReportDashboard />} />
+                  
+                  {/* Certificate Routes */}
+                  <Route path="/death-certificate" element={<DeathCertificate />} />
                   
                   <Route path="*" element={<Navigate to="/patient-registration" replace />} />
                 </>
