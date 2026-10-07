@@ -1,0 +1,242 @@
+.pageContainer {
+  padding: 24px 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Inter', sans-serif;
+  color: #172033;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  height: 100%;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #E2E8F0;
+  padding-bottom: 16px;
+}
+
+.pageTitle {
+  font-size: 22px;
+  font-weight: 600;
+  color: #172033;
+  margin: 0;
+}
+
+.recordCounter {
+  font-size: 14px;
+  font-weight: 500;
+  color: #64748B;
+  background-color: #F8FAFC;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #E2E8F0;
+}
+
+/* Main Layout Grid */
+.mainGrid {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 32px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Left Form Container */
+.formSection {
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Right Section */
+.rightSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.largeDisplayBox {
+  flex: 1;
+  background-color: #FEF9C3; /* Light yellow background */
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  min-height: 200px;
+  padding: 16px;
+  font-size: 14px;
+  color: #172033;
+  resize: none;
+  outline: none;
+}
+
+/* Form Fields */
+.formRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.label {
+  width: 140px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #475467;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.input {
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid #DDE3EA;
+  border-radius: 6px;
+  background-color: #FFFFFF;
+  color: #172033;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.input:focus {
+  border-color: #2563EB;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.highlightInput {
+  background-color: #FEF9C3; /* Yellowish highlight */
+}
+
+.shortInput {
+  max-width: 150px;
+}
+
+.radioGroup {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 8px 16px;
+  border: 1px solid #DDE3EA;
+  border-radius: 6px;
+  background-color: #F8FAFC;
+}
+
+.radioItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #172033;
+  cursor: pointer;
+}
+
+/* Bottom Action Bar */
+.actionBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background-color: #FFFFFF;
+  border-top: 1px solid #E2E8F0;
+  margin-top: auto;
+  border-radius: 8px;
+}
+
+.navControls {
+  display: flex;
+  gap: 8px;
+}
+
+.navBtn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  color: #475467;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.navBtn:hover {
+  background-color: #F8FAFC;
+  color: #172033;
+}
+
+.rightActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.secondaryBtn {
+  height: 40px;
+  padding: 0 20px;
+  background-color: #FFFFFF;
+  color: #172033;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.secondaryBtn:hover {
+  background-color: #F8FAFC;
+  border-color: #CBD5E1;
+}
+
+.primaryBtn {
+  height: 40px;
+  padding: 0 24px;
+  background-color: #2563EB;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.primaryBtn:hover {
+  background-color: #1D4ED8;
+}
+
+.dangerBtn {
+  height: 40px;
+  padding: 0 20px;
+  background-color: #FFFFFF;
+  color: #DC2626;
+  border: 1px solid #FECACA;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dangerBtn:hover {
+  background-color: #FEF2F2;
+  border-color: #FCA5A5;
+}
