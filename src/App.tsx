@@ -20,10 +20,13 @@ const DischargeCard = lazy(() => import('./components/DischargeCard/DischargeCar
 const DepositEntry = lazy(() => import('./components/DepositEntry/DepositEntry'));
 const Billing = lazy(() => import('./components/Billing/Billing'));
 const DrVisitProcedure = lazy(() => import('./components/DrVisitProcedure/DrVisitProcedure'));
+const ContactList = lazy(() => import('./components/ContactList/ContactList'));
 
 // Navigation Bar Component (only shown when authenticated)
 const NavigationBar = () => {
   const location = useLocation();
+  const [isUtilityOpen, setIsUtilityOpen] = useState(false);
+  
   if (location.pathname === '/login') return null;
 
   const navLinkStyle = ({ isActive }: { isActive: boolean }) => ({
@@ -38,6 +41,12 @@ const NavigationBar = () => {
     transition: 'all 0.2s',
     whiteSpace: 'nowrap' as const,
     display: 'block'
+  });
+
+  const nestedLinkStyle = ({ isActive }: { isActive: boolean }) => ({
+    ...navLinkStyle({ isActive }),
+    paddingLeft: '32px',
+    fontSize: '13px'
   });
 
   return (
@@ -96,6 +105,38 @@ const NavigationBar = () => {
       <NavLink to="/indoor-register" style={navLinkStyle}>
         Indoor Register
       </NavLink>
+
+      {/* Nested Utility Menu */}
+      <div style={{ marginTop: '8px', borderTop: '1px solid #E2E8F0', paddingTop: '8px' }}>
+        <button 
+          onClick={() => setIsUtilityOpen(!isUtilityOpen)}
+          style={{ 
+            width: '100%', 
+            textAlign: 'left', 
+            padding: '10px 16px', 
+            backgroundColor: 'transparent', 
+            border: 'none', 
+            color: '#475467', 
+            fontWeight: 600, 
+            fontSize: '14px', 
+            cursor: 'pointer',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}
+        >
+          Utility
+          <span style={{ fontSize: '10px' }}>{isUtilityOpen ? '▼' : '▶'}</span>
+        </button>
+        {isUtilityOpen && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '4px' }}>
+            <NavLink to="/contact-list" style={nestedLinkStyle}>
+              Contact List
+            </NavLink>
+          </div>
+        )}
+      </div>
+
     </nav>
   );
 };
@@ -146,6 +187,7 @@ function App() {
                   <Route path="/dr-visit-procedure" element={<DrVisitProcedure />} />
                   <Route path="/investigation-ordered" element={<InvestigationOrdered />} />
                   <Route path="/indoor-register" element={<IndoorRegister />} />
+                  <Route path="/contact-list" element={<ContactList />} />
                   <Route path="*" element={<Navigate to="/patient-registration" replace />} />
                 </>
               )}
