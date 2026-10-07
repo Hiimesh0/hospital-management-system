@@ -22,10 +22,12 @@ const Billing = lazy(() => import('./components/Billing/Billing'));
 const DrVisitProcedure = lazy(() => import('./components/DrVisitProcedure/DrVisitProcedure'));
 const ContactList = lazy(() => import('./components/ContactList/ContactList'));
 const IntercommDisplay = lazy(() => import('./components/IntercommDisplay/IntercommDisplay'));
+const PatientHistory = lazy(() => import('./components/PatientHistory/PatientHistory'));
 
 // Navigation Bar Component (only shown when authenticated)
 const NavigationBar = () => {
   const location = useLocation();
+  const [isMasterOpen, setIsMasterOpen] = useState(false);
   const [isUtilityOpen, setIsUtilityOpen] = useState(false);
   
   if (location.pathname === '/login') return null;
@@ -119,6 +121,37 @@ const NavigationBar = () => {
         Indoor Register
       </NavLink>
 
+      {/* Nested Master Menu */}
+      <div style={{ marginTop: '8px', borderTop: '1px solid #E2E8F0', paddingTop: '8px' }}>
+        <button 
+          onClick={() => setIsMasterOpen(!isMasterOpen)}
+          style={{ 
+            width: '100%', 
+            textAlign: 'left', 
+            padding: '10px 16px', 
+            backgroundColor: 'transparent', 
+            border: 'none', 
+            color: '#475467', 
+            fontWeight: 600, 
+            fontSize: '14px', 
+            cursor: 'pointer',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}
+        >
+          Master
+          <span style={{ fontSize: '10px' }}>{isMasterOpen ? '▼' : '▶'}</span>
+        </button>
+        {isMasterOpen && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '4px' }}>
+            <NavLink to="/patient-history" style={nestedLinkStyle}>
+              Clinical / Patient History
+            </NavLink>
+          </div>
+        )}
+      </div>
+
       {/* Nested Utility Menu */}
       <div style={{ marginTop: '8px', borderTop: '1px solid #E2E8F0', paddingTop: '8px' }}>
         <button 
@@ -205,6 +238,7 @@ function App() {
                   <Route path="/indoor-register" element={<IndoorRegister />} />
                   <Route path="/contact-list" element={<ContactList />} />
                   <Route path="/intercomm-display" element={<IntercommDisplay />} />
+                  <Route path="/patient-history" element={<PatientHistory />} />
                   <Route path="*" element={<Navigate to="/patient-registration" replace />} />
                 </>
               )}
