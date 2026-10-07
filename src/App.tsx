@@ -50,8 +50,20 @@ const NavigationBar = () => {
   });
 
   return (
-    <nav style={{ width: '250px', padding: '24px 16px', backgroundColor: '#FFFFFF', borderRight: '1px solid #E2E8F0', display: 'flex', flexDirection: 'column', gap: '8px', overflowY: 'auto' }}>
-      <div style={{ padding: '0 16px 16px', marginBottom: '16px', borderBottom: '1px solid #E2E8F0', fontSize: '18px', fontWeight: 'bold', color: '#172033' }}>
+    <nav style={{ 
+      width: '250px', 
+      minWidth: '250px',
+      padding: '24px 16px', 
+      backgroundColor: '#FFFFFF', 
+      borderRight: '1px solid #E2E8F0', 
+      display: 'flex', 
+      flexDirection: 'column', 
+      gap: '8px', 
+      overflowY: 'auto',
+      boxSizing: 'border-box',
+      height: '100vh'
+    }}>
+      <div style={{ padding: '0 16px 16px', marginBottom: '16px', borderBottom: '1px solid #E2E8F0', fontSize: '18px', fontWeight: 'bold', color: '#172033', flexShrink: 0 }}>
         Hospital System
       </div>
       <NavLink to="/patient-registration" style={navLinkStyle}>
