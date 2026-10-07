@@ -38,6 +38,7 @@ const DoctorMaster = lazy(() => import('./components/DoctorMaster/DoctorMaster')
 const InsuranceCompanyMaster = lazy(() => import('./components/InsuranceCompanyMaster/InsuranceCompanyMaster'));
 const OPDChargesProfile = lazy(() => import('./components/OPDChargesProfile/OPDChargesProfile'));
 const EchoReport = lazy(() => import('./components/EchoReport/EchoReport'));
+const ShortFormMaster = lazy(() => import('./components/ShortFormMaster/ShortFormMaster'));
 
 // Navigation Bar Component (only shown when authenticated)
 const NavigationBar = () => {
@@ -291,6 +292,9 @@ const NavigationBar = () => {
             <NavLink to="/echo-report" style={nestedLinkStyle}>
               Echo Report
             </NavLink>
+            <NavLink to="/short-form-master" style={nestedLinkStyle}>
+              Short Form Master
+            </NavLink>
           </div>
         )}
       </div>
@@ -401,6 +405,7 @@ function App() {
                   
                   {/* Diagnostics Report Routes */}
                   <Route path="/echo-report" element={<EchoReport />} />
+                  <Route path="/short-form-master" element={<ShortFormMaster />} />
                   
                   <Route path="*" element={<Navigate to="/patient-registration" replace />} />
                 </>
