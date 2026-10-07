@@ -31,12 +31,14 @@ const OperationGroupMaster = lazy(() => import('./components/OperationGroupMaste
 const RoomTypeMaster = lazy(() => import('./components/RoomTypeMaster/RoomTypeMaster'));
 const VisitingTypeMaster = lazy(() => import('./components/VisitingTypeMaster/VisitingTypeMaster'));
 const VisitProcedureHeaderMaster = lazy(() => import('./components/VisitProcedureHeaderMaster/VisitProcedureHeaderMaster'));
+const OPDPatientCategory = lazy(() => import('./components/OPDPatientCategory/OPDPatientCategory'));
 
 // Navigation Bar Component (only shown when authenticated)
 const NavigationBar = () => {
   const location = useLocation();
   const [isMasterOpen, setIsMasterOpen] = useState(false);
   const [isMasterIpdOpen, setIsMasterIpdOpen] = useState(false);
+  const [isMasterOpdOpen, setIsMasterOpdOpen] = useState(false);
   const [isUtilityOpen, setIsUtilityOpen] = useState(false);
   
   if (location.pathname === '/login') return null;
@@ -207,6 +209,35 @@ const NavigationBar = () => {
                 </NavLink>
               </div>
             )}
+
+            {/* OPD Sub-menu */}
+            <button 
+              onClick={() => setIsMasterOpdOpen(!isMasterOpdOpen)}
+              style={{ 
+                ...navLinkStyle({ isActive: false }),
+                paddingLeft: '32px',
+                textAlign: 'left',
+                backgroundColor: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                width: '100%',
+                fontSize: '13px',
+                fontWeight: 600
+              }}
+            >
+              OPD Master
+              <span style={{ fontSize: '10px' }}>{isMasterOpdOpen ? '▼' : '▶'}</span>
+            </button>
+            {isMasterOpdOpen && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <NavLink to="/opd-patient-category" style={{ ...nestedLinkStyle({ isActive: location.pathname === '/opd-patient-category' }), paddingLeft: '48px', fontSize: '12px' }}>
+                  OPD Patient Category
+                </NavLink>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -306,6 +337,10 @@ function App() {
                   <Route path="/room-type-master" element={<RoomTypeMaster />} />
                   <Route path="/visiting-type-master" element={<VisitingTypeMaster />} />
                   <Route path="/visit-procedure-header-master" element={<VisitProcedureHeaderMaster />} />
+                  
+                  {/* OPD Master Routes */}
+                  <Route path="/opd-patient-category" element={<OPDPatientCategory />} />
+                  
                   <Route path="*" element={<Navigate to="/patient-registration" replace />} />
                 </>
               )}
