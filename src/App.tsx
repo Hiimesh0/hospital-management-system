@@ -43,6 +43,7 @@ const ReportTemplate = lazy(() => import('./components/ReportTemplate/ReportTemp
 const TodayReportDashboard = lazy(() => import('./components/TodayReportDashboard/TodayReportDashboard'));
 const DeathCertificate = lazy(() => import('./components/DeathCertificate/DeathCertificate'));
 const MedicalCertificate = lazy(() => import('./components/MedicalCertificate/MedicalCertificate'));
+const MlcCertificate = lazy(() => import('./components/MlcCertificate/MlcCertificate'));
 
 // Navigation Bar Component (only shown when authenticated)
 const NavigationBar = () => {
@@ -340,6 +341,9 @@ const NavigationBar = () => {
             <NavLink to="/medical-certificate" style={nestedLinkStyle}>
               Medical Certificate
             </NavLink>
+            <NavLink to="/mlc-certificate" style={nestedLinkStyle}>
+              MLC Certificate
+            </NavLink>
           </div>
         )}
       </div>
@@ -457,6 +461,7 @@ function App() {
                   {/* Certificate Routes */}
                   <Route path="/death-certificate" element={<DeathCertificate />} />
                   <Route path="/medical-certificate" element={<MedicalCertificate />} />
+                  <Route path="/mlc-certificate" element={<MlcCertificate />} />
                   
                   <Route path="*" element={<Navigate to="/patient-registration" replace />} />
                 </>
