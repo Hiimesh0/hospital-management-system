@@ -1,0 +1,256 @@
+.pageContainer {
+  padding: 24px 32px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-family: 'Inter', sans-serif;
+  background-color: #F7F8FA;
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #FFFFFF;
+  padding: 16px 20px;
+  border-radius: 8px;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.leftControls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.datePicker {
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid #DDE3EA;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #172033;
+  outline: none;
+}
+
+.datePicker:focus {
+  border-color: #2563EB;
+}
+
+.buttonGroup {
+  display: flex;
+  border: 1px solid #DDE3EA;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.groupBtn {
+  padding: 0 16px;
+  height: 38px;
+  background-color: #FFFFFF;
+  border: none;
+  border-right: 1px solid #DDE3EA;
+  font-size: 13px;
+  font-weight: 500;
+  color: #475467;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.groupBtn:last-child {
+  border-right: none;
+}
+
+.groupBtn:hover {
+  background-color: #F8FAFC;
+}
+
+.groupBtn.active {
+  background-color: #EFF6FF;
+  color: #1D4ED8;
+  font-weight: 600;
+}
+
+.actionBtn {
+  height: 38px;
+  padding: 0 16px;
+  background-color: #FFFFFF;
+  border: 1px solid #DDE3EA;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #475467;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.actionBtn:hover {
+  background-color: #F8FAFC;
+  border-color: #CBD5E1;
+}
+
+/* Center Title */
+.titleContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pageTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #172033;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+/* Right Controls */
+.rightControls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.searchContainer {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 250px;
+}
+
+.searchLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475467;
+  margin-right: 8px;
+}
+
+.searchInput {
+  height: 38px;
+  width: 100%;
+  padding: 0 12px 0 36px;
+  border: 1px solid #DDE3EA;
+  border-radius: 6px;
+  font-size: 13px;
+  background-color: #FFFFFF;
+  transition: all 0.2s;
+}
+
+.searchInput:focus {
+  border-color: #2563EB;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  background-color: #FFFFFF;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 10px;
+  color: #94A3B8;
+}
+
+.iconBtn {
+  height: 38px;
+  width: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #FFFFFF;
+  border: 1px solid #DDE3EA;
+  border-radius: 6px;
+  color: #475467;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.iconBtn:hover {
+  background-color: #F1F5F9;
+  color: #1E293B;
+}
+
+/* Table Area */
+.tableWrapper {
+  flex: 1;
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.tableContainer {
+  flex: 1;
+  overflow: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.th {
+  position: sticky;
+  top: 0;
+  background-color: #F8FAFC;
+  padding: 12px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #475467;
+  border-bottom: 1px solid #E2E8F0;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+.td {
+  padding: 10px 16px;
+  font-size: 13px;
+  border-bottom: 1px solid #F1F5F9;
+  white-space: nowrap;
+}
+
+.tr {
+  transition: background-color 0.15s;
+}
+
+.tr:hover {
+  background-color: #F8FAFC;
+}
+
+/* Status Colors */
+.textDefault {
+  color: #172033;
+  font-weight: 500;
+}
+
+.textGreen {
+  color: #16A34A;
+  font-weight: 500;
+}
+
+.textBlue {
+  color: #2563EB;
+  font-weight: 500;
+}
+
+.textMuted {
+  color: #64748B;
+}
+
+.alignCenter {
+  text-align: center;
+}
+
+.truncate {
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

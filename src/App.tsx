@@ -40,6 +40,7 @@ const OPDChargesProfile = lazy(() => import('./components/OPDChargesProfile/OPDC
 const EchoReport = lazy(() => import('./components/EchoReport/EchoReport'));
 const ShortFormMaster = lazy(() => import('./components/ShortFormMaster/ShortFormMaster'));
 const ReportTemplate = lazy(() => import('./components/ReportTemplate/ReportTemplate'));
+const TodayReportDashboard = lazy(() => import('./components/TodayReportDashboard/TodayReportDashboard'));
 
 // Navigation Bar Component (only shown when authenticated)
 const NavigationBar = () => {
@@ -299,6 +300,9 @@ const NavigationBar = () => {
             <NavLink to="/report-template" style={nestedLinkStyle}>
               Report Template
             </NavLink>
+            <NavLink to="/today-report-dashboard" style={nestedLinkStyle}>
+              Today Report Dashboard
+            </NavLink>
           </div>
         )}
       </div>
@@ -411,6 +415,7 @@ function App() {
                   <Route path="/echo-report" element={<EchoReport />} />
                   <Route path="/short-form-master" element={<ShortFormMaster />} />
                   <Route path="/report-template" element={<ReportTemplate />} />
+                  <Route path="/today-report-dashboard" element={<TodayReportDashboard />} />
                   
                   <Route path="*" element={<Navigate to="/patient-registration" replace />} />
                 </>
