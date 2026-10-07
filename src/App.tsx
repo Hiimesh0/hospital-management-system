@@ -29,6 +29,7 @@ const AdviceMaster = lazy(() => import('./components/AdviceMaster/AdviceMaster')
 const BedMaster = lazy(() => import('./components/BedMaster/BedMaster'));
 const OperationGroupMaster = lazy(() => import('./components/OperationGroupMaster/OperationGroupMaster'));
 const RoomTypeMaster = lazy(() => import('./components/RoomTypeMaster/RoomTypeMaster'));
+const VisitingTypeMaster = lazy(() => import('./components/VisitingTypeMaster/VisitingTypeMaster'));
 
 // Navigation Bar Component (only shown when authenticated)
 const NavigationBar = () => {
@@ -197,6 +198,9 @@ const NavigationBar = () => {
                 <NavLink to="/room-type-master" style={{ ...nestedLinkStyle({ isActive: location.pathname === '/room-type-master' }), paddingLeft: '48px', fontSize: '12px' }}>
                   Room Type Master
                 </NavLink>
+                <NavLink to="/visiting-type-master" style={{ ...nestedLinkStyle({ isActive: location.pathname === '/visiting-type-master' }), paddingLeft: '48px', fontSize: '12px' }}>
+                  Visiting Type Master
+                </NavLink>
               </div>
             )}
           </div>
@@ -296,6 +300,7 @@ function App() {
                   <Route path="/bed-master" element={<BedMaster />} />
                   <Route path="/operation-group-master" element={<OperationGroupMaster />} />
                   <Route path="/room-type-master" element={<RoomTypeMaster />} />
+                  <Route path="/visiting-type-master" element={<VisitingTypeMaster />} />
                   <Route path="*" element={<Navigate to="/patient-registration" replace />} />
                 </>
               )}
