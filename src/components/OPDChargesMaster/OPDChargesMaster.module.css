@@ -1,0 +1,389 @@
+.pageContainer {
+  padding: 24px 32px;
+  max-width: 1400px;
+  margin: 0 auto;
+  font-family: 'Inter', sans-serif;
+  color: #172033;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #E2E8F0;
+  padding-bottom: 16px;
+}
+
+.pageTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #172033;
+  margin: 0;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.badge {
+  font-size: 13px;
+  font-weight: 500;
+  color: #64748B;
+  background-color: #F8FAFC;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #E2E8F0;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Form Container */
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.mainSection {
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Grids */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.fieldGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #475467;
+  white-space: nowrap;
+  width: 100px;
+  text-align: right;
+}
+
+.labelLong {
+  width: 120px;
+}
+
+.input {
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid #DDE3EA;
+  border-radius: 6px;
+  background-color: #FFFFFF;
+  color: #172033;
+  font-size: 13px;
+  outline: none;
+  transition: all 0.2s;
+  flex: 1;
+}
+
+.input:focus {
+  border-color: #2563EB;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.inputSmall {
+  width: 60px;
+  flex: none;
+}
+.inputMedium {
+  width: 120px;
+  flex: none;
+}
+.inputLarge {
+  width: 300px;
+  flex: none;
+}
+.inputXLarge {
+  width: 450px;
+  flex: none;
+}
+
+.inputYellow {
+  background-color: #FEF9C3;
+  border-color: #FDE047;
+  color: #854D0E;
+}
+
+.checkboxItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #475467;
+  cursor: pointer;
+}
+
+/* Action Buttons */
+.smallBtn {
+  height: 32px;
+  padding: 0 16px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 4px;
+  border: 1px solid #E2E8F0;
+  background-color: #F8FAFC;
+  color: #172033;
+  cursor: pointer;
+}
+
+.smallBtn:hover {
+  background-color: #F1F5F9;
+}
+
+.pinkBtn {
+  background-color: #FBCFE8;
+  border-color: #F9A8D4;
+  color: #831843;
+}
+.pinkBtn:hover {
+  background-color: #F9A8D4;
+}
+
+/* Table Section */
+.tableSection {
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.entryRow {
+  display: flex;
+  background-color: #F8FAFC;
+  border-bottom: 1px solid #E2E8F0;
+  padding: 8px;
+  gap: 4px;
+  align-items: flex-end;
+}
+
+.entryCol {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.entryLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748B;
+  text-align: center;
+}
+.entryInput {
+  height: 30px;
+  padding: 0 8px;
+  border: 1px solid #DDE3EA;
+  border-radius: 4px;
+  font-size: 12px;
+  width: 100%;
+}
+
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.dataTable th {
+  text-align: left;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #475467;
+  border-bottom: 1px solid #E2E8F0;
+  background-color: #F1F5F9;
+}
+
+.dataTable td {
+  padding: 6px 12px;
+  font-size: 12px;
+  color: #172033;
+  border-bottom: 1px solid #F8FAFC;
+  height: 36px; /* Empty rows height */
+}
+
+/* Form Notes */
+.notesSection {
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 16px 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.textarea {
+  flex: 1;
+  height: 60px;
+  padding: 8px 12px;
+  border: 1px solid #DDE3EA;
+  border-radius: 6px;
+  resize: vertical;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+}
+.textarea:focus {
+  border-color: #2563EB;
+}
+
+/* Bottom Action Bar */
+.actionBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background-color: #FFFFFF;
+  border-top: 1px solid #E2E8F0;
+  border-radius: 8px;
+  margin-top: auto;
+}
+
+.navControls {
+  display: flex;
+  gap: 8px;
+}
+
+.navBtn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  color: #475467;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.navBtn:hover {
+  background-color: #F8FAFC;
+  color: #172033;
+}
+
+.middleActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.radioGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #E2E8F0;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background-color: #F8FAFC;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #475467;
+  cursor: pointer;
+}
+
+.rightActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.secondaryBtn {
+  height: 36px;
+  padding: 0 16px;
+  background-color: #FFFFFF;
+  color: #172033;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.secondaryBtn:hover {
+  background-color: #F8FAFC;
+  border-color: #CBD5E1;
+}
+
+.primaryBtn {
+  height: 36px;
+  padding: 0 20px;
+  background-color: #2563EB;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.primaryBtn:hover {
+  background-color: #1D4ED8;
+}
+
+.dangerBtn {
+  height: 36px;
+  padding: 0 16px;
+  background-color: #FFFFFF;
+  color: #DC2626;
+  border: 1px solid #FECACA;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dangerBtn:hover {
+  background-color: #FEF2F2;
+}
