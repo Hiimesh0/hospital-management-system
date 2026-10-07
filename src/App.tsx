@@ -37,6 +37,7 @@ const DepartmentMaster = lazy(() => import('./components/DepartmentMaster/Depart
 const DoctorMaster = lazy(() => import('./components/DoctorMaster/DoctorMaster'));
 const InsuranceCompanyMaster = lazy(() => import('./components/InsuranceCompanyMaster/InsuranceCompanyMaster'));
 const OPDChargesProfile = lazy(() => import('./components/OPDChargesProfile/OPDChargesProfile'));
+const EchoReport = lazy(() => import('./components/EchoReport/EchoReport'));
 
 // Navigation Bar Component (only shown when authenticated)
 const NavigationBar = () => {
@@ -44,6 +45,7 @@ const NavigationBar = () => {
   const [isMasterOpen, setIsMasterOpen] = useState(false);
   const [isMasterIpdOpen, setIsMasterIpdOpen] = useState(false);
   const [isMasterOpdOpen, setIsMasterOpdOpen] = useState(false);
+  const [isDiagnosticsReportOpen, setIsDiagnosticsReportOpen] = useState(false);
   const [isUtilityOpen, setIsUtilityOpen] = useState(false);
   
   if (location.pathname === '/login') return null;
@@ -262,6 +264,37 @@ const NavigationBar = () => {
         )}
       </div>
 
+      {/* Nested Diagnostics Report Menu */}
+      <div style={{ marginTop: '8px', borderTop: '1px solid #E2E8F0', paddingTop: '8px' }}>
+        <button 
+          onClick={() => setIsDiagnosticsReportOpen(!isDiagnosticsReportOpen)}
+          style={{ 
+            width: '100%', 
+            textAlign: 'left', 
+            padding: '10px 16px', 
+            backgroundColor: 'transparent', 
+            border: 'none', 
+            color: '#475467', 
+            fontWeight: 600, 
+            fontSize: '14px', 
+            cursor: 'pointer',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}
+        >
+          Diagnostics Report
+          <span style={{ fontSize: '10px' }}>{isDiagnosticsReportOpen ? '▼' : '▶'}</span>
+        </button>
+        {isDiagnosticsReportOpen && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '4px' }}>
+            <NavLink to="/echo-report" style={nestedLinkStyle}>
+              Echo Report
+            </NavLink>
+          </div>
+        )}
+      </div>
+
       {/* Nested Utility Menu */}
       <div style={{ marginTop: '8px', borderTop: '1px solid #E2E8F0', paddingTop: '8px' }}>
         <button 
@@ -365,6 +398,9 @@ function App() {
                   <Route path="/doctor-master" element={<DoctorMaster />} />
                   <Route path="/insurance-company-master" element={<InsuranceCompanyMaster />} />
                   <Route path="/opd-charges-profile" element={<OPDChargesProfile />} />
+                  
+                  {/* Diagnostics Report Routes */}
+                  <Route path="/echo-report" element={<EchoReport />} />
                   
                   <Route path="*" element={<Navigate to="/patient-registration" replace />} />
                 </>

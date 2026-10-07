@@ -1,0 +1,275 @@
+.pageContainer {
+  padding: 24px 32px;
+  max-width: 1400px;
+  margin: 0 auto;
+  font-family: 'Inter', sans-serif;
+  color: #172033;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  height: 100%;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #E2E8F0;
+  padding-bottom: 16px;
+}
+
+.pageTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #172033;
+  margin: 0;
+}
+
+/* Form Container */
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.section {
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sectionTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2563EB;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.fieldGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fieldGroupVertical {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475467;
+  white-space: nowrap;
+}
+
+.labelRight {
+  text-align: right;
+  width: 130px;
+}
+
+.input {
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid #DDE3EA;
+  border-radius: 6px;
+  background-color: #FFFFFF;
+  color: #172033;
+  font-size: 13px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.input:focus {
+  border-color: #2563EB;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.inputReadOnly {
+  background-color: #F8FAFC;
+  color: #64748B;
+  border-color: #E2E8F0;
+}
+
+.textarea {
+  padding: 10px 12px;
+  border: 1px solid #DDE3EA;
+  border-radius: 6px;
+  background-color: #FFFFFF;
+  color: #172033;
+  font-size: 13px;
+  outline: none;
+  resize: vertical;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.textarea:focus {
+  border-color: #2563EB;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Specific Widths */
+.wSmall { width: 80px; }
+.wMedium { width: 140px; }
+.wLarge { width: 240px; }
+.wFull { flex: 1; }
+
+/* Grid Layouts for Measurements */
+.measurementGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 32px;
+}
+
+.measurementSubGrid {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  align-items: center;
+  gap: 8px;
+}
+
+.complexRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.unit {
+  font-size: 13px;
+  color: #64748B;
+  font-weight: 500;
+}
+
+/* Split Section for Bottom */
+.splitSection {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 32px;
+}
+
+/* Action Bar */
+.actionBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background-color: #FFFFFF;
+  border-top: 1px solid #E2E8F0;
+  border-radius: 8px;
+  margin-top: auto;
+}
+
+.navControls {
+  display: flex;
+  gap: 8px;
+}
+
+.navBtn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  color: #475467;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.navBtn:hover {
+  background-color: #F8FAFC;
+  color: #172033;
+}
+
+.middleActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rightActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.secondaryBtn {
+  height: 40px;
+  padding: 0 20px;
+  background-color: #FFFFFF;
+  color: #172033;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.secondaryBtn:hover {
+  background-color: #F8FAFC;
+  border-color: #CBD5E1;
+}
+
+.primaryBtn {
+  height: 40px;
+  padding: 0 24px;
+  background-color: #2563EB;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.primaryBtn:hover {
+  background-color: #1D4ED8;
+}
+
+.dangerBtn {
+  height: 40px;
+  padding: 0 20px;
+  background-color: #FFFFFF;
+  color: #DC2626;
+  border: 1px solid #FECACA;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dangerBtn:hover {
+  background-color: #FEF2F2;
+}
