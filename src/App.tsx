@@ -25,11 +25,13 @@ const IntercommDisplay = lazy(() => import('./components/IntercommDisplay/Interc
 const PatientHistory = lazy(() => import('./components/PatientHistory/PatientHistory'));
 const MedicineMaster = lazy(() => import('./components/MedicineMaster/MedicineMaster'));
 const StandardPrescriptionMaster = lazy(() => import('./components/StandardPrescriptionMaster/StandardPrescriptionMaster'));
+const AdviceMaster = lazy(() => import('./components/AdviceMaster/AdviceMaster'));
 
 // Navigation Bar Component (only shown when authenticated)
 const NavigationBar = () => {
   const location = useLocation();
   const [isMasterOpen, setIsMasterOpen] = useState(false);
+  const [isMasterIpdOpen, setIsMasterIpdOpen] = useState(false);
   const [isUtilityOpen, setIsUtilityOpen] = useState(false);
   
   if (location.pathname === '/login') return null;
@@ -156,6 +158,35 @@ const NavigationBar = () => {
             <NavLink to="/standard-prescription-master" style={nestedLinkStyle}>
               Standard Prescription Master
             </NavLink>
+            
+            {/* IPD Sub-menu */}
+            <button 
+              onClick={() => setIsMasterIpdOpen(!isMasterIpdOpen)}
+              style={{ 
+                ...navLinkStyle({ isActive: false }),
+                paddingLeft: '32px',
+                textAlign: 'left',
+                backgroundColor: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                width: '100%',
+                fontSize: '13px',
+                fontWeight: 600
+              }}
+            >
+              IPD Master
+              <span style={{ fontSize: '10px' }}>{isMasterIpdOpen ? '▼' : '▶'}</span>
+            </button>
+            {isMasterIpdOpen && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <NavLink to="/advice-master" style={{ ...nestedLinkStyle({ isActive: location.pathname === '/advice-master' }), paddingLeft: '48px', fontSize: '12px' }}>
+                  Advice Master
+                </NavLink>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -249,6 +280,7 @@ function App() {
                   <Route path="/patient-history" element={<PatientHistory />} />
                   <Route path="/medicine-master" element={<MedicineMaster />} />
                   <Route path="/standard-prescription-master" element={<StandardPrescriptionMaster />} />
+                  <Route path="/advice-master" element={<AdviceMaster />} />
                   <Route path="*" element={<Navigate to="/patient-registration" replace />} />
                 </>
               )}
