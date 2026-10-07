@@ -24,6 +24,7 @@ const ContactList = lazy(() => import('./components/ContactList/ContactList'));
 const IntercommDisplay = lazy(() => import('./components/IntercommDisplay/IntercommDisplay'));
 const PatientHistory = lazy(() => import('./components/PatientHistory/PatientHistory'));
 const MedicineMaster = lazy(() => import('./components/MedicineMaster/MedicineMaster'));
+const StandardPrescriptionMaster = lazy(() => import('./components/StandardPrescriptionMaster/StandardPrescriptionMaster'));
 
 // Navigation Bar Component (only shown when authenticated)
 const NavigationBar = () => {
@@ -152,6 +153,9 @@ const NavigationBar = () => {
             <NavLink to="/medicine-master" style={nestedLinkStyle}>
               Medicine Master
             </NavLink>
+            <NavLink to="/standard-prescription-master" style={nestedLinkStyle}>
+              Standard Prescription Master
+            </NavLink>
           </div>
         )}
       </div>
@@ -244,6 +248,7 @@ function App() {
                   <Route path="/intercomm-display" element={<IntercommDisplay />} />
                   <Route path="/patient-history" element={<PatientHistory />} />
                   <Route path="/medicine-master" element={<MedicineMaster />} />
+                  <Route path="/standard-prescription-master" element={<StandardPrescriptionMaster />} />
                   <Route path="*" element={<Navigate to="/patient-registration" replace />} />
                 </>
               )}
