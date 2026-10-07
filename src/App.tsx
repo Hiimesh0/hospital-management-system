@@ -33,6 +33,7 @@ const VisitingTypeMaster = lazy(() => import('./components/VisitingTypeMaster/Vi
 const VisitProcedureHeaderMaster = lazy(() => import('./components/VisitProcedureHeaderMaster/VisitProcedureHeaderMaster'));
 const OPDPatientCategory = lazy(() => import('./components/OPDPatientCategory/OPDPatientCategory'));
 const OPDChargesMaster = lazy(() => import('./components/OPDChargesMaster/OPDChargesMaster'));
+const DepartmentMaster = lazy(() => import('./components/DepartmentMaster/DepartmentMaster'));
 
 // Navigation Bar Component (only shown when authenticated)
 const NavigationBar = () => {
@@ -240,6 +241,9 @@ const NavigationBar = () => {
                 <NavLink to="/opd-charges-master" style={{ ...nestedLinkStyle({ isActive: location.pathname === '/opd-charges-master' }), paddingLeft: '48px', fontSize: '12px' }}>
                   OPD Charges Master
                 </NavLink>
+                <NavLink to="/department-master" style={{ ...nestedLinkStyle({ isActive: location.pathname === '/department-master' }), paddingLeft: '48px', fontSize: '12px' }}>
+                  Department Master
+                </NavLink>
               </div>
             )}
           </div>
@@ -345,6 +349,7 @@ function App() {
                   {/* OPD Master Routes */}
                   <Route path="/opd-patient-category" element={<OPDPatientCategory />} />
                   <Route path="/opd-charges-master" element={<OPDChargesMaster />} />
+                  <Route path="/department-master" element={<DepartmentMaster />} />
                   
                   <Route path="*" element={<Navigate to="/patient-registration" replace />} />
                 </>
