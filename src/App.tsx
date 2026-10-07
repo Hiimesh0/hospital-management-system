@@ -21,6 +21,7 @@ const DepositEntry = lazy(() => import('./components/DepositEntry/DepositEntry')
 const Billing = lazy(() => import('./components/Billing/Billing'));
 const DrVisitProcedure = lazy(() => import('./components/DrVisitProcedure/DrVisitProcedure'));
 const ContactList = lazy(() => import('./components/ContactList/ContactList'));
+const IntercommDisplay = lazy(() => import('./components/IntercommDisplay/IntercommDisplay'));
 
 // Navigation Bar Component (only shown when authenticated)
 const NavigationBar = () => {
@@ -145,6 +146,9 @@ const NavigationBar = () => {
             <NavLink to="/contact-list" style={nestedLinkStyle}>
               Contact List
             </NavLink>
+            <NavLink to="/intercomm-display" style={nestedLinkStyle}>
+              Intercomm Display
+            </NavLink>
           </div>
         )}
       </div>
@@ -200,6 +204,7 @@ function App() {
                   <Route path="/investigation-ordered" element={<InvestigationOrdered />} />
                   <Route path="/indoor-register" element={<IndoorRegister />} />
                   <Route path="/contact-list" element={<ContactList />} />
+                  <Route path="/intercomm-display" element={<IntercommDisplay />} />
                   <Route path="*" element={<Navigate to="/patient-registration" replace />} />
                 </>
               )}
