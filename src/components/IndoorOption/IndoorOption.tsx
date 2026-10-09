@@ -40,10 +40,10 @@ const IndoorOption: React.FC = () => {
  <div>
  <h1 className={styles.patientName}>--</h1>
  <div className={styles.patientDetails}>
- <span>IPD: I/0123/178</span>
+ <span>IPD: --</span>
  <span>UHID: --</span>
- <span>Male · 45 Years</span>
- <span>Dr. Dipen Bhuva</span>
+ <span>--</span>
+ <span>--</span>
  </div>
  </div>
  </div>

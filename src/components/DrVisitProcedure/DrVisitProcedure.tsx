@@ -24,7 +24,7 @@ const DrVisitProcedure: React.FC = () => {
  0
  </div>
  <div className={styles.contextBlock}>
- I/0123/178
+ --
  </div>
  </div>
 

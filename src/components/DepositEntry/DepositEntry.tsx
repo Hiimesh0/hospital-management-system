@@ -21,7 +21,7 @@ const DepositEntry: React.FC = () => {
  <div className={styles.contextBar}>
  <div className={`${styles.contextBlock} ${styles.contextBlockName}`}>--</div>
  <div className={styles.contextBlock}>
- I/0123/178
+ --
  </div>
  <div className={styles.contextBlock}>
  5000 Rs.

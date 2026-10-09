@@ -72,15 +72,15 @@ const RoomStatus: React.FC = () => {
  <div className={styles.summaryCard}>
  <div className={`${styles.summaryRow} ${styles.total}`}>
  <span>All (F1)</span>
- <span>106</span>
+ <span>0</span>
  </div>
  <div className={`${styles.summaryRow} ${styles.occupied}`}>
  <span>Occupied (F2)</span>
- <span>77</span>
+ <span>0</span>
  </div>
  <div className={`${styles.summaryRow} ${styles.unoccupied}`}>
  <span>Unoccupied (F3)</span>
- <span>29</span>
+ <span>0</span>
  </div>
  <div className={`${styles.summaryRow} ${styles.booked}`}>
  <span>Booked (F4)</span>
