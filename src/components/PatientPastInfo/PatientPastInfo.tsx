@@ -4,53 +4,16 @@ import styles from './PatientPastInfo.module.css';
 
 const PatientPastInfo: React.FC = () => {
  // We can setup local state for fields, though we are mostly just presenting the layout
- const [patientSearch, setPatientSearch] = useState('MANJULABEN MAGANBHAI GAJERA');
- const [patientId, setPatientId] = useState('600');
- const [mobile, setMobile] = useState('9909433911');
+ const [patientSearch, setPatientSearch] = useState('');
+ const [patientId, setPatientId] = useState('');
+ const [mobile, setMobile] = useState('');
 
  // Hardcoded data matching the screenshot for fidelity
- const opdData = [
- {
- id: 1,
- typ: 'OPD',
- invDate: '09-Jan-2023',
- invNo: 'BCHLAB2223/367',
- particulars: 'CBC, S.CREATININE(UNITY)\n, S.ELECTROLYTE (UNITY)\n, TRANSPORTATION CHARGE(UNITY)',
- amount: '1125',
- received: '1125',
- due: '0',
- notes: ''
- }
- ];
+ const opdData : any[] = [
+];
 
- const ipdData = [
- {
- id: 1,
- typ: 'IPD',
- invDate: '09-Jan-2023',
- invNo: 'GEN2223/122',
- particulars: 'Indoor Bill',
- underCareDr: 'DR. TANVEER MAKSUD',
- amount: '5863',
- received: '5863',
- due: '0',
- notes: '',
- entryBy: 'Mahipal Mahida, PCName:RECEPTION3-PC, At:09-Jan-2023 11:43:32 AM.'
- },
- {
- id: 2,
- typ: 'IPD',
- invDate: '09-Jan-2023',
- invNo: 'GEN2223/126',
- particulars: 'Indoor Bill',
- underCareDr: 'DR. TANVEER MAKSUD',
- amount: '220',
- received: '220',
- due: '0',
- notes: '',
- entryBy: 'Mahipal Mahida, PCName:RECEPTION3-PC, At:09-Jan-2023 03:01:36 PM.'
- }
- ];
+ const ipdData : any[] = [
+];
 
  return (
  <div className={styles.pageContainer}>

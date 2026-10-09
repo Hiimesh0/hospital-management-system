@@ -3,7 +3,7 @@ import { ArrowDown, Save, LogOut } from 'lucide-react';
 import styles from './InpatientReceipt.module.css';
 
 const InpatientReceipt: React.FC = () => {
- const [activeTab, setActiveTab] = useState('Room Charges');
+ const [activeTab, setActiveTab] = useState('');
 
  const tabs = [
  'Room Charges',

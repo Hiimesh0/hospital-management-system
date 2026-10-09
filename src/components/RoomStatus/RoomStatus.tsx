@@ -5,40 +5,11 @@ import styles from './RoomStatus.module.css';
 const RoomStatus: React.FC = () => {
  const [activeTab, setActiveTab] = useState('DC');
 
- const tabs = [
- { id: 'DX', label: 'DX', total: 1, occupied: 0 },
- { id: 'MA', label: 'MA', total: 36, occupied: 35 },
- { id: 'IC', label: 'IC', total: 14, occupied: 12 },
- { id: 'DC', label: 'DC', total: 17, occupied: 7 },
- { id: 'SP', label: 'SP', total: 6, occupied: 1 },
- { id: 'SS', label: 'SS', total: 4, occupied: 0 },
- { id: 'EX', label: 'EX', total: 2, occupied: 1 },
- { id: 'GW', label: 'GW', total: 20, occupied: 20 },
- { id: 'IS', label: 'IS', total: 1, occupied: 0 },
- { id: 'OT', label: 'OT', total: 5, occupied: 1 },
- ];
+ const tabs : any[] = [
+];
 
- const rooms = [
- { id: 'IC-9', type: 'IC', recordId: '429', date: '06-01-23', tags: ['C', 'L'], patient: 'NARESHBHAI DHIRUBHAI JHALA', location: 'VARACHHA,,SURAT', doctor: 'DR. NIKUNJ VITHALANI', status: 'occupied' },
- { id: 'IC-10', type: 'IC', recordId: '26', date: '09-01-23', tags: ['C', 'L'], patient: 'BHUPATBHAI DHANJIBHAI PARMAR', location: 'SITANAGAR CHOKADI,SURAT', doctor: 'DR. DIPEN BHUVA (PATEL)', status: 'occupied' },
- { id: 'IC-11', type: 'IC', recordId: '475', date: '06-01-23', tags: ['C', 'L'], patient: 'PRITI MADHURAJ DHURIYA', location: 'PANDESARA,,SURAT', doctor: 'DR. HONEY PAREKH', status: 'occupied' },
- { id: 'IC-12', type: 'IC', recordId: '227', date: '06-01-23', tags: ['C', 'L'], patient: 'DINESHBHAI NAGINBHAI NAYKA', location: 'NAVI PARDI,,SURAT', doctor: 'DR. TANVEER MAKSUD', status: 'occupied' },
- 
- { id: 'IC-13', type: 'IC', status: 'unoccupied' },
- { id: 'IC-14', type: 'IC', status: 'unoccupied' },
- 
- { id: 'DC-1', type: 'DC', recordId: '472', date: '06-01-23', tags: ['C', 'L'], patient: 'KANTABEN MAGANBHAI SOLANKI', location: '-,BOTAD', doctor: 'DR. NIKUNJ VITHALANI', status: 'occupied' },
- { id: 'DC-2', type: 'DC', recordId: '74', date: '06-01-23', tags: ['C', 'L'], patient: 'NANIBEN B PATEL', location: 'VAPI,VALSAD', doctor: 'DR. DIPEN BHUVA (PATEL)', status: 'occupied' },
- 
- { id: 'DC-3', type: 'DC', recordId: '645', date: '09-01-23', tags: ['C', 'L'], patient: 'DEVSHIBHAI RANCHHODBHAI MONPARIYA', location: 'NANA VARACHHA,,SURAT', doctor: 'DR. ANKIT PATEL', status: 'occupied' },
- { id: 'DC-4', type: 'DC', recordId: '609', date: '09-01-23', tags: ['C', 'L', 'B'], patient: 'HANSABEN BHANUSHANKARBHAI JOSHI', location: 'PUNAGAM,,SURAT', doctor: 'DR. ANKIT PATEL', status: 'occupied' },
- { id: 'DC-5', type: 'DC', recordId: '514', date: '09-01-23', tags: ['C', 'L'], patient: 'BHUPENDRABHAI NAJANBHAI BHAGARIYA', location: 'VANSDA,,NAVSARI', doctor: 'DR. RAHUL SHAH', status: 'occupied' },
- 
- { id: 'DC-6', type: 'DC', status: 'unoccupied' },
- { id: 'DC-7', type: 'DC', status: 'unoccupied' },
- { id: 'DC-8', type: 'DC', status: 'unoccupied' },
- { id: 'DC-9', type: 'DC', status: 'unoccupied' },
- ];
+ const rooms : any[] = [
+];
 
  return (
  <div className={styles.pageContainer}>

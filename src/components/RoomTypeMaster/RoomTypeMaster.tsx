@@ -5,21 +5,7 @@ import {
 } from 'lucide-react';
 import styles from './RoomTypeMaster.module.css';
 
-const MOCK_DATA = [
- { id: 1, shortName: 'MA', description: 'Ma Yojana Ward' },
- { id: 2, shortName: 'ES', description: 'Esic Ward' },
- { id: 3, shortName: 'IC', description: 'I.C.U' },
- { id: 4, shortName: 'MS', description: 'Male Surgical Ward' },
- { id: 5, shortName: 'FS', description: 'Female Surgical Ward' },
- { id: 6, shortName: 'DC', description: 'Day Care Ward' },
- { id: 7, shortName: 'SP', description: 'Special Room' },
- { id: 8, shortName: 'SS', description: 'Semi Special Room' },
- { id: 9, shortName: 'EX', description: 'Executive Suite' },
- { id: 10, shortName: 'IS', description: 'Isolation Room' },
- { id: 11, shortName: 'GW', description: 'General Ward' },
- { id: 12, shortName: 'CT', description: 'Clinical Trial Management' },
- { id: 13, shortName: 'OT', description: 'Ot' },
- { id: 14, shortName: 'DX', description: 'Deluxe' },
+const MOCK_DATA : any[] = [
 ];
 
 const COLORS_ROW_1 = [

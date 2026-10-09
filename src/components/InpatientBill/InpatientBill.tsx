@@ -3,7 +3,7 @@ import { Save, Printer, Lock, Calculator, Package, RefreshCw, Trash2, XCircle } 
 import styles from './InpatientBill.module.css';
 
 const InpatientBill: React.FC = () => {
- const [activeTab, setActiveTab] = useState('Room Charges');
+ const [activeTab, setActiveTab] = useState('');
  const [isLocked, setIsLocked] = useState(false);
 
  const tabs = [

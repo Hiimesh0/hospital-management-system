@@ -5,19 +5,7 @@ import {
 } from 'lucide-react';
 import styles from './VisitingTypeMaster.module.css';
 
-const MOCK_DATA = [
- { id: 1, roomType: 'MA', description: 'Ma Yojana Ward', rate: '250' },
- { id: 2, roomType: 'ES', description: 'Esic Ward', rate: '250' },
- { id: 3, roomType: 'GW', description: 'General Ward', rate: '0' },
- { id: 4, roomType: 'CT', description: 'Clinical Trial Management', rate: '250' },
- { id: 5, roomType: 'IC', description: 'I.C.U', rate: '0' },
- { id: 6, roomType: 'MS', description: 'Male Surgical Ward', rate: '0' },
- { id: 7, roomType: 'FS', description: 'Female Surgical Ward', rate: '0' },
- { id: 8, roomType: 'DC', description: 'Day Care Ward', rate: '0' },
- { id: 9, roomType: 'SP', description: 'Special Room', rate: '0' },
- { id: 10, roomType: 'SS', description: 'Semi Special Room', rate: '0' },
- { id: 11, roomType: 'EX', description: 'Executive Suite', rate: '0' },
- { id: 12, roomType: 'IS', description: 'Isolation Room', rate: '0' },
+const MOCK_DATA : any[] = [
 ];
 
 const VisitingTypeMaster: React.FC = () => {

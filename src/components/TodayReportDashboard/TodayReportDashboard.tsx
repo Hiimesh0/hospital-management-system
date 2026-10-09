@@ -4,19 +4,7 @@ import {
 } from 'lucide-react';
 import styles from './TodayReportDashboard.module.css';
 
-const MOCK_DATA = [
- { id: 1, code: '122', name: 'SALMABANU MOHAMEDNAIM SHAIKH', reports: 2, created: 0, printed: 0, doc: 'Dr. HITENDRA AYRE', age: '52 Yrs.', test: 'ABG (UNITY), TRANSPORTATION CHARGE(UNITY)', labId: '345', status: 'default' },
- { id: 2, code: '122', name: 'SALMABANU MOHAMEDNAIM SHAIKH', reports: 2, created: 0, printed: 0, doc: 'Dr. HITENDRA AYRE', age: '52 Yrs.', test: 'ABG (UNITY), TRANSPORTATION CHARGE(UNITY)', labId: '346', status: 'default' },
- { id: 3, code: '122', name: 'SALMABANU MOHAMEDNAIM SHAIKH', reports: 3, created: 0, printed: 0, doc: 'Dr. HITENDRA AYRE', age: '52 Yrs.', test: 'CBC + MP(UNITY), CRP (UNITY), TRANSPORTATION ...', labId: '347', status: 'default' },
- { id: 4, code: '122', name: 'SALMABANU MOHAMEDNAIM SHAIKH', reports: 5, created: 4, printed: 3, doc: 'Dr. HITENDRA AYRE', age: '52 Yrs.', test: 'BLOOD CULLTURE &amp; SENSITIVE(2019), CBC, S.E...', labId: '348', status: 'default' },
- { id: 5, code: '5', name: 'DWARKADAS R MAHESHWARI', reports: 3, created: 3, printed: 3, doc: 'Dr. ANKIT PATEL', age: '65 Yrs.', test: 'S.ELECTROLYTE', labId: '349', status: 'green' },
- { id: 6, code: '440', name: 'RAMPRAKASH K TIWARI', reports: 2, created: 2, printed: 2, doc: 'Dr. RAHUL SHAH', age: '65 Yrs.', test: 'S.CREATININE, S.UREA', labId: '351', status: 'green' },
- { id: 7, code: '24', name: 'SHYAMBHAI BHAVRAV SOLANKI', reports: 1, created: 0, printed: 0, doc: 'Dr. JAYVIRSINH JHALA', age: '40 Yrs.', test: 'FROZEN 7', labId: '350', status: 'default' },
- { id: 8, code: '171', name: 'TEJASHKUMAR H MAHAKAL', reports: 7, created: 4, printed: 3, doc: 'Dr. RAHUL SHAH', age: '33 Yrs.', test: 'BLOOD CULLTURE &amp; SENSITIVE(2019), CBC, CU...', labId: '352', status: 'default' },
- { id: 9, code: '609', name: 'HANSABEN BHANUSHANKARBHAI JOSHI', reports: 2, created: 2, printed: 1, doc: 'Dr. ANKIT PATEL', age: '58 Yrs.', test: 'CBC, S.CREATININE', labId: '353', status: 'blue' },
- { id: 10, code: '626', name: 'PARULATA BHARATKUMAR PATEL', reports: 4, created: 3, printed: 1, doc: 'Dr. HITENDRA AYRE', age: '51 Yrs.', test: 'Cancer Screening Camp Female(Above 40)', labId: '', status: 'default' },
- { id: 11, code: '624', name: 'SHARDABEN ASHOKBHAI HADIYA', reports: 2, created: 2, printed: 1, doc: 'Dr. ANKIT PATEL', age: '46 Yrs.', test: 'Carcinoembryonic Antigen (Sr.CEA), CBC', labId: '354', status: 'blue' },
- { id: 12, code: '435', name: 'DIPAKBHAI JAVAHARLAL SONI', reports: 2, created: 2, printed: 1, doc: 'Dr. DIPALI AYRE', age: '59 Yrs.', test: 'CBC, S.CREATININE', labId: '355', status: 'blue' },
+const MOCK_DATA : any[] = [
 ];
 
 const TodayReportDashboard: React.FC = () => {

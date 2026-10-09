@@ -2,13 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { RefreshCw, X, MoreVertical } from 'lucide-react';
 import styles from './IndoorSummaryChart.module.css';
 
-const MOCK_DATA = [
- { id: 178, indoor: 'I/0123/178', patient: 'RANJITKUMAR MOHANLAL D...', surgery: '-', remark: '-', dr: 'DR. DIPEN BHUVA (...', de: 'D.E.', billRec: '', ot: '', dc: '', billNo: '', prefix: 'GEN', dod: '', mediclaim: '', mlc: '', cashless: '', recNo: '', status: 'black' },
- { id: 179, indoor: 'I/0123/179', patient: 'LAKHABHAI DHANJIBHAI DABHI', surgery: '-', remark: '-', dr: 'DR. ANKIT PATEL', de: '', billRec: '', ot: '', dc: '', billNo: '', prefix: 'GEN', dod: '', mediclaim: '', mlc: '', cashless: 'CashLess', recNo: '', status: 'black' },
- { id: 180, indoor: 'I/0123/180', patient: 'PRABHABEN V BHOJANI', surgery: '-', remark: '-', dr: 'DR. ANKIT PATEL', de: '', billRec: '', ot: '', dc: '', billNo: '', prefix: 'GEN', dod: '', mediclaim: '', mlc: '', cashless: 'CashLess', recNo: '', status: 'black' },
- { id: 191, indoor: 'I/0123/191', patient: 'MANJULABEN MAGANBHAI G...', surgery: '-', remark: '-', dr: 'DR. TANVEER MAK...', de: '', billRec: 'Bill R...', ot: '', dc: 'D.C.', billNo: 'GEN222...', prefix: 'GEN', dod: '09-Jan-2023', mediclaim: '', mlc: '', cashless: '', recNo: '', status: 'green' },
- { id: 192, indoor: 'I/0123/192', patient: 'KINNABEN DEVENDRA SITAPA...', surgery: '-', remark: '-', dr: 'DR. ANKIT PATEL', de: '', billRec: '', ot: '', dc: '', billNo: '', prefix: 'GEN', dod: '', mediclaim: '', mlc: '', cashless: 'CashLess', recNo: '', status: 'black' },
- { id: 195, indoor: 'I/0123/195', patient: 'NITINBHAI MANSUKHBHAI PO...', surgery: '-', remark: '-', dr: 'DR. AKASH VAGHANI', de: 'D.E.', billRec: 'Bill R...', ot: '', dc: '', billNo: 'GEN222...', prefix: 'GEN', dod: '09-Jan-2023', mediclaim: '', mlc: '', cashless: '', recNo: '', status: 'green' },
+const MOCK_DATA : any[] = [
 ];
 
 const IndoorSummaryChart: React.FC = () => {

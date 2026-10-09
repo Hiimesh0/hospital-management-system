@@ -3,19 +3,8 @@ import { X, Plus, Edit2, Trash2, Printer, Search } from 'lucide-react';
 import styles from './ContactList.module.css';
 
 const ContactList: React.FC = () => {
- const contacts = [
- { id: 1, name: 'Darshan - SSD', phone: '9723200078', remarks: 'Sunil Medico Software Person', direct: '', address: '', department: '' },
- { id: 2, name: 'Jayesh - SSD', phone: '9714108007', remarks: 'Sunil Medico Software', direct: '*8233', address: '', department: '' },
- { id: 3, name: 'Maganbhai', phone: '', remarks: '', direct: '*8103', address: '', department: '' },
- { id: 4, name: 'Mahipal Mahida', phone: '9574077710', remarks: 'Billing Assistant', direct: '*8287', address: '', department: '' },
- { id: 5, name: 'Mitesh Jadav', phone: '9537198172', remarks: 'Billing Assistant', direct: '*8174', address: '', department: '' },
- { id: 6, name: 'Mr. Vinay Patel', phone: '9624491510', remarks: 'Assi Admin Manager', direct: '', address: '', department: '' },
- { id: 7, name: 'Nitin Padvi', phone: '9726858948', remarks: 'Billing Assistant', direct: '..........0', address: '', department: '' },
- { id: 8, name: 'SSd', phone: '8306560717', remarks: '', direct: '*8135', address: '', department: '' },
- { id: 9, name: 'Sunil Medico Softwares', phone: '912555/02613252322', remarks: 'Meena Madam', direct: '', address: '', department: '' },
- { id: 10, name: 'Sunilbhai', phone: '9374706801', remarks: '', direct: '', address: '', department: '' },
- { id: 11, name: 'Suresh - SSD', phone: '8460510348', remarks: 'Sunil Medico Software', direct: '', address: '', department: '' },
- ];
+ const contacts : any[] = [
+];
 
  return (
  <div className={styles.pageContainer}>
