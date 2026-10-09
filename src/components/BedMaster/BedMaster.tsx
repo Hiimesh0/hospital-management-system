@@ -12,7 +12,7 @@ const BedMaster: React.FC = () => {
  {/* Header */}
  <div className={styles.header}>
  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
- <span className={styles.recordCounter}>106 of 106</span>
+ <span className={styles.recordCounter}>0 of 0</span>
  <h1 className={styles.pageTitle}>Bed Master</h1>
  </div>
  </div>
@@ -109,14 +109,8 @@ const BedMaster: React.FC = () => {
  </tr>
  </thead>
  <tbody>
- <tr>
- <td><Play size={10} fill="#172033" /></td>
- <td>220</td>
- <td>1940</td>
- <td>0</td>
- <td style={{ textAlign: 'left' }}></td>
- </tr>
- </tbody>
+                {/* Empty State / No Data */}
+              </tbody>
  </table>
  </div>
  </div>

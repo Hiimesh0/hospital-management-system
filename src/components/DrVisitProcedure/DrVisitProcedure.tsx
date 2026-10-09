@@ -156,15 +156,8 @@ const DrVisitProcedure: React.FC = () => {
  </tr>
  </thead>
  <tbody>
- {/* Empty state representing the blank table in screenshot */}
- {!isFormVisible && (
- <tr>
- <td colSpan={15} className={styles.emptyState}>
- No visit or procedure records found. Click "Add VISIT" or "Add PROC" to begin.
- </td>
- </tr>
- )}
- </tbody>
+                {/* Empty State / No Data */}
+              </tbody>
  </table>
  </div>
  </div>

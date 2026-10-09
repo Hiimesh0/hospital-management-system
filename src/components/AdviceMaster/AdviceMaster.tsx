@@ -55,14 +55,8 @@ const AdviceMaster: React.FC = () => {
  </tr>
  </thead>
  <tbody>
- <tr>
- <td style={{ textAlign: 'center' }}><Play size={10} fill="#172033" /></td>
- <td>1</td>
- <td>One Tablet Daily</td>
- <td>LL</td>
- <td>पपप</td>
- </tr>
- </tbody>
+                {/* Empty State / No Data */}
+              </tbody>
  </table>
  </div>
  </div>

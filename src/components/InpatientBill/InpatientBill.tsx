@@ -120,10 +120,8 @@ const InpatientBill: React.FC = () => {
  </tr>
  </thead>
  <tbody>
- <tr>
- <td colSpan={2} style={{ height: '40px' }}></td>
- </tr>
- </tbody>
+                {/* Empty State / No Data */}
+              </tbody>
  </table>
  <div className={styles.tableFooter}>
  <input type="text" className={`${styles.input} ${styles.totalInput}`} readOnly />
@@ -140,10 +138,8 @@ const InpatientBill: React.FC = () => {
  </tr>
  </thead>
  <tbody>
- <tr>
- <td colSpan={2} style={{ height: '40px' }}></td>
- </tr>
- </tbody>
+                {/* Empty State / No Data */}
+              </tbody>
  </table>
  <div className={styles.tableFooter}>
  <input type="text" className={`${styles.input} ${styles.totalInput}`} readOnly />
@@ -167,10 +163,8 @@ const InpatientBill: React.FC = () => {
  </tr>
  </thead>
  <tbody>
- <tr>
- <td colSpan={2} style={{ height: '40px' }}></td>
- </tr>
- </tbody>
+                {/* Empty State / No Data */}
+              </tbody>
  </table>
  <div className={styles.tableFooter}>
  <input type="text" className={`${styles.input} ${styles.totalInput}`} readOnly />
@@ -187,15 +181,8 @@ const InpatientBill: React.FC = () => {
  </tr>
  </thead>
  <tbody>
- <tr>
- <td>1 <span style={{color: '#98A2B3'}}>▶</span> LABORATORY</td>
- <td style={{ textAlign: 'right' }}>6140</td>
- </tr>
- <tr>
- <td>2 <span style={{color: '#98A2B3'}}>▶</span> X-RAY</td>
- <td style={{ textAlign: 'right' }}>450</td>
- </tr>
- </tbody>
+                {/* Empty State / No Data */}
+              </tbody>
  </table>
  <div className={styles.tableFooter}>
  <input type="text" className={`${styles.input} ${styles.totalInput}`} readOnly />

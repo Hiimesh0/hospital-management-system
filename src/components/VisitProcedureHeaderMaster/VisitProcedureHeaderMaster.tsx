@@ -17,7 +17,7 @@ const VisitProcedureHeaderMaster: React.FC = () => {
  {/* Header */}
  <div className={styles.header}>
  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
- <span className={styles.recordCounter}>2 of 2</span>
+ <span className={styles.recordCounter}>0 of 0</span>
  <h1 className={styles.pageTitle}>Visit Procedure Header Master</h1>
  </div>
  </div>

@@ -9,7 +9,7 @@ const IndoorRegister: React.FC = () => {
  {/* Header */}
  <div className={styles.header}>
  <div className={styles.headerLeft}>
- <span className={styles.recordCount}>204 of 204</span>
+ <span className={styles.recordCount}>0 of 0</span>
  <span className={styles.userBadge}>Demo User</span>
  </div>
 

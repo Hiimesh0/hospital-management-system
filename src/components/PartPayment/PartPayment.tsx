@@ -95,13 +95,8 @@ const PartPayment: React.FC = () => {
  </tr>
  </thead>
  <tbody>
- <tr>
- <td style={{textAlign: 'center'}}>▶</td>
- <td>&nbsp;</td>
- <td>&nbsp;</td>
- <td>&nbsp;</td>
- </tr>
- </tbody>
+                {/* Empty State / No Data */}
+              </tbody>
  </table>
  </div>
  </div>
@@ -153,23 +148,23 @@ const PartPayment: React.FC = () => {
  <div className={styles.modalEntryRow}>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Operator Name</label>
- <input type="text" className={styles.input} value="Demo" readOnly />
+ <input type="text" className={styles.input} value="" readOnly />
  </div>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Date</label>
- <input type="date" className={styles.input} value="09-Jan-2023" readOnly  max="2099-12-31" />
+ <input type="date" className={styles.input} value="" readOnly  max="2099-12-31" />
  </div>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Time</label>
- <input type="time" className={styles.input} value="06:32:29 PM" readOnly />
+ <input type="time" className={styles.input} value="" readOnly />
  </div>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Due Amt</label>
- <input type="text" className={styles.input} value="0" style={{textAlign: 'right'}} readOnly />
+ <input type="text" className={styles.input} value="" style={{textAlign: 'right'}} readOnly />
  </div>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Now Paid Amt</label>
- <input type="text" className={styles.input} value="0" style={{textAlign: 'right'}} />
+ <input type="text" className={styles.input} value="" style={{textAlign: 'right'}} />
  </div>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Pay Type</label>

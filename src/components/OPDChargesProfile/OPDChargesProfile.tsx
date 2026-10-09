@@ -19,7 +19,7 @@ const OPDChargesProfile: React.FC = () => {
  <div className={styles.headerLeft}>
  <span className={styles.badge}>811 Of 811</span>
  <span className={styles.badge} style={{ backgroundColor: '#EFF6FF', color: '#2563EB', borderColor: '#BFDBFE' }}>
- Test ID: 2494
+ Test ID: --
  </span>
  <h1 className={styles.pageTitle}>OPD Charges / Diagnostics Test</h1>
  </div>
@@ -122,16 +122,8 @@ const OPDChargesProfile: React.FC = () => {
  </tr>
  </thead>
  <tbody>
- {/* Empty rows to mimic screenshot's empty table area */}
- <tr><td></td><td></td><td></td><td></td></tr>
- <tr><td></td><td></td><td></td><td></td></tr>
- <tr><td></td><td></td><td></td><td></td></tr>
- <tr><td></td><td></td><td></td><td></td></tr>
- <tr><td></td><td></td><td></td><td></td></tr>
- <tr><td></td><td></td><td></td><td></td></tr>
- <tr><td></td><td></td><td></td><td></td></tr>
- <tr><td></td><td></td><td></td><td></td></tr>
- </tbody>
+                {/* Empty State / No Data */}
+              </tbody>
  </table>
  </div>
 

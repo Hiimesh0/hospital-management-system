@@ -120,23 +120,8 @@ const DepositEntry: React.FC = () => {
  </tr>
  </thead>
  <tbody>
- <tr>
- <td style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
- <span style={{ color: '#98A2B3', fontSize: '10px' }}>▶</span> GEN222...
- </td>
- <td>09-Jan-2023</td>
- <td style={{ fontWeight: 500 }}>5000</td>
- <td>Mahipal Mahida</td>
- <td>Cash</td>
- <td></td>
- <td>IPD Deposit</td>
- <td>Remark</td>
- <td>RANJITKUMAR MOHANLAL DARUKA 75</td>
- <td></td>
- <td>GEN</td>
- <td>$#@:E</td>
- </tr>
- </tbody>
+                {/* Empty State / No Data */}
+              </tbody>
  </table>
  </div>
  </div>

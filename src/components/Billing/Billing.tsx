@@ -47,12 +47,8 @@ const Billing: React.FC = () => {
  </tr>
  </thead>
  <tbody>
- <tr>
- <td></td>
- <td></td>
- <td></td>
- </tr>
- </tbody>
+                {/* Empty State / No Data */}
+              </tbody>
  </table>
  </div>
 
@@ -82,13 +78,8 @@ const Billing: React.FC = () => {
  </tr>
  </thead>
  <tbody>
- <tr>
- <td style={{ textAlign: 'center', color: '#98A2B3' }}>▶</td>
- <td></td>
- <td></td>
- <td></td>
- </tr>
- </tbody>
+                {/* Empty State / No Data */}
+              </tbody>
  </table>
  </div>
 

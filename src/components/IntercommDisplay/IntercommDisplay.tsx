@@ -67,10 +67,8 @@ const IntercommDisplay: React.FC = () => {
  </tr>
  </thead>
  <tbody>
- <tr>
- <td colSpan={2} className={styles.emptyState}>No intercom records found.</td>
- </tr>
- </tbody>
+                {/* Empty State / No Data */}
+              </tbody>
  </table>
  </div>
  </div>

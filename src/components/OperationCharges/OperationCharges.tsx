@@ -114,10 +114,8 @@ const OperationCharges: React.FC = () => {
  </tr>
  </thead>
  <tbody>
- <tr>
- <td colSpan={10} className={styles.emptyState}>No operation charges entered yet.</td>
- </tr>
- </tbody>
+                {/* Empty State / No Data */}
+              </tbody>
  </table>
  </div>
 
@@ -186,10 +184,8 @@ const OperationCharges: React.FC = () => {
  </tr>
  </thead>
  <tbody>
- <tr>
- <td colSpan={7} className={styles.emptyState}>No package charges entered.</td>
- </tr>
- </tbody>
+                {/* Empty State / No Data */}
+              </tbody>
  </table>
  </div>
  

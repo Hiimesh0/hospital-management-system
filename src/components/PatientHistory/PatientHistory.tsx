@@ -146,12 +146,8 @@ const PatientHistory: React.FC = () => {
  </tr>
  </thead>
  <tbody>
- <tr>
- <td colSpan={8} style={{ textAlign: 'center', padding: '24px', color: '#64748B', fontStyle: 'italic' }}>
- No medicines prescribed yet.
- </td>
- </tr>
- </tbody>
+                {/* Empty State / No Data */}
+              </tbody>
  </table>
  </div>
  <div className={styles.rxFooter}>

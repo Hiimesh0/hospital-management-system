@@ -22,7 +22,7 @@ const InpatientReceipt: React.FC = () => {
  <div className={styles.headerCard}>
  <div className={styles.topHeader}>
  <div className={styles.headerActions}>
- <span className={styles.recordCount}>1 of 1</span>
+ <span className={styles.recordCount}>0 of 0</span>
  <span className={styles.doctorName}>DR. SOHAM PATEL</span>
  </div>
  
@@ -127,11 +127,8 @@ const InpatientReceipt: React.FC = () => {
  </tr>
  </thead>
  <tbody>
- <tr>
- <td>1 <span style={{color: '#98A2B3'}}>▶</span> Visiting Charge</td>
- <td style={{ textAlign: 'right' }}>3200</td>
- </tr>
- </tbody>
+                {/* Empty State / No Data */}
+              </tbody>
  </table>
  <div className={styles.tableFooter}>
  <input type="text" className={`${styles.input} ${styles.totalInput}`} readOnly />
@@ -148,11 +145,8 @@ const InpatientReceipt: React.FC = () => {
  </tr>
  </thead>
  <tbody>
- <tr>
- <td>1 <span style={{color: '#98A2B3'}}>▶</span> Operation Charges</td>
- <td style={{ textAlign: 'right' }}>19290</td>
- </tr>
- </tbody>
+                {/* Empty State / No Data */}
+              </tbody>
  </table>
  <div className={styles.tableFooter}>
  <input type="text" className={`${styles.input} ${styles.totalInput}`} readOnly />
@@ -172,11 +166,8 @@ const InpatientReceipt: React.FC = () => {
  </tr>
  </thead>
  <tbody>
- <tr>
- <td>1 <span style={{color: '#98A2B3'}}>▶</span> Additional Charge</td>
- <td style={{ textAlign: 'right' }}>7270</td>
- </tr>
- </tbody>
+                {/* Empty State / No Data */}
+              </tbody>
  </table>
  <div className={styles.tableFooter}>
  <input type="text" className={`${styles.input} ${styles.totalInput}`} readOnly />
@@ -193,15 +184,8 @@ const InpatientReceipt: React.FC = () => {
  </tr>
  </thead>
  <tbody>
- <tr>
- <td>1 <span style={{color: '#98A2B3'}}>▶</span> LABORATORY</td>
- <td style={{ textAlign: 'right' }}>11170</td>
- </tr>
- <tr>
- <td>2 <span style={{color: '#98A2B3'}}>▶</span> X-RAY</td>
- <td style={{ textAlign: 'right' }}>450</td>
- </tr>
- </tbody>
+                {/* Empty State / No Data */}
+              </tbody>
  </table>
  <div className={styles.tableFooter}>
  <input type="text" className={`${styles.input} ${styles.totalInput}`} readOnly />
@@ -229,10 +213,8 @@ const InpatientReceipt: React.FC = () => {
  </tr>
  </thead>
  <tbody>
- <tr>
- <td colSpan={4} style={{ textAlign: 'center', color: '#98A2B3', padding: '24px' }}>No payments recorded</td>
- </tr>
- </tbody>
+                {/* Empty State / No Data */}
+              </tbody>
  </table>
  </div>
 

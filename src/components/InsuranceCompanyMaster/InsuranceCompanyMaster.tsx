@@ -17,7 +17,7 @@ const InsuranceCompanyMaster: React.FC = () => {
  {/* Header */}
  <div className={styles.header}>
  <div className={styles.headerLeft}>
- <span className={styles.recordCounter}>37 of 37</span>
+ <span className={styles.recordCounter}>0 of 0</span>
  <h1 className={styles.pageTitle}>Patient / Insurance Company</h1>
  </div>
  </div>

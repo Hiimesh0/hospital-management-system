@@ -16,8 +16,8 @@ const DoctorMaster: React.FC = () => {
  {/* Header */}
  <div className={styles.header}>
  <div className={styles.headerLeft}>
- <span className={styles.recordCounter}>195 of 195</span>
- <span className={styles.idBadge}>Dr ID: 195</span>
+ <span className={styles.recordCounter}>0 of 0</span>
+ <span className={styles.idBadge}>Dr ID: --</span>
  <h1 className={styles.pageTitle}>Doctor Master</h1>
  </div>
  </div>

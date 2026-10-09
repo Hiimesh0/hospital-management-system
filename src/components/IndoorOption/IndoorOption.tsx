@@ -41,7 +41,7 @@ const IndoorOption: React.FC = () => {
  <h1 className={styles.patientName}>RANJITKUMAR MOHANLAL D.</h1>
  <div className={styles.patientDetails}>
  <span>IPD: I/0123/178</span>
- <span>UHID: 710</span>
+ <span>UHID: --</span>
  <span>Male · 45 Years</span>
  <span>Dr. Dipen Bhuva</span>
  </div>

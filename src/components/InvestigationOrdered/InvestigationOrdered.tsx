@@ -78,12 +78,8 @@ const InvestigationOrdered: React.FC = () => {
  </tr>
  </thead>
  <tbody>
- <tr>
- <td colSpan={2} className={styles.emptyState}>
- No investigations added yet.
- </td>
- </tr>
- </tbody>
+                {/* Empty State / No Data */}
+              </tbody>
  </table>
  </div>
 

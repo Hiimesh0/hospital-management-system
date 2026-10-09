@@ -71,20 +71,8 @@ const RoomCharges: React.FC = () => {
  </tr>
  </thead>
  <tbody>
- <tr>
- <td style={{textAlign: 'center', fontSize: '10px'}}>▶</td>
- <td>09-Jan-2023</td>
- <td>BCH-IC-IC-3</td>
- <td>IC</td>
- <td style={{textAlign: 'right'}}>2460</td>
- <td style={{textAlign: 'right'}}>0</td>
- <td style={{textAlign: 'right'}}>0</td>
- <td></td>
- </tr>
- {/* Empty rows to visually match the large empty space of the screenshot if desired, 
- but modern design prefers not adding empty tr rows. I'll add one empty state row if no data, 
- but since there is data, let's keep it clean. */}
- </tbody>
+                {/* Empty State / No Data */}
+              </tbody>
  </table>
  </div>
 

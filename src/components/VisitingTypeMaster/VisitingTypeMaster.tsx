@@ -15,7 +15,7 @@ const VisitingTypeMaster: React.FC = () => {
  {/* Header */}
  <div className={styles.header}>
  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
- <span className={styles.recordCounter}>33 of 33</span>
+ <span className={styles.recordCounter}>0 of 0</span>
  <h1 className={styles.pageTitle}>Visiting Type</h1>
  </div>
  </div>

@@ -10,8 +10,8 @@ const PatientRegistration: React.FC = () => {
  <p className={styles.subtitle}>Register and manage patient information</p>
  </div>
  <div className={styles.metaInfo}>
- <span className={styles.badge}>Record: 110 of 110</span>
- <span className={styles.badge}>Reg: 09-Jan-2023</span>
+ <span className={styles.badge}>Record: 0 of 0</span>
+ <span className={styles.badge}>Reg: --</span>
  </div>
  </header>
 
