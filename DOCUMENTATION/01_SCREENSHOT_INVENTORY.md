@@ -1,0 +1,48 @@
+# 01 SCREENSHOT INVENTORY
+
+- `Add-Visit- Procedure Charges Entry.jpg`
+- `Billing.jpg`
+- `Deposite Entry.jpg`
+- `Discharge Carde.jpg`
+- `E_billing.jpg`
+- `F_Bill.jpg`
+- `IPD Summary Charge.jpg`
+- `Indoor Option.jpg`
+- `Indoor Register.jpg`
+- `Investigation To Ordered.jpg`
+- `Operation Entry By Package.jpg`
+- `Operation Entry.jpg`
+- `Ot Entry.jpg`
+- `PD.jpg`
+- `Part Payment.jpg`
+- `Patient Past Billing History.jpg`
+- `Room Charges.jpg`
+- `Room Status.jpg`
+- `Certificate\Deth Certi.jpg`
+- `Certificate\MLC Certificate.jpg`
+- `Certificate\Medical Certi.jpg`
+- `Certificate\Open Format Certificate.jpg`
+- `Investigation Report\Echo Report.jpg`
+- `Investigation Report\Short Form Master.jpg`
+- `Investigation Report\Template Master.jpg`
+- `Investigation Report\Today Report Dasbord.jpg`
+- `Utility\Contact List.jpg`
+- `Utility\Inter Come.jpg`
+- `Utility\Utility.jpg`
+- `Master\Clinical.jpg`
+- `Master\Medicine Master.jpg`
+- `Master\Standerd Prec. Master.jpg`
+- `Master\IPD\Advice Master.jpg`
+- `Master\IPD\Bed Master.jpg`
+- `Master\IPD\Operation Charges Master.jpg`
+- `Master\IPD\Room Type Master.jpg`
+- `Master\IPD\Visit - Add- Procedure - master.jpg`
+- `Master\IPD\Visit Type Main Group Master.jpg`
+- `Master\OPD\Category.jpg`
+- `Master\OPD\Charges Master.jpg`
+- `Master\OPD\Department Master.jpg`
+- `Master\OPD\Dr Master.jpg`
+- `Master\OPD\Insurance Company Master.jpg`
+- `Master\OPD\OPD ChargesProfile or package.jpg`
+
+**Total Screenshots Documented:** 44
