@@ -50,19 +50,7 @@ const PartPayment: React.FC = () => {
  </tr>
  </thead>
  <tbody>
- <tr>
- <td>Follow Up Charges (BCH)</td>
- <td>Dr. NIKUNJ VITHALANI</td>
- <td style={{textAlign: 'right'}}>370</td>
- </tr>
- {/* Empty rows to match the screenshot's height if necessary, or just natural height */}
- {Array.from({ length: 4 }).map((_, i) => (
- <tr key={i}>
- <td>&nbsp;</td>
- <td>&nbsp;</td>
- <td>&nbsp;</td>
- </tr>
- ))}
+ {/* Empty State / No Data */}
  </tbody>
  </table>
  </div>
@@ -217,27 +205,7 @@ const PartPayment: React.FC = () => {
  </tr>
  </thead>
  <tbody>
- <tr>
- <td>Mahipal ...</td>
- <td>09-Jan-2023</td>
- <td>9:54AM</td>
- <td style={{textAlign: 'right'}}>370</td>
- <td>Cash</td>
- <td></td>
- <td></td>
- </tr>
- {/* Empty rows to match height */}
- {Array.from({ length: 3 }).map((_, i) => (
- <tr key={i}>
- <td>&nbsp;</td>
- <td>&nbsp;</td>
- <td>&nbsp;</td>
- <td>&nbsp;</td>
- <td>&nbsp;</td>
- <td>&nbsp;</td>
- <td>&nbsp;</td>
- </tr>
- ))}
+ {/* Empty State / No Data */}
  </tbody>
  </table>
  </div>
