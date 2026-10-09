@@ -25,7 +25,7 @@ const InvestigationOrdered: React.FC = () => {
  </div>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Date:</label>
- <input type="date" className={styles.input} />
+ <input type="date" className={styles.input}  max="2099-12-31" />
  </div>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Time:</label>

@@ -29,7 +29,7 @@ const ShortFormMaster: React.FC = () => {
 
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Description :</label>
- <textarea className={styles.textarea}></textarea>
+ <textarea className={styles.textarea} maxLength={500}></textarea>
  </div>
 
  <div className={styles.fieldGroup}>

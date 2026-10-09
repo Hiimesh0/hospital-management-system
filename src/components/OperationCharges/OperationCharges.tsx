@@ -47,7 +47,7 @@ const OperationCharges: React.FC = () => {
  <div className={styles.formRow}>
  <div className={`${styles.fieldGroup} ${styles.wDate}`}>
  <label className={styles.label}>Date</label>
- <input type="date" className={styles.input} />
+ <input type="date" className={styles.input}  max="2099-12-31" />
  </div>
  
  <div className={`${styles.fieldGroup} ${styles.wOpType}`}>
@@ -138,7 +138,7 @@ const OperationCharges: React.FC = () => {
  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 2fr', gap: '16px', marginBottom: '16px' }}>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Date</label>
- <input type="date" className={styles.input} />
+ <input type="date" className={styles.input}  max="2099-12-31" />
  </div>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Room Type</label>

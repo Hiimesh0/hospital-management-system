@@ -56,7 +56,7 @@ const MlcCertificate: React.FC = () => {
  </div>
  <div className={`${styles.fieldGroup} ${styles.flex1}`}>
  <label className={styles.label} style={{ width: '60px' }}>Date :</label>
- <input type="date" className={styles.input} />
+ <input type="date" className={styles.input}  max="2099-12-31" />
  </div>
  </div>
 
@@ -83,14 +83,14 @@ const MlcCertificate: React.FC = () => {
  <div className={styles.row}>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Address :</label>
- <textarea className={styles.textarea}></textarea>
+ <textarea className={styles.textarea} maxLength={500}></textarea>
  </div>
  </div>
 
  <div className={styles.row}>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>DOA :</label>
- <input type="date" className={styles.input} />
+ <input type="date" className={styles.input}  max="2099-12-31" />
  </div>
  <div className={styles.fieldGroup}>
  <label className={styles.label} style={{ width: '60px' }}>TOA :</label>
@@ -98,7 +98,7 @@ const MlcCertificate: React.FC = () => {
  </div>
  <div className={styles.fieldGroup}>
  <label className={styles.label} style={{ width: '60px' }}>DOD :</label>
- <input type="date" className={styles.input} />
+ <input type="date" className={styles.input}  max="2099-12-31" />
  </div>
  <div className={styles.fieldGroup}>
  <label className={styles.label} style={{ width: '60px' }}>TOD :</label>
@@ -120,7 +120,7 @@ const MlcCertificate: React.FC = () => {
  <div className={styles.row}>
  <div className={`${styles.fieldGroup} ${styles.flex1}`}>
  <label className={styles.label}>Date :</label>
- <input type="date" className={styles.input} />
+ <input type="date" className={styles.input}  max="2099-12-31" />
  </div>
  <div className={`${styles.fieldGroup} ${styles.flex1}`}>
  <label className={styles.label}>Time :</label>
@@ -135,7 +135,7 @@ const MlcCertificate: React.FC = () => {
  <div className={styles.row}>
  <div className={`${styles.fieldGroup} ${styles.flex1}`}>
  <label className={styles.label}>Examination Date :</label>
- <input type="date" className={styles.input} />
+ <input type="date" className={styles.input}  max="2099-12-31" />
  </div>
  <div className={`${styles.fieldGroup} ${styles.flex1}`}>
  <label className={styles.label}>Examination Time :</label>
@@ -164,7 +164,7 @@ const MlcCertificate: React.FC = () => {
  <div className={styles.row} style={{ flex: 1 }}>
  <div className={styles.fieldGroup} style={{ alignItems: 'flex-start' }}>
  <label className={styles.label}>HISTORY :</label>
- <textarea className={`${styles.textarea} ${styles.textareaLarge}`} style={{ height: '100%' }}></textarea>
+ <textarea className={`${styles.textarea} ${styles.textareaLarge}`} style={{ height: '100%' }} maxLength={500}></textarea>
  </div>
  </div>
  </div>
@@ -194,21 +194,21 @@ const MlcCertificate: React.FC = () => {
  <div className={styles.row}>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Investigation :</label>
- <textarea className={styles.textarea}></textarea>
+ <textarea className={styles.textarea} maxLength={500}></textarea>
  </div>
  </div>
 
  <div className={styles.row}>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Treatment Given :</label>
- <textarea className={styles.textarea}></textarea>
+ <textarea className={styles.textarea} maxLength={500}></textarea>
  </div>
  </div>
 
  <div className={styles.row}>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>FINDINGS :</label>
- <textarea className={styles.textarea}></textarea>
+ <textarea className={styles.textarea} maxLength={500}></textarea>
  </div>
  </div>
 
@@ -237,7 +237,7 @@ const MlcCertificate: React.FC = () => {
  </div>
  <div className={`${styles.fieldGroup} ${styles.flex1}`}>
  <label className={styles.labelVertical}>DATE :</label>
- <input type="date" className={styles.input} />
+ <input type="date" className={styles.input}  max="2099-12-31" />
  </div>
  <div className={`${styles.fieldGroup} ${styles.flex1}`}>
  <label className={styles.labelVertical}>TIME :</label>

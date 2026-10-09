@@ -8,7 +8,7 @@ const ClinicalField = ({ label, minHeight = "80px" }: { label: string, minHeight
  <button className={styles.helpBtn} title="Click for help">?</button>
  <label className={styles.clinicalLabel}>{label}</label>
  </div>
- <textarea className={styles.textarea} style={{ minHeight }}></textarea>
+ <textarea className={styles.textarea} style={{ minHeight }} maxLength={500}></textarea>
  </div>
 );
 
@@ -65,21 +65,21 @@ const DischargeCard: React.FC = () => {
  <span className={styles.label}>DOS 1 :</span>
  <input type="checkbox" className={styles.checkbox} defaultChecked />
  </label>
- <input type="date" className={styles.input} />
+ <input type="date" className={styles.input}  max="2099-12-31" />
  </div>
  <div className={`${styles.fieldGroup} ${styles.col2}`}>
  <label className={styles.checkboxGroup}>
  <span className={styles.label}>DOS 2 :</span>
  <input type="checkbox" className={styles.checkbox} defaultChecked />
  </label>
- <input type="date" className={styles.input} />
+ <input type="date" className={styles.input}  max="2099-12-31" />
  </div>
  <div className={`${styles.fieldGroup} ${styles.col2}`}>
  <label className={styles.checkboxGroup}>
  <span className={styles.label}>DOS 3 :</span>
  <input type="checkbox" className={styles.checkbox} defaultChecked />
  </label>
- <input type="date" className={styles.input} />
+ <input type="date" className={styles.input}  max="2099-12-31" />
  </div>
  </div>
  </div>
@@ -116,7 +116,7 @@ const DischargeCard: React.FC = () => {
  <button className={styles.helpBtn} title="Click for help">?</button>
  <label className={styles.clinicalLabel}>RX (Advise On Discharge)</label>
  </div>
- <textarea className={styles.textarea} style={{ flex: 1, minHeight: '160px' }}></textarea>
+ <textarea className={styles.textarea} style={{ flex: 1, minHeight: '160px' }} maxLength={500}></textarea>
  </div>
 
  {/* Right RX Controls */}
@@ -135,7 +135,7 @@ const DischargeCard: React.FC = () => {
  <div className={styles.clinicalFieldHeader} style={{ marginTop: '4px', marginBottom: '0' }}>
  <label className={styles.label}>Advice</label>
  </div>
- <textarea className={styles.textarea} style={{ minHeight: '60px' }}></textarea>
+ <textarea className={styles.textarea} style={{ minHeight: '60px' }} maxLength={500}></textarea>
  </div>
  </div>
 

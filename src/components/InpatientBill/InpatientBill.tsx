@@ -41,7 +41,7 @@ const InpatientBill: React.FC = () => {
  </div>
  <div className={`${styles.fieldGroup} ${styles.col3}`}>
  <label className={styles.label}>Bill Date:</label>
- <input type="date" className={styles.input} />
+ <input type="date" className={styles.input}  max="2099-12-31" />
  </div>
  <div className={`${styles.fieldGroup} ${styles.col4}`}>
  <label className={styles.label}>Patient:</label>
@@ -75,11 +75,11 @@ const InpatientBill: React.FC = () => {
  <div className={styles.infoGrid} style={{ marginBottom: '24px' }}>
  <div className={`${styles.fieldGroup} ${styles.col4}`}>
  <label className={styles.label}>DOA:</label>
- <input type="date" className={styles.input} />
+ <input type="date" className={styles.input}  max="2099-12-31" />
  </div>
  <div className={`${styles.fieldGroup} ${styles.col4}`}>
  <label className={styles.label}>DOD:</label>
- <input type="date" className={styles.input} />
+ <input type="date" className={styles.input}  max="2099-12-31" />
  </div>
  <div className={`${styles.fieldGroup} ${styles.col3}`}>
  <label className={styles.label}>Total Days:</label>

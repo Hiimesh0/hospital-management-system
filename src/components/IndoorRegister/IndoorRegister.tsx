@@ -52,7 +52,7 @@ const IndoorRegister: React.FC = () => {
 
  <div className={`${styles.fieldGroup} ${styles.col2}`}>
  <label className={styles.label}>DOA</label>
- <input type="date" className={styles.input} />
+ <input type="date" className={styles.input}  max="2099-12-31" />
  </div>
 
  <div className={`${styles.fieldGroup} ${styles.col2}`}>
@@ -101,7 +101,7 @@ const IndoorRegister: React.FC = () => {
  
  <div className={`${styles.fieldGroup} ${styles.col3}`}>
  <label className={styles.label}>Birth Date</label>
- <input type="date" className={styles.input} />
+ <input type="date" className={styles.input}  max="2099-12-31" />
  </div>
 
  <div className={`${styles.fieldGroup} ${styles.col3}`}>
@@ -134,7 +134,7 @@ const IndoorRegister: React.FC = () => {
  
  <div className={`${styles.fieldGroup} ${styles.col6}`}>
  <label className={styles.label}>Address</label>
- <textarea className={styles.textarea}></textarea>
+ <textarea className={styles.textarea} maxLength={500}></textarea>
  </div>
 
  <div className={`${styles.fieldGroup} ${styles.col6}`} style={{ justifyContent: 'space-between' }}>
@@ -168,7 +168,7 @@ const IndoorRegister: React.FC = () => {
  </div>
  <div className={`${styles.fieldGroup} ${styles.col3}`}>
  <label className={styles.label}>Mobile</label>
- <input type="tel" className={styles.input} />
+ <input type="tel" className={styles.input}  pattern="[0-9]{10,15}" title="Please enter a valid mobile number" />
  </div>
  <div className={`${styles.fieldGroup} ${styles.col2}`}>
  <label className={styles.label}>Other</label>
@@ -232,7 +232,7 @@ const IndoorRegister: React.FC = () => {
  <label className={styles.checkboxLabel}>
  <input type="checkbox" defaultChecked /> <span className={styles.insuranceText}>MLC</span>
  </label>
- <input type="date" className={styles.input} />
+ <input type="date" className={styles.input}  max="2099-12-31" />
  </div>
 
  <div className={`${styles.fieldGroup} ${styles.col3}`}>

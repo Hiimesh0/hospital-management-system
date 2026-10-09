@@ -27,7 +27,7 @@ const PatientRegistration: React.FC = () => {
  
  <div className={`${styles.formGroup} ${styles.colSpan2}`}>
  <label className={`${styles.label} ${styles.required}`}>Category</label>
- <select className={styles.select}>
+ <select className={styles.select} required>
  <option>NEW</option>
  <option>OLD</option>
  </select>
@@ -35,7 +35,7 @@ const PatientRegistration: React.FC = () => {
 
  <div className={`${styles.formGroup} ${styles.colSpan3}`}>
  <label className={`${styles.label} ${styles.required}`}>First Name</label>
- <input type="text" className={styles.input} />
+ <input type="text" className={styles.input}  required />
  </div>
 
  <div className={`${styles.formGroup} ${styles.colSpan2}`}>
@@ -50,13 +50,13 @@ const PatientRegistration: React.FC = () => {
 
  <div className={`${styles.formGroup} ${styles.colSpan3}`}>
  <label className={styles.label}>Birth Date</label>
- <input type="date" className={styles.input} />
+ <input type="date" className={styles.input}  max="2099-12-31" />
  </div>
 
  <div className={`${styles.formGroup} ${styles.colSpan3}`}>
  <label className={`${styles.label} ${styles.required}`}>Age</label>
  <div className={styles.inputGroup}>
- <input type="number" className={styles.input} style={{ flex: 1 }} />
+ <input type="number" className={styles.input} style={{ flex: 1 }}  required />
  <select className={styles.select} style={{ flex: 1, minWidth: '90px' }}>
  <option>Days</option>
  <option>Months</option>
@@ -96,7 +96,7 @@ const PatientRegistration: React.FC = () => {
  <div className={`${styles.formGroup} ${styles.colSpan4}`}>
  <label className={`${styles.label} ${styles.required}`}>Hospital Doctor</label>
  <div className={styles.inputGroup}>
- <input type="text" className={styles.input} />
+ <input type="text" className={styles.input}  required />
  <button className={`${styles.btn} ${styles.btnSecondary}`}>Change</button>
  </div>
  </div>
@@ -140,7 +140,7 @@ const PatientRegistration: React.FC = () => {
 
  <div className={`${styles.formGroup} ${styles.colSpan3}`}>
  <label className={styles.label}>Wedding Date</label>
- <input type="date" className={styles.input} />
+ <input type="date" className={styles.input}  max="2099-12-31" />
  </div>
 
  <div className={`${styles.formGroup} ${styles.colSpan3}`}>
@@ -170,11 +170,11 @@ const PatientRegistration: React.FC = () => {
  <div className={styles.formGrid}>
  <div className={`${styles.formGroup} ${styles.colSpan12}`}>
  <label className={`${styles.label} ${styles.required}`}>Mobile</label>
- <input type="tel" className={styles.input} />
+ <input type="tel" className={styles.input}  pattern="[0-9]{10,15}" title="Please enter a valid mobile number"  required />
  </div>
  <div className={`${styles.formGroup} ${styles.colSpan12}`}>
  <label className={styles.label}>Email</label>
- <input type="email" className={styles.input} />
+ <input type="email" className={styles.input}  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter a valid email address" />
  </div>
  </div>
  </div>

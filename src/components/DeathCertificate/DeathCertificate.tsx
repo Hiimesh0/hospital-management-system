@@ -46,14 +46,14 @@ const DeathCertificate: React.FC = () => {
  <div className={styles.fieldRow}>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Address :</label>
- <textarea className={styles.textarea}></textarea>
+ <textarea className={styles.textarea} maxLength={500}></textarea>
  </div>
  </div>
 
  <div className={styles.fieldRow}>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Date Of Admission :</label>
- <input type="date" className={styles.input} />
+ <input type="date" className={styles.input}  max="2099-12-31" />
  </div>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Time :</label>
@@ -64,7 +64,7 @@ const DeathCertificate: React.FC = () => {
  <div className={styles.fieldRow}>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Date Of Death :</label>
- <input type="date" className={styles.input} />
+ <input type="date" className={styles.input}  max="2099-12-31" />
  </div>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Time :</label>
@@ -94,7 +94,7 @@ const DeathCertificate: React.FC = () => {
  <div className={styles.fieldRow}>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Cause Of Death :</label>
- <textarea className={`${styles.textarea} ${styles.textareaLarge}`}></textarea>
+ <textarea className={`${styles.textarea} ${styles.textareaLarge}`} maxLength={500}></textarea>
  </div>
  </div>
 

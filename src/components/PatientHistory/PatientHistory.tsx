@@ -38,7 +38,7 @@ const PatientHistory: React.FC = () => {
  </div>
  <div className={styles.fieldGroup} style={{ flex: 1 }}>
  <label className={styles.label}>Date</label>
- <input type="date" className={styles.input} />
+ <input type="date" className={styles.input}  max="2099-12-31" />
  </div>
  </div>
 
@@ -94,13 +94,13 @@ const PatientHistory: React.FC = () => {
  <div className={styles.row}>
  <div className={styles.fieldGroup} style={{ flex: 1 }}>
  <label className={styles.label}>Complains</label>
- <textarea className={styles.input} style={{ height: '60px', padding: '8px 12px', resize: 'vertical' }}></textarea>
+ <textarea className={styles.input} style={{ height: '60px', padding: '8px 12px', resize: 'vertical' }} maxLength={500}></textarea>
  </div>
  </div>
  <div className={styles.row}>
  <div className={styles.fieldGroup} style={{ flex: 1 }}>
  <label className={styles.label}>On Examination</label>
- <textarea className={styles.input} style={{ height: '60px', padding: '8px 12px', resize: 'vertical' }}></textarea>
+ <textarea className={styles.input} style={{ height: '60px', padding: '8px 12px', resize: 'vertical' }} maxLength={500}></textarea>
  </div>
  </div>
  <div className={styles.row}>
@@ -211,7 +211,7 @@ const PatientHistory: React.FC = () => {
  <label className={styles.checkboxItem}>
  <input type="checkbox" defaultChecked />
  </label>
- <input type="date" className={styles.input} style={{ width: '140px' }} />
+ <input type="date" className={styles.input} style={{ width: '140px' }}  max="2099-12-31" />
  </div>
  </div>
  <div className={styles.fieldGroup} style={{ flex: 3 }}>

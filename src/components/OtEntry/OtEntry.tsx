@@ -109,7 +109,7 @@ const OtEntry: React.FC = () => {
  
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Date of Operation</label>
- <input type="date" className={styles.input} />
+ <input type="date" className={styles.input}  max="2099-12-31" />
  </div>
 
  <div className={styles.fieldGroup}>
@@ -160,7 +160,7 @@ const OtEntry: React.FC = () => {
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Surgical Note</label>
  <div className={styles.inputWithHelp}>
- <textarea className={styles.textarea}></textarea>
+ <textarea className={styles.textarea} maxLength={500}></textarea>
  <button className={styles.helpBtn} style={{ top: '8px' }} aria-label="Help"><HelpCircle size={16} /></button>
  </div>
  </div>
@@ -168,14 +168,14 @@ const OtEntry: React.FC = () => {
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Anesthesia Note</label>
  <div className={styles.inputWithHelp}>
- <textarea className={styles.textarea}></textarea>
+ <textarea className={styles.textarea} maxLength={500}></textarea>
  <button className={styles.helpBtn} style={{ top: '8px' }} aria-label="Help"><HelpCircle size={16} /></button>
  </div>
  </div>
 
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Remark</label>
- <textarea className={styles.textarea}></textarea>
+ <textarea className={styles.textarea} maxLength={500}></textarea>
  </div>
 
  </div>

@@ -157,7 +157,7 @@ const PartPayment: React.FC = () => {
  </div>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Date</label>
- <input type="date" className={styles.input} value="09-Jan-2023" readOnly />
+ <input type="date" className={styles.input} value="09-Jan-2023" readOnly  max="2099-12-31" />
  </div>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Time</label>

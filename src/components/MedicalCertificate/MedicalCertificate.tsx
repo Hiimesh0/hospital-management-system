@@ -102,7 +102,7 @@ const MedicalCertificate: React.FC = () => {
  <div className={styles.sentenceRow}>
  <input type="checkbox" className={styles.checkbox} />
  <span className={styles.sentenceText}>attended for first consultation on</span>
- <input type="date" className={`${styles.input} ${styles.inlineSelect}`} />
+ <input type="date" className={`${styles.input} ${styles.inlineSelect}`}  max="2099-12-31" />
  </div>
 
  <div className={styles.sentenceRow}>
@@ -111,10 +111,10 @@ const MedicalCertificate: React.FC = () => {
  <option></option>
  </select>
  <span className={styles.sentenceText}>treated as on O.P.D. patient from</span>
- <input type="date" className={`${styles.input} ${styles.inlineSelect}`} />
+ <input type="date" className={`${styles.input} ${styles.inlineSelect}`}  max="2099-12-31" />
  <span className={styles.sentenceText}>to</span>
  <input type="checkbox" className={styles.checkbox} />
- <input type="date" className={`${styles.input} ${styles.inlineSelect}`} />
+ <input type="date" className={`${styles.input} ${styles.inlineSelect}`}  max="2099-12-31" />
  </div>
 
  <div className={styles.sentenceRow}>
@@ -123,10 +123,10 @@ const MedicalCertificate: React.FC = () => {
  <option></option>
  </select>
  <span className={styles.sentenceText}>admitted as an indoor patient on</span>
- <input type="date" className={`${styles.input} ${styles.inlineSelect}`} />
+ <input type="date" className={`${styles.input} ${styles.inlineSelect}`}  max="2099-12-31" />
  <span className={styles.sentenceText}>And discharged on</span>
  <input type="checkbox" className={styles.checkbox} defaultChecked />
- <input type="date" className={`${styles.input} ${styles.inlineSelect}`} />
+ <input type="date" className={`${styles.input} ${styles.inlineSelect}`}  max="2099-12-31" />
  </div>
 
  <div className={styles.sentenceRow}>
@@ -137,14 +137,14 @@ const MedicalCertificate: React.FC = () => {
  <option></option>
  </select>
  <span className={styles.sentenceText}>rest from</span>
- <input type="date" className={`${styles.input} ${styles.inlineSelect}`} />
+ <input type="date" className={`${styles.input} ${styles.inlineSelect}`}  max="2099-12-31" />
  </div>
 
  <div className={styles.sentenceRow}>
  <input type="checkbox" className={styles.checkbox} />
  <span className={styles.sentenceText} style={{ color: '#94A3B8' }}>However</span>
  <span className={styles.sentenceText}>is further advised to continue rest from</span>
- <input type="date" className={`${styles.input} ${styles.inlineSelect}`} />
+ <input type="date" className={`${styles.input} ${styles.inlineSelect}`}  max="2099-12-31" />
  <span className={styles.sentenceText}>for another</span>
  <input type="text" className={`${styles.input} ${styles.inlineInput}`} />
  <span className={styles.sentenceText}>days.</span>
@@ -153,7 +153,7 @@ const MedicalCertificate: React.FC = () => {
  <div className={styles.sentenceRow}>
  <input type="checkbox" className={styles.checkbox} />
  <span className={styles.sentenceText}>is fit to resume normal duties from</span>
- <input type="date" className={`${styles.input} ${styles.inlineSelect}`} />
+ <input type="date" className={`${styles.input} ${styles.inlineSelect}`}  max="2099-12-31" />
  </div>
 
  </div>
@@ -173,7 +173,7 @@ const MedicalCertificate: React.FC = () => {
  <div style={{ fontSize: '13px', fontWeight: 600, color: '#475467' }}>Patient's Signature And/Or Thumb<br/>Impression</div>
  <div className={styles.fieldGroupExpanded} style={{ marginTop: 'auto' }}>
  <span style={{ fontSize: '13px', fontWeight: 600, color: '#475467' }}>Date:</span>
- <input type="date" className={`${styles.input} ${styles.inlineSelect}`} />
+ <input type="date" className={`${styles.input} ${styles.inlineSelect}`}  max="2099-12-31" />
  </div>
  </div>
  <div className={styles.signatureBlock} style={{ flex: 1.5 }}>
@@ -183,7 +183,7 @@ const MedicalCertificate: React.FC = () => {
  </div>
  <div className={styles.fieldGroupExpanded} style={{ marginTop: 'auto', justifyContent: 'flex-end' }}>
  <span style={{ fontSize: '13px', fontWeight: 600, color: '#475467' }}>Date:</span>
- <input type="date" className={`${styles.input} ${styles.inlineSelect}`} />
+ <input type="date" className={`${styles.input} ${styles.inlineSelect}`}  max="2099-12-31" />
  </div>
  </div>
  </div>

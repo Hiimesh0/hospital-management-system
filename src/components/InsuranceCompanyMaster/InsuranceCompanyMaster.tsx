@@ -84,7 +84,7 @@ const InsuranceCompanyMaster: React.FC = () => {
  <div className={styles.row}>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Address :</label>
- <textarea className={styles.textarea}></textarea>
+ <textarea className={styles.textarea} maxLength={500}></textarea>
  </div>
  </div>
 

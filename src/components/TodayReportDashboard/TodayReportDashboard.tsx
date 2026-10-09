@@ -29,7 +29,7 @@ const TodayReportDashboard: React.FC = () => {
  <div className={styles.toolbar}>
  
  <div className={styles.leftControls}>
- <input type="date" className={styles.datePicker} />
+ <input type="date" className={styles.datePicker}  max="2099-12-31" />
  
  <button className={styles.actionBtn}>
  Pending

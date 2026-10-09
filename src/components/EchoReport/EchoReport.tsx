@@ -42,7 +42,7 @@ const EchoReport: React.FC = () => {
  </div>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Date :</label>
- <input type="date" className={`${styles.input} ${styles.inputReadOnly} ${styles.wMedium}`} readOnly />
+ <input type="date" className={`${styles.input} ${styles.inputReadOnly} ${styles.wMedium}`} readOnly  max="2099-12-31" />
  </div>
  </div>
  
@@ -163,11 +163,11 @@ const EchoReport: React.FC = () => {
  </div>
  <div className={styles.measurementSubGrid} style={{ alignItems: 'flex-start' }}>
  <label className={`${styles.label} ${styles.labelRight}`} style={{ marginTop: '8px' }}>Doppler Study :</label>
- <textarea className={styles.textarea} style={{ height: '80px' }}></textarea>
+ <textarea className={styles.textarea} style={{ height: '80px' }} maxLength={500}></textarea>
  </div>
  <div className={styles.measurementSubGrid} style={{ alignItems: 'flex-start' }}>
  <label className={`${styles.label} ${styles.labelRight}`} style={{ marginTop: '8px' }}>Conclusion :</label>
- <textarea className={styles.textarea} style={{ height: '80px' }}></textarea>
+ <textarea className={styles.textarea} style={{ height: '80px' }} maxLength={500}></textarea>
  </div>
  </div>
 

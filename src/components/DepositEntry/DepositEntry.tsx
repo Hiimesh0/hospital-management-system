@@ -45,7 +45,7 @@ const DepositEntry: React.FC = () => {
 
  <div className={styles.fieldGroup} style={{ flex: '0 0 160px' }}>
  <label className={styles.label}>Date</label>
- <input type="date" className={styles.input} />
+ <input type="date" className={styles.input}  max="2099-12-31" />
  </div>
 
  <div className={styles.fieldGroup} style={{ flex: '0 0 120px' }}>

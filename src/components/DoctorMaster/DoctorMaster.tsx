@@ -116,7 +116,7 @@ const DoctorMaster: React.FC = () => {
  <div className={styles.row}>
  <div className={styles.fieldGroup} style={{ flex: 1 }}>
  <label className={styles.label}>Birth Date :</label>
- <input type="date" className={styles.input} />
+ <input type="date" className={styles.input}  max="2099-12-31" />
  </div>
  <div className={styles.fieldGroup} style={{ flex: 1 }}>
  <label className={styles.label}>Wedding :</label>

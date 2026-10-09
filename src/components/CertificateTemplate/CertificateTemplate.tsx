@@ -39,7 +39,7 @@ const CertificateTemplate: React.FC = () => {
  </div>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Date :</label>
- <input type="date" className={styles.input} />
+ <input type="date" className={styles.input}  max="2099-12-31" />
  </div>
  </div>
 
@@ -51,7 +51,7 @@ const CertificateTemplate: React.FC = () => {
  </div>
  <div className={styles.editorRow} style={{ flex: 1, display: 'flex' }}>
  <label className={styles.editorLabel}>Details :</label>
- <textarea className={styles.textarea}></textarea>
+ <textarea className={styles.textarea} maxLength={500}></textarea>
  </div>
  </div>
 

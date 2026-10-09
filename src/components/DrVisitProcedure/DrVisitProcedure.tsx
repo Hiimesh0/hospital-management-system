@@ -62,7 +62,7 @@ const DrVisitProcedure: React.FC = () => {
  <div className={styles.formGrid}>
  <div className={`${styles.fieldGroup} ${styles.col3}`}>
  <label className={styles.label}>Date</label>
- <input type="date" className={styles.input} />
+ <input type="date" className={styles.input}  max="2099-12-31" />
  </div>
  <div className={`${styles.fieldGroup} ${styles.col5}`}>
  <label className={styles.label}>Head</label>

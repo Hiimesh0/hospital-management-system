@@ -299,7 +299,7 @@ const OPDChargesMaster: React.FC = () => {
  {/* Form Notes */}
  <div className={styles.notesSection}>
  <label className={styles.label} style={{ width: '100px', marginTop: '8px' }}>Form Notes :</label>
- <textarea className={styles.textarea}></textarea>
+ <textarea className={styles.textarea} maxLength={500}></textarea>
  </div>
 
  </div>

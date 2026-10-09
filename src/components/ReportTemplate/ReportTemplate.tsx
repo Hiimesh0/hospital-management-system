@@ -46,7 +46,7 @@ const ReportTemplate: React.FC = () => {
  <textarea 
  className={styles.textarea} 
  
- />
+  maxLength={500} />
  </div>
 
  </div>

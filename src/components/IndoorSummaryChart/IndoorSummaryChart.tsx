@@ -90,7 +90,7 @@ const IndoorSummaryChart: React.FC = () => {
  <div className={styles.timelineRow}>
  
  <div className={styles.fieldGroup}>
- <input type="date" className={`${styles.input} ${styles.wDate}`} />
+ <input type="date" className={`${styles.input} ${styles.wDate}`}  max="2099-12-31" />
  </div>
 
  <div className={styles.fieldGroup}>

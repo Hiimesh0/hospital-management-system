@@ -90,7 +90,7 @@ const MedicineMaster: React.FC = () => {
  <label className={styles.label} style={{ width: '120px' }}>Generic Name :</label>
  <input type="text" className={styles.input} />
  </div>
- <textarea className={styles.largeDisplayBox} readOnly></textarea>
+ <textarea className={styles.largeDisplayBox} readOnly maxLength={500}></textarea>
  </div>
 
  </div>
