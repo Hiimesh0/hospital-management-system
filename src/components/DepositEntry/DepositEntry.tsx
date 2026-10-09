@@ -19,9 +19,7 @@ const DepositEntry: React.FC = () => {
  
  {/* Patient Context Bar */}
  <div className={styles.contextBar}>
- <div className={`${styles.contextBlock} ${styles.contextBlockName}`}>
- RANJITKUMAR MOHANLAL DARUKA
- </div>
+ <div className={`${styles.contextBlock} ${styles.contextBlockName}`}>--</div>
  <div className={styles.contextBlock}>
  I/0123/178
  </div>

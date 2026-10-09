@@ -101,7 +101,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
  </form>
 
  <div className={styles.demoInfo}>
- <p>Demo Access</p>
+ <p>--</p>
  <div>Username: <code>admin</code></div>
  <div style={{marginTop: '4px'}}>Password: <code>pass123</code></div>
  </div>

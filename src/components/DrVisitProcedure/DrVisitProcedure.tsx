@@ -19,9 +19,7 @@ const DrVisitProcedure: React.FC = () => {
  {/* Context & Actions Bar */}
  <div className={styles.contextBar}>
  <div className={styles.patientContext}>
- <div className={`${styles.contextBlock} ${styles.contextBlockName}`}>
- RANJITKUMAR MOHANLAL DARUKA
- </div>
+ <div className={`${styles.contextBlock} ${styles.contextBlockName}`}>--</div>
  <div className={styles.contextBlock}>
  0
  </div>

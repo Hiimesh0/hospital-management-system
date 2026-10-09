@@ -23,7 +23,7 @@ const InpatientReceipt: React.FC = () => {
  <div className={styles.topHeader}>
  <div className={styles.headerActions}>
  <span className={styles.recordCount}>0 of 0</span>
- <span className={styles.doctorName}>DR. SOHAM PATEL</span>
+ <span className={styles.doctorName}>--</span>
  </div>
  
  <h1 className={styles.pageTitle}>INPATIENT RECEIPT</h1>
@@ -55,7 +55,7 @@ const InpatientReceipt: React.FC = () => {
  </div>
  <div className={`${styles.fieldGroup} ${styles.col12}`}>
  <label className={styles.label}>Patient:</label>
- <div className={styles.patientNameBadge}>Vitthalbhai Mithabhai Kumbhani</div>
+ <div className={styles.patientNameBadge}>--</div>
  </div>
  </div>
  </div>

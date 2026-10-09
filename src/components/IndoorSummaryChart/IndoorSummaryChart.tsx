@@ -38,7 +38,7 @@ const IndoorSummaryChart: React.FC = () => {
  <div className={styles.header}>
  <div className={styles.titleArea}>
  <h1 className={styles.pageTitle}>Indoor Summary Chart</h1>
- <span className={styles.recordCount}>Total: 204</span>
+ <span className={styles.recordCount}>Total: 0</span>
  </div>
  <div className={styles.headerActions}>
  <button className={styles.actionBtn}>

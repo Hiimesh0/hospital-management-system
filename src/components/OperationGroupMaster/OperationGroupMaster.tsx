@@ -12,7 +12,7 @@ const OperationGroupMaster: React.FC = () => {
  {/* Header */}
  <div className={styles.header}>
  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
- <span className={styles.recordCounter}>41 Of 41</span>
+ <span className={styles.recordCounter}>0 of 0</span>
  <h1 className={styles.pageTitle}>Operation Group Master</h1>
  </div>
  </div>

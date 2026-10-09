@@ -11,7 +11,7 @@ const PartPayment: React.FC = () => {
  
  {/* Background Page Content */}
  <div className={styles.header}>
- <h1 className={styles.patientName}>ASHWINBHAI GOVINDBHAI VEKARIYA</h1>
+ <h1 className={styles.patientName}>--</h1>
  <span className={styles.hospitalName}>Bharat Cancer Hospital [OPD-BCH]</span>
  </div>
 

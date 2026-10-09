@@ -23,9 +23,9 @@ const InpatientBill: React.FC = () => {
  {/* Top Header Card */}
  <div className={styles.headerCard}>
  <div className={styles.topHeader}>
- <span className={styles.doctorName}>DR. DIPEN BHUVA (PATEL)</span>
+ <span className={styles.doctorName}>--</span>
  <h1 className={styles.pageTitle}>Inpatient Bill</h1>
- <span className={styles.recordCount}>74</span>
+ <span className={styles.recordCount}>0</span>
  </div>
 
  <div className={styles.infoGrid}>
@@ -45,7 +45,7 @@ const InpatientBill: React.FC = () => {
  </div>
  <div className={`${styles.fieldGroup} ${styles.col4}`}>
  <label className={styles.label}>Patient:</label>
- <div className={styles.patientNameBadge}>RANJITKUMAR MOHANLAL DARUKA</div>
+ <div className={styles.patientNameBadge}>--</div>
  </div>
  <div className={`${styles.fieldGroup} ${styles.col2}`} style={{ position: 'absolute', top: '75px', right: '24px' }}>
  <input type="text" className={styles.input} />

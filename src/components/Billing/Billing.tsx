@@ -8,8 +8,8 @@ const Billing: React.FC = () => {
  
  {/* Header */}
  <div className={styles.headerCard}>
- <h1 className={styles.patientNameTitle}>ROHINIBEN PIYUSHBHAI PATEL</h1>
- <div className={styles.hospitalSubtitle}>Bharat Cancer Hospital [OPD-BCH]</div>
+ <h1 className={styles.patientNameTitle}>--</h1>
+ <div className={styles.hospitalSubtitle}>--</div>
  </div>
 
  {/* Entry Row */}

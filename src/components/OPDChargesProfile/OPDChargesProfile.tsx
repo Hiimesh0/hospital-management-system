@@ -17,7 +17,7 @@ const OPDChargesProfile: React.FC = () => {
  {/* Header */}
  <div className={styles.header}>
  <div className={styles.headerLeft}>
- <span className={styles.badge}>811 Of 811</span>
+ <span className={styles.badge}>0 of 0</span>
  <span className={styles.badge} style={{ backgroundColor: '#EFF6FF', color: '#2563EB', borderColor: '#BFDBFE' }}>
  Test ID: --
  </span>

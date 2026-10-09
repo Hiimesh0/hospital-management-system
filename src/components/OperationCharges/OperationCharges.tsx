@@ -30,7 +30,7 @@ const OperationCharges: React.FC = () => {
  </div>
  
  <div className={styles.patientInfoBox}>
- <div className={`${styles.infoSegment} ${styles.name}`}>SAVITABEN VALLABHBHAI VAGHASIYA</div>
+ <div className={`${styles.infoSegment} ${styles.name}`}>--</div>
  <div className={`${styles.infoSegment} ${styles.amount}`}>0 Rs.</div>
  <div className={`${styles.infoSegment} ${styles.record}`}>I/0123/186</div>
  </div>

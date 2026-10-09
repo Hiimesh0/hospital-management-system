@@ -13,7 +13,7 @@ const ShortFormMaster: React.FC = () => {
  
  {/* Header */}
  <div className={styles.header}>
- <span className={styles.badge}>438 Of 438</span>
+ <span className={styles.badge}>0 of 0</span>
  <h1 className={styles.pageTitle}>Short Form Master</h1>
  </div>
 

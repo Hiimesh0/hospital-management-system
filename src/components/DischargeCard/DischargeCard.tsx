@@ -26,7 +26,7 @@ const DischargeCard: React.FC = () => {
  <h1 className={styles.pageTitle}>Discharge Card</h1>
  <div className={styles.fieldGroup}>
  <span className={styles.headerInfoText}>Prepared By :</span>
- <span className={styles.headerInfoText} style={{ color: '#172033', fontWeight: 600 }}>Demo</span>
+ <span className={styles.headerInfoText} style={{ color: '#172033', fontWeight: 600 }}>--</span>
  </div>
  </div>
 
@@ -42,9 +42,7 @@ const DischargeCard: React.FC = () => {
  </div>
  <div className={`${styles.fieldGroup} ${styles.col6}`}>
  <label className={styles.label}>Patient :</label>
- <div className={styles.patientNameBadge}>
- BHAVESHKUMAR K GANDHI
- </div>
+ <div className={styles.patientNameBadge}>--</div>
  <span className={styles.patientDemographics}>Age : 47 Yrs. Sex : Male</span>
  </div>
  </div>

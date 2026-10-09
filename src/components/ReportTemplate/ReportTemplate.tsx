@@ -13,7 +13,7 @@ const ReportTemplate: React.FC = () => {
  
  {/* Header */}
  <div className={styles.header}>
- <span className={styles.badge}>17 Of 17</span>
+ <span className={styles.badge}>0 of 0</span>
  <h1 className={styles.pageTitle}>Report Template</h1>
  </div>
 

@@ -14,7 +14,7 @@ const RoomCharges: React.FC = () => {
  
  {/* Context Bar */}
  <div className={styles.contextBar}>
- <div className={styles.patientName}>RANJITKUMAR MOHANLAL DARUKA</div>
+ <div className={styles.patientName}>--</div>
  <div className={styles.recordId}>I/0123/178</div>
  
  <div className={styles.companyGroup}>

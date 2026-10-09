@@ -38,7 +38,7 @@ const IndoorOption: React.FC = () => {
  <div className={styles.patientIdentity}>
  <div className={styles.avatar}>R</div>
  <div>
- <h1 className={styles.patientName}>RANJITKUMAR MOHANLAL D.</h1>
+ <h1 className={styles.patientName}>--</h1>
  <div className={styles.patientDetails}>
  <span>IPD: I/0123/178</span>
  <span>UHID: --</span>

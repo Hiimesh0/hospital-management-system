@@ -48,7 +48,7 @@ const InvestigationOrdered: React.FC = () => {
  </div>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Prepare By:</label>
- <div className={styles.textLabel}>Demo</div>
+ <div className={styles.textLabel}>--</div>
  </div>
  </div>
 
