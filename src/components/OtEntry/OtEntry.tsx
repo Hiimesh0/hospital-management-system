@@ -114,18 +114,12 @@ const OtEntry: React.FC = () => {
 
  <div className={styles.fieldGroup}>
  <label className={styles.label}>From Time</label>
- <div className={styles.timeWrapper}>
- <input type="checkbox" defaultChecked />
- <input type="text" />
- </div>
+ <input type="time" className={styles.input} />
  </div>
 
  <div className={styles.fieldGroup}>
  <label className={styles.label}>To Time</label>
- <div className={styles.timeWrapper}>
- <input type="checkbox" defaultChecked />
- <input type="text" />
- </div>
+ <input type="time" className={styles.input} />
  </div>
 
  <div className={styles.fieldGroup}>
