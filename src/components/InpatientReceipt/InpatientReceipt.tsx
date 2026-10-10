@@ -66,7 +66,7 @@ const InpatientReceipt: React.FC = () => {
  <button 
  key={tab} 
  className={styles.tabBtn}
- style={activeTab === tab ? { backgroundColor: 'var(--primary-soft)', borderColor: '#BFDBFE', color: 'var(--primary-hover)' } : {}}
+ style={activeTab === tab ? { backgroundColor: 'var(--primary-soft)', borderColor: 'var(--primary-soft)', color: 'var(--primary-hover)' } : {}}
  onClick={() => setActiveTab(tab)}
 >
  {tab}
@@ -102,7 +102,7 @@ const InpatientReceipt: React.FC = () => {
  {/* Column 1 */}
  <div>
  <div className={styles.baseChargesGrid} style={{ gridTemplateColumns: 'auto 1fr', padding: '0', border: 'none', gap: '12px 16px', backgroundColor: 'transparent' }}>
- <div style={{gridColumn: '2', textAlign: 'center', fontSize: '12px', color: '#667085', fontWeight: 500}}>Rate</div>
+ <div style={{gridColumn: '2', textAlign: 'center', fontSize: '12px', color: 'var(--text-muted)', fontWeight: 500}}>Rate</div>
  
  <label className={styles.label} style={{ textAlign: 'right', alignSelf: 'center' }}>Admission :</label>
  <input type="text" className={styles.input} style={{ textAlign: 'right' }} />
@@ -251,7 +251,7 @@ const InpatientReceipt: React.FC = () => {
  <div className={styles.multiInputRow}>
  <div className={styles.fieldGroup} style={{ gap: '4px' }}>
  <input type="text" className={`${styles.input} ${styles.percentInput}`} />
- <span style={{ fontSize: '13px', color: '#667085' }}>%</span>
+ <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>%</span>
  </div>
  <input type="text" className={`${styles.input} ${styles.summaryValue}`} />
  </div>

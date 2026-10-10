@@ -20,7 +20,7 @@ const OPDChargesMaster: React.FC = () => {
  <div className={styles.header}>
  <div className={styles.headerLeft}>
  <span className={styles.badge}>0 of 0</span>
- <span className={styles.badge} style={{ backgroundColor: 'var(--primary-soft)', color: 'var(--primary)', borderColor: '#BFDBFE' }}>
+ <span className={styles.badge} style={{ backgroundColor: 'var(--primary-soft)', color: 'var(--primary)', borderColor: 'var(--primary-soft)' }}>
  Test ID: --
  </span>
  <h1 className={styles.pageTitle}>OPD Charges / Diagnostics Test</h1>
@@ -74,8 +74,8 @@ const OPDChargesMaster: React.FC = () => {
  <input type="text" className={`${styles.input} ${styles.inputSmall}`} />
  </div>
  <div className={styles.checkboxItem} onClick={() => setIsBio(!isBio)}>
- {isBio ? <CheckSquare size={16} color="var(--primary)" /> : <Square size={16} color="#94A3B8" />}
- <span style={{ color: isBio ? 'var(--text-main)' : '#94A3B8' }}>BIO</span>
+ {isBio ? <CheckSquare size={16} color="var(--primary)" /> : <Square size={16} color="var(--text-muted)" />}
+ <span style={{ color: isBio ? 'var(--text-main)' : 'var(--text-muted)' }}>BIO</span>
  </div>
  <div className={styles.checkboxItem} onClick={() => setIsActive(!isActive)}>
  {isActive ? <CheckSquare size={16} color="var(--primary)" /> : <Square size={16} />}
@@ -94,12 +94,12 @@ const OPDChargesMaster: React.FC = () => {
  <input type="text" className={`${styles.input} ${styles.inputLarge}`} />
  </div>
  <div className={styles.checkboxItem} onClick={() => setExcludeRoomRate(!excludeRoomRate)} style={{ marginLeft: '16px' }}>
- {excludeRoomRate ? <CheckSquare size={16} color="var(--primary)" /> : <Square size={16} color="#94A3B8" />}
- <span style={{ color: excludeRoomRate ? 'var(--text-main)' : '#94A3B8' }}>Exclude in Room Rate</span>
+ {excludeRoomRate ? <CheckSquare size={16} color="var(--primary)" /> : <Square size={16} color="var(--text-muted)" />}
+ <span style={{ color: excludeRoomRate ? 'var(--text-main)' : 'var(--text-muted)' }}>Exclude in Room Rate</span>
  </div>
  <div className={styles.checkboxItem} onClick={() => setOutsideTest(!outsideTest)} style={{ marginLeft: '16px' }}>
- {outsideTest ? <CheckSquare size={16} color="var(--primary)" /> : <Square size={16} color="#94A3B8" />}
- <span style={{ color: outsideTest ? 'var(--text-main)' : '#94A3B8' }}>Outside Test</span>
+ {outsideTest ? <CheckSquare size={16} color="var(--primary)" /> : <Square size={16} color="var(--text-muted)" />}
+ <span style={{ color: outsideTest ? 'var(--text-main)' : 'var(--text-muted)' }}>Outside Test</span>
  </div>
  </div>
 

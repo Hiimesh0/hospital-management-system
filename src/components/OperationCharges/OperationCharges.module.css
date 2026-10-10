@@ -6,7 +6,7 @@
   box-sizing: border-box;
   font-family: 'Inter', sans-serif;
   color: var(--text-main);
-  background-color: #F7F8FA;
+  background-color: var(--bg-color);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -36,7 +36,7 @@
   background-color: var(--primary-soft);
   padding: 8px 16px;
   border-radius: 6px;
-  border: 1px solid #BFDBFE;
+  border: 1px solid var(--primary-soft);
 }
 
 .companyLabel {
@@ -47,7 +47,7 @@
 
 .companyValue {
   font-size: 14px;
-  color: #1E3A8A;
+  color: var(--primary-hover);
   font-weight: 700;
 }
 
@@ -119,7 +119,7 @@
 .exitBtn {
   background-color: var(--surface);
   color: var(--text-main);
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   height: 40px;
   padding: 0 20px;
@@ -179,7 +179,7 @@
 
 .input, .select {
   background-color: var(--surface);
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   padding: 10px 12px;
   font-size: 14px;
@@ -324,7 +324,7 @@
 .secondaryBtn {
   background-color: var(--surface);
   color: var(--text-main);
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   height: 40px;
   padding: 0 20px;

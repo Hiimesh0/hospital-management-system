@@ -78,7 +78,7 @@
 .input {
   height: 38px;
   padding: 0 12px;
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   background-color: var(--surface);
   color: var(--text-main);
@@ -149,7 +149,7 @@
   justify-content: center;
   background-color: var(--primary-soft);
   color: var(--primary);
-  border: 1px solid #BFDBFE;
+  border: 1px solid var(--primary-soft);
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s;
@@ -293,7 +293,7 @@
   padding: 0 20px;
   background-color: var(--surface);
   color: var(--danger-hover);
-  border: 1px solid #FECACA;
+  border: 1px solid var(--danger-soft);
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;

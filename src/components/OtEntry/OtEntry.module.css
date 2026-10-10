@@ -6,7 +6,7 @@
   box-sizing: border-box;
   font-family: 'Inter', sans-serif;
   color: var(--text-main);
-  background-color: #F7F8FA;
+  background-color: var(--bg-color);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -100,7 +100,7 @@
 
 .input, .select, .textarea {
   background-color: var(--surface);
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   padding: 10px 12px;
   font-size: 14px;
@@ -128,7 +128,7 @@
 
 .input[readonly] {
   background-color: var(--bg-color);
-  color: #667085;
+  color: var(--text-muted);
 }
 
 /* Input with Addon/Help */
@@ -143,7 +143,7 @@
   right: 8px;
   background: none;
   border: none;
-  color: #98A2B3;
+  color: var(--text-muted);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -168,7 +168,7 @@
   align-items: center;
   gap: 8px;
   background-color: var(--surface);
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   padding: 0 12px;
   height: 38px;
@@ -214,7 +214,7 @@
   justify-content: center;
   background-color: var(--surface);
   color: var(--text-muted);
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s;
@@ -255,7 +255,7 @@
 .secondaryBtn {
   background-color: var(--surface);
   color: var(--text-main);
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   height: 38px;
   padding: 0 16px;

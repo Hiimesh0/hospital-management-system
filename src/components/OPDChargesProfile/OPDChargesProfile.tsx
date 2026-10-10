@@ -18,7 +18,7 @@ const OPDChargesProfile: React.FC = () => {
  <div className={styles.header}>
  <div className={styles.headerLeft}>
  <span className={styles.badge}>0 of 0</span>
- <span className={styles.badge} style={{ backgroundColor: 'var(--primary-soft)', color: 'var(--primary)', borderColor: '#BFDBFE' }}>
+ <span className={styles.badge} style={{ backgroundColor: 'var(--primary-soft)', color: 'var(--primary)', borderColor: 'var(--primary-soft)' }}>
  Test ID: --
  </span>
  <h1 className={styles.pageTitle}>OPD Charges / Diagnostics Test</h1>
@@ -47,8 +47,8 @@ const OPDChargesProfile: React.FC = () => {
  </select>
  </div>
  <div className={styles.checkboxItem} onClick={() => setConcernDr(!concernDr)} style={{ width: '160px', marginLeft: '16px' }}>
- {concernDr ? <CheckSquare size={16} color="#94A3B8" /> : <Square size={16} color="#94A3B8" />}
- <span style={{ color: '#94A3B8' }}>Concern Dr Compulsary</span>
+ {concernDr ? <CheckSquare size={16} color="var(--text-muted)" /> : <Square size={16} color="var(--text-muted)" />}
+ <span style={{ color: 'var(--text-muted)' }}>Concern Dr Compulsary</span>
  </div>
  <div className={styles.fieldGroup} style={{ flex: 1 }}>
  <label className={styles.label}>Company :</label>
@@ -71,12 +71,12 @@ const OPDChargesProfile: React.FC = () => {
  <input type="text" className={`${styles.input} ${styles.inputSmall}`} />
  </div>
  <div className={styles.checkboxItem} onClick={() => setIsBio(!isBio)}>
- {isBio ? <CheckSquare size={16} color="var(--primary)" /> : <Square size={16} color="#94A3B8" />}
- <span style={{ color: isBio ? 'var(--text-main)' : '#94A3B8' }}>BIO</span>
+ {isBio ? <CheckSquare size={16} color="var(--primary)" /> : <Square size={16} color="var(--text-muted)" />}
+ <span style={{ color: isBio ? 'var(--text-main)' : 'var(--text-muted)' }}>BIO</span>
  </div>
  <div className={styles.checkboxItem} onClick={() => setIsActive(!isActive)}>
- {isActive ? <CheckSquare size={16} color="var(--primary)" /> : <Square size={16} color="#94A3B8" />}
- <span style={{ color: isActive ? 'var(--text-main)' : '#94A3B8' }}>ACTIVE</span>
+ {isActive ? <CheckSquare size={16} color="var(--primary)" /> : <Square size={16} color="var(--text-muted)" />}
+ <span style={{ color: isActive ? 'var(--text-main)' : 'var(--text-muted)' }}>ACTIVE</span>
  </div>
  <div className={styles.fieldGroup} style={{ marginLeft: 'auto' }}>
  <label className={styles.label} style={{ width: '80px' }}>LIS Lab ID :</label>

@@ -262,7 +262,7 @@ const MlcCertificate: React.FC = () => {
 
  <div className={styles.middleActions}>
  <div className={styles.checkboxItem} onClick={() => setIsCheckedH(!isCheckedH)}>
- {isCheckedH ? <CheckSquare size={18} color="var(--primary)" /> : <Square size={18} color="#94A3B8" />}
+ {isCheckedH ? <CheckSquare size={18} color="var(--primary)" /> : <Square size={18} color="var(--text-muted)" />}
  H
  </div>
  
@@ -271,7 +271,7 @@ const MlcCertificate: React.FC = () => {
  </button>
  
  <div className={styles.checkboxItem} onClick={() => setIsCheckedP(!isCheckedP)}>
- {isCheckedP ? <CheckSquare size={18} color="var(--primary)" /> : <Square size={18} color="#94A3B8" />}
+ {isCheckedP ? <CheckSquare size={18} color="var(--primary)" /> : <Square size={18} color="var(--text-muted)" />}
  P
  </div>
  

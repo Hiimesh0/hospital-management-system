@@ -329,7 +329,7 @@ const IndoorRegister: React.FC = () => {
  <div className={styles.utilsGroup}>
  <button className={styles.secondaryBtn}>Multi Sticker</button>
  
- <div className={styles.fieldGroupHorizontal} style={{ border: '1px solid #DDE3EA', borderRadius: '6px', padding: '0 8px', height: '38px' }}>
+ <div className={styles.fieldGroupHorizontal} style={{ border: '1px solid var(--border)', borderRadius: '6px', padding: '0 8px', height: '38px' }}>
  <button className={styles.tertiaryBtn} style={{ padding: '0' }} disabled>Print</button>
  <label className={styles.checkboxLabel} style={{ height: 'auto' }}><input type="checkbox" defaultChecked /> P</label>
  <label className={styles.checkboxLabel} style={{ height: 'auto' }}><input type="checkbox" /> L</label>
@@ -337,7 +337,7 @@ const IndoorRegister: React.FC = () => {
 
  <button className={styles.secondaryBtn}><FileText size={16} /> Folder</button>
  <button className={styles.secondaryBtn}><UserCircle size={16} /> Gate Pass</button>
- <label className={styles.checkboxLabel} style={{ border: '1px solid #DDE3EA', borderRadius: '6px', padding: '0 12px' }}>
+ <label className={styles.checkboxLabel} style={{ border: '1px solid var(--border)', borderRadius: '6px', padding: '0 12px' }}>
  <input type="checkbox" /> Sticker
  </label>
  </div>

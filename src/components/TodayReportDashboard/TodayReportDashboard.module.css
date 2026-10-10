@@ -5,7 +5,7 @@
   flex-direction: column;
   gap: 20px;
   font-family: 'Inter', sans-serif;
-  background-color: #F7F8FA;
+  background-color: var(--bg-color);
 }
 
 /* Toolbar */
@@ -29,7 +29,7 @@
 .datePicker {
   height: 38px;
   padding: 0 12px;
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   font-size: 14px;
   color: var(--text-main);
@@ -42,7 +42,7 @@
 
 .buttonGroup {
   display: flex;
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   overflow: hidden;
 }
@@ -52,7 +52,7 @@
   height: 38px;
   background-color: var(--surface);
   border: none;
-  border-right: 1px solid #DDE3EA;
+  border-right: 1px solid var(--border);
   font-size: 13px;
   font-weight: 500;
   color: var(--text-muted);
@@ -78,7 +78,7 @@
   height: 38px;
   padding: 0 16px;
   background-color: var(--surface);
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   font-size: 13px;
   font-weight: 500;
@@ -135,7 +135,7 @@
   height: 38px;
   width: 100%;
   padding: 0 12px 0 36px;
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   font-size: 13px;
   background-color: var(--surface);
@@ -151,7 +151,7 @@
 .searchIcon {
   position: absolute;
   left: 10px;
-  color: #94A3B8;
+  color: var(--text-muted);
 }
 
 .iconBtn {
@@ -161,7 +161,7 @@
   align-items: center;
   justify-content: center;
   background-color: var(--surface);
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   color: var(--text-muted);
   cursor: pointer;
@@ -170,7 +170,7 @@
 
 .iconBtn:hover {
   background-color: var(--bg-color);
-  color: #1E293B;
+  color: var(--text-main);
 }
 
 /* Table Area */

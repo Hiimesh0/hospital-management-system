@@ -83,7 +83,7 @@
 .input {
   height: 36px;
   padding: 0 12px;
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   background-color: var(--surface);
   color: var(--text-main);
@@ -93,7 +93,7 @@
 }
 
 .inputYellow {
-  background-color: #FEF08A;
+  background-color: var(--warning-soft);
   border-color: var(--warning);
 }
 
@@ -137,7 +137,7 @@
 
 .textarea {
   padding: 16px;
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   background-color: var(--surface);
   color: var(--text-main);
@@ -244,7 +244,7 @@
   padding: 0 20px;
   background-color: var(--surface);
   color: var(--danger-hover);
-  border: 1px solid #FECACA;
+  border: 1px solid var(--danger-soft);
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;

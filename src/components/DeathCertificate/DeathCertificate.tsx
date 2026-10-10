@@ -125,12 +125,12 @@ const DeathCertificate: React.FC = () => {
 
  <div className={styles.middleActions}>
  <div className={styles.checkboxItem} onClick={() => setIsCheckedH(!isCheckedH)}>
- {isCheckedH ? <CheckSquare size={18} color="var(--primary)" /> : <Square size={18} color="#94A3B8" />}
+ {isCheckedH ? <CheckSquare size={18} color="var(--primary)" /> : <Square size={18} color="var(--text-muted)" />}
  H
  </div>
  
  <div className={styles.checkboxItem} onClick={() => setShouldPrint(!shouldPrint)}>
- {shouldPrint ? <CheckSquare size={18} color="var(--primary)" /> : <Square size={18} color="#94A3B8" />}
+ {shouldPrint ? <CheckSquare size={18} color="var(--primary)" /> : <Square size={18} color="var(--text-muted)" />}
  Print
  </div>
  

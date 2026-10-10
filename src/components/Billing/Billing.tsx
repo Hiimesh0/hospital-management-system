@@ -92,7 +92,7 @@ const Billing: React.FC = () => {
  <div className={styles.formColumn}>
  <div className={styles.checkboxGroup} style={{ marginLeft: '122px', marginBottom: '8px' }}>
  <input type="checkbox" className={styles.checkbox} disabled />
- <span className={styles.label} style={{ color: '#98A2B3' }}>Indoor Patient</span>
+ <span className={styles.label} style={{ color: 'var(--text-muted)' }}>Indoor Patient</span>
  </div>
 
  <div className={styles.formRow}>
@@ -143,7 +143,7 @@ const Billing: React.FC = () => {
 
  {/* Column 3: References */}
  <div className={styles.formColumn}>
- <button className={styles.secondaryBtn} style={{ width: '100%', justifyContent: 'center', backgroundColor: '#FFFBEB', borderColor: '#FDE68A', color: 'var(--warning-hover)' }}>
+ <button className={styles.secondaryBtn} style={{ width: '100%', justifyContent: 'center', backgroundColor: 'var(--warning-soft)', borderColor: 'var(--warning-soft)', color: 'var(--warning-hover)' }}>
  <ShieldAlert size={16} /> Delete Multiple Test By OTP Before Amount Received
  </button>
 

@@ -84,8 +84,8 @@ const DoctorMaster: React.FC = () => {
  </div>
  <div className={styles.col} style={{ flex: 1.5, justifyContent: 'center', paddingTop: '10px' }}>
  <div className={styles.checkboxItem} onClick={() => setHospitalNameChecked(!hospitalNameChecked)}>
- {hospitalNameChecked ? <CheckSquare size={16} color="var(--primary)" /> : <Square size={16} color="#94A3B8" />}
- <span style={{ color: hospitalNameChecked ? 'var(--text-main)' : '#94A3B8' }}>Hospital Name</span>
+ {hospitalNameChecked ? <CheckSquare size={16} color="var(--primary)" /> : <Square size={16} color="var(--text-muted)" />}
+ <span style={{ color: hospitalNameChecked ? 'var(--text-main)' : 'var(--text-muted)' }}>Hospital Name</span>
  </div>
  </div>
  <div className={styles.col} style={{ flex: 1 }}>

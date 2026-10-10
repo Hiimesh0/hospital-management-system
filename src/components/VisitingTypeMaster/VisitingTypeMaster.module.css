@@ -80,7 +80,7 @@
 .input {
   height: 38px;
   padding: 0 12px;
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   background-color: var(--surface);
   color: var(--text-main);
@@ -96,9 +96,9 @@
 }
 
 .input.readOnly {
-  background-color: #FEF9C3; /* Yellowish background from screenshot */
-  border-color: #FDE047;
-  color: #854D0E;
+  background-color: var(--warning-soft); /* Yellowish background from screenshot */
+  border-color: var(--warning-soft);
+  color: var(--warning-hover);
 }
 
 .statusGroup {

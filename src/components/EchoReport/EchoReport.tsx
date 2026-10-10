@@ -22,7 +22,7 @@ const EchoReport: React.FC = () => {
  <div className={styles.row}>
  <div className={styles.fieldGroup} style={{ flex: 1.5 }}>
  <label className={`${styles.label} ${styles.labelRight}`}>Patient's Name :</label>
- <input type="text" className={`${styles.input} ${styles.wFull}`} style={{ backgroundColor: '#FEF9C3' }} />
+ <input type="text" className={`${styles.input} ${styles.wFull}`} style={{ backgroundColor: 'var(--warning-soft)' }} />
  </div>
  <div className={styles.fieldGroup} style={{ flex: 1 }}>
  <label className={`${styles.label} ${styles.labelRight}`}>Pt.Code :</label>

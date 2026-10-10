@@ -100,7 +100,7 @@ const PatientPastInfo: React.FC = () => {
  ))}
  {opdData.length === 0 && (
  <tr>
- <td colSpan={8} style={{ textAlign: 'center', padding: '24px', color: '#667085' }}>
+ <td colSpan={8} style={{ textAlign: 'center', padding: '24px', color: 'var(--text-muted)' }}>
  No records found
  </td>
  </tr>
@@ -141,12 +141,12 @@ const PatientPastInfo: React.FC = () => {
  <td style={{textAlign: 'right'}}>{row.received}</td>
  <td style={{textAlign: 'right'}}>{row.due}</td>
  <td className={styles.notesCell}>{row.notes || '-'}</td>
- <td style={{ fontSize: '11px', color: '#667085' }}>{row.entryBy}</td>
+ <td style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{row.entryBy}</td>
  </tr>
  ))}
  {ipdData.length === 0 && (
  <tr>
- <td colSpan={10} style={{ textAlign: 'center', padding: '24px', color: '#667085' }}>
+ <td colSpan={10} style={{ textAlign: 'center', padding: '24px', color: 'var(--text-muted)' }}>
  No records found
  </td>
  </tr>

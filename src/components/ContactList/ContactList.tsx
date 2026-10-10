@@ -23,7 +23,7 @@ const ContactList: React.FC = () => {
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Search By Name</label>
  <div style={{ position: 'relative' }}>
- <Search size={16} style={{ position: 'absolute', left: '12px', top: '11px', color: '#98A2B3' }} />
+ <Search size={16} style={{ position: 'absolute', left: '12px', top: '11px', color: 'var(--text-muted)' }} />
  <input type="text" className={styles.input} style={{ paddingLeft: '36px' }} />
  </div>
  </div>
@@ -31,7 +31,7 @@ const ContactList: React.FC = () => {
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Search By Remarks</label>
  <div style={{ position: 'relative' }}>
- <Search size={16} style={{ position: 'absolute', left: '12px', top: '11px', color: '#98A2B3' }} />
+ <Search size={16} style={{ position: 'absolute', left: '12px', top: '11px', color: 'var(--text-muted)' }} />
  <input type="text" className={styles.input} style={{ paddingLeft: '36px' }} />
  </div>
  </div>

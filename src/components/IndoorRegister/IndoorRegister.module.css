@@ -6,7 +6,7 @@
   box-sizing: border-box;
   font-family: 'Inter', sans-serif;
   color: var(--text-main);
-  background-color: #F7F8FA;
+  background-color: var(--bg-color);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -69,7 +69,7 @@
   height: 34px;
   padding: 0 10px;
   border-radius: 6px;
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   font-size: 13px;
 }
 
@@ -144,7 +144,7 @@
 
 .input, .select, .textarea {
   background-color: var(--surface);
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   padding: 10px 12px;
   font-size: 14px;
@@ -172,7 +172,7 @@
 
 .input[readonly] {
   background-color: var(--bg-color);
-  color: #667085;
+  color: var(--text-muted);
 }
 
 /* Checkbox Label */
@@ -190,7 +190,7 @@
 .checkboxLabel input[type="checkbox"] {
   width: 16px;
   height: 16px;
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 4px;
   cursor: pointer;
 }
@@ -209,7 +209,7 @@
 /* Specific buttons inside forms */
 .inlineBtn {
   background-color: var(--bg-color);
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   height: 38px;
   padding: 0 16px;
@@ -228,7 +228,7 @@
 
 .primaryInlineBtn {
   background-color: var(--primary-soft);
-  border: 1px solid #BFDBFE;
+  border: 1px solid var(--primary-soft);
   color: var(--primary-hover);
   border-radius: 6px;
   height: 38px;
@@ -246,7 +246,7 @@
 
 /* Special Pink/Magenta text from screenshot for insurance */
 .insuranceText {
-  color: #BE185D;
+  color: var(--danger-hover);
   font-weight: 600;
 }
 
@@ -274,7 +274,7 @@
   justify-content: center;
   background-color: var(--surface);
   color: var(--text-muted);
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s;
@@ -321,7 +321,7 @@
 .secondaryBtn {
   background-color: var(--surface);
   color: var(--text-main);
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   height: 38px;
   padding: 0 16px;
@@ -340,7 +340,7 @@
 }
 
 .secondaryBtn:disabled {
-  color: #98A2B3;
+  color: var(--text-muted);
   cursor: not-allowed;
   background-color: var(--bg-color);
 }

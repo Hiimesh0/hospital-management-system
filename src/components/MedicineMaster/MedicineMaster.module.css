@@ -65,7 +65,7 @@
 
 .largeDisplayBox {
   flex: 1;
-  background-color: #FEF9C3; /* Light yellow background */
+  background-color: var(--warning-soft); /* Light yellow background */
   border: 1px solid var(--border);
   border-radius: 8px;
   min-height: 200px;
@@ -95,7 +95,7 @@
 .input {
   height: 38px;
   padding: 0 12px;
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   background-color: var(--surface);
   color: var(--text-main);
@@ -111,7 +111,7 @@
 }
 
 .highlightInput {
-  background-color: #FEF9C3; /* Yellowish highlight */
+  background-color: var(--warning-soft); /* Yellowish highlight */
 }
 
 .shortInput {
@@ -123,7 +123,7 @@
   align-items: center;
   gap: 24px;
   padding: 8px 16px;
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   background-color: var(--bg-color);
 }
@@ -225,7 +225,7 @@
   padding: 0 20px;
   background-color: var(--surface);
   color: var(--danger-hover);
-  border: 1px solid #FECACA;
+  border: 1px solid var(--danger-soft);
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;

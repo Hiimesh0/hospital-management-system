@@ -70,7 +70,7 @@
 .input {
   height: 38px;
   padding: 0 12px;
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   background-color: var(--surface);
   color: var(--text-main);
@@ -86,7 +86,7 @@
 }
 
 .highlightInput {
-  background-color: #FEF9C3;
+  background-color: var(--warning-soft);
 }
 
 .hintText {
@@ -130,7 +130,7 @@
   align-items: center;
   justify-content: center;
   background-color: var(--bg-color);
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   color: var(--text-muted);
   cursor: pointer;
@@ -181,7 +181,7 @@
   height: 32px;
   padding: 0 16px;
   background-color: var(--surface);
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   font-size: 13px;
   font-weight: 500;
@@ -288,7 +288,7 @@
   padding: 0 20px;
   background-color: var(--surface);
   color: var(--danger-hover);
-  border: 1px solid #FECACA;
+  border: 1px solid var(--danger-soft);
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;

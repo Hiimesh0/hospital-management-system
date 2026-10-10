@@ -402,7 +402,7 @@ function App() {
 
   return (
     <HashRouter>
-      <div style={{ display: 'flex', flexDirection: 'row', height: '100vh', backgroundColor: '#F7F8FA' }}>
+      <div style={{ display: 'flex', flexDirection: 'row', height: '100vh', backgroundColor: 'var(--bg-color)' }}>
         
         {isAuthenticated && <NavigationBar />}
 

@@ -67,7 +67,7 @@ const ReportTemplate: React.FC = () => {
  <Printer size={16} /> Print
  </button>
  <div className={styles.checkboxItem} onClick={() => setShouldPrint(!shouldPrint)} style={{ marginLeft: '8px', marginRight: '16px' }}>
- {shouldPrint ? <CheckSquare size={18} color="var(--primary)" /> : <Square size={18} color="#94A3B8" />}
+ {shouldPrint ? <CheckSquare size={18} color="var(--primary)" /> : <Square size={18} color="var(--text-muted)" />}
  </div>
  <button className={styles.secondaryBtn}>
  <Search size={16} /> {/* Binoculars */}

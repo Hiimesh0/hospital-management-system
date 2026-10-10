@@ -64,7 +64,7 @@ const VisitingTypeMaster: React.FC = () => {
  <label className={styles.radioLabel}>
  <input type="radio" name="status" defaultChecked /> Active
  </label>
- <label className={styles.radioLabel} style={{ marginLeft: '12px', color: '#94A3B8' }}>
+ <label className={styles.radioLabel} style={{ marginLeft: '12px', color: 'var(--text-muted)' }}>
  <input type="radio" name="status" disabled /> Inactive
  </label>
  </div>

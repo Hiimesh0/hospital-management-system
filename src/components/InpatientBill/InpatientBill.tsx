@@ -59,7 +59,7 @@ const InpatientBill: React.FC = () => {
  <button 
  key={tab} 
  className={styles.tabBtn}
- style={activeTab === tab ? { backgroundColor: 'var(--primary-soft)', borderColor: '#BFDBFE', color: 'var(--primary-hover)' } : {}}
+ style={activeTab === tab ? { backgroundColor: 'var(--primary-soft)', borderColor: 'var(--primary-soft)', color: 'var(--primary-hover)' } : {}}
  onClick={() => setActiveTab(tab)}
 >
  {tab}
@@ -95,7 +95,7 @@ const InpatientBill: React.FC = () => {
  {/* Column 1 */}
  <div>
  <div className={styles.baseChargesGrid} style={{ gridTemplateColumns: 'auto 1fr', padding: '0', border: 'none', gap: '12px 16px', backgroundColor: 'transparent' }}>
- <div style={{gridColumn: '2', textAlign: 'center', fontSize: '12px', color: '#667085', fontWeight: 500}}>Rate</div>
+ <div style={{gridColumn: '2', textAlign: 'center', fontSize: '12px', color: 'var(--text-muted)', fontWeight: 500}}>Rate</div>
  
  <label className={styles.label} style={{ textAlign: 'right', alignSelf: 'center' }}>Admission :</label>
  <input type="text" className={styles.input} style={{ textAlign: 'right' }} />
@@ -150,7 +150,7 @@ const InpatientBill: React.FC = () => {
  {/* Column 2 */}
  <div>
  <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
- <div style={{ textAlign: 'center', fontSize: '12px', color: '#667085', fontWeight: 500, width: '120px' }}>Remark</div>
+ <div style={{ textAlign: 'center', fontSize: '12px', color: 'var(--text-muted)', fontWeight: 500, width: '120px' }}>Remark</div>
  </div>
 
  <div className={styles.tableSection}>

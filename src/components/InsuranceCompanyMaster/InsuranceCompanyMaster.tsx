@@ -70,7 +70,7 @@ const InsuranceCompanyMaster: React.FC = () => {
  <input type="text" className={styles.input} />
  </div>
  <div className={styles.fieldGroup} style={{ flex: 1 }}>
- <div className={styles.checkboxItem} style={{ color: '#94A3B8', cursor: 'not-allowed' }}>
+ <div className={styles.checkboxItem} style={{ color: 'var(--text-muted)', cursor: 'not-allowed' }}>
  <Square size={16} color="var(--border)" />
  <span>Default Hospital Name</span>
  </div>
@@ -102,8 +102,8 @@ const InsuranceCompanyMaster: React.FC = () => {
  <div className={styles.row}>
  <div className={styles.fieldGroup} style={{ paddingLeft: '152px' }}>
  <div className={styles.checkboxItem} onClick={() => setNoIpdCharges(!noIpdCharges)}>
- {noIpdCharges ? <CheckSquare size={16} color="var(--primary)" /> : <Square size={16} color="#94A3B8" />}
- <span style={{ color: noIpdCharges ? 'var(--text-main)' : '#94A3B8' }}>Do not calculate IPD Service Charges</span>
+ {noIpdCharges ? <CheckSquare size={16} color="var(--primary)" /> : <Square size={16} color="var(--text-muted)" />}
+ <span style={{ color: noIpdCharges ? 'var(--text-main)' : 'var(--text-muted)' }}>Do not calculate IPD Service Charges</span>
  </div>
  </div>
  </div>

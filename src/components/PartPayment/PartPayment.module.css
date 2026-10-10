@@ -6,7 +6,7 @@
   box-sizing: border-box;
   font-family: 'Inter', sans-serif;
   color: var(--text-main);
-  background-color: #F7F8FA;
+  background-color: var(--bg-color);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -32,7 +32,7 @@
 
 .hospitalName {
   font-size: 13px;
-  color: #667085;
+  color: var(--text-muted);
   font-weight: 500;
 }
 
@@ -73,7 +73,7 @@
 .input {
   height: 38px;
   background-color: var(--surface);
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   padding: 10px 12px;
   font-size: 13px;
@@ -91,14 +91,14 @@
 
 .input[readonly] {
   background-color: var(--bg-color);
-  color: #667085;
+  color: var(--text-muted);
   border-color: var(--border);
 }
 
 .select {
   height: 38px;
   background-color: var(--surface);
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   padding: 0 12px;
   font-size: 13px;
@@ -233,7 +233,7 @@
 .secondaryBtn {
   background-color: var(--surface);
   color: var(--text-main);
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   height: 38px;
   padding: 0 16px;
@@ -309,7 +309,7 @@
 .closeBtn {
   background: none;
   border: none;
-  color: #667085;
+  color: var(--text-muted);
   cursor: pointer;
   padding: 4px;
   display: flex;
@@ -319,7 +319,7 @@
 }
 
 .closeBtn:hover {
-  background-color: #F7F8FA;
+  background-color: var(--bg-color);
   color: var(--text-main);
 }
 

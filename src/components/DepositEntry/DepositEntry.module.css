@@ -78,7 +78,7 @@
   flex: 2;
   color: var(--primary-hover);
   background-color: var(--primary-soft);
-  border-color: #BFDBFE;
+  border-color: var(--primary-soft);
 }
 
 /* Entry Form */
@@ -103,7 +103,7 @@
 .select, .input {
   height: 38px;
   padding: 0 12px;
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   background-color: var(--surface);
   color: var(--text-main);
@@ -163,7 +163,7 @@
   padding: 0 20px;
   background-color: var(--surface);
   color: var(--text-main);
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
@@ -227,6 +227,6 @@
 .emptyState {
   padding: 48px;
   text-align: center;
-  color: #667085;
+  color: var(--text-muted);
   font-size: 14px;
 }

@@ -75,7 +75,7 @@
 .input {
   height: 40px;
   padding: 0 12px;
-  border: 1px solid #DDE3EA;
+  border: 1px solid var(--border);
   border-radius: 6px;
   background-color: var(--surface);
   color: var(--text-main);
@@ -91,9 +91,9 @@
 }
 
 .input.readOnly {
-  background-color: #FEF9C3; /* Match the yellowish legacy background */
-  border-color: #FDE047;
-  color: #854D0E;
+  background-color: var(--warning-soft); /* Match the yellowish legacy background */
+  border-color: var(--warning-soft);
+  color: var(--warning-hover);
 }
 
 /* Bottom Action Bar */

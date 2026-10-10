@@ -78,7 +78,7 @@ const MedicalCertificate: React.FC = () => {
  <span style={{ fontSize: '13px', fontWeight: 600 }}>Patient Code :</span>
  </div>
  <div className={styles.photoBox}>
- <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#94A3B8' }}>
+ <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
  <ImageIcon size={32} />
  </div>
  </div>
@@ -142,7 +142,7 @@ const MedicalCertificate: React.FC = () => {
 
  <div className={styles.sentenceRow}>
  <input type="checkbox" className={styles.checkbox} />
- <span className={styles.sentenceText} style={{ color: '#94A3B8' }}>However</span>
+ <span className={styles.sentenceText} style={{ color: 'var(--text-muted)' }}>However</span>
  <span className={styles.sentenceText}>is further advised to continue rest from</span>
  <input type="date" className={`${styles.input} ${styles.inlineSelect}`}  max="2099-12-31" />
  <span className={styles.sentenceText}>for another</span>
@@ -205,7 +205,7 @@ const MedicalCertificate: React.FC = () => {
 
  <div className={styles.middleActions}>
  <div className={styles.checkboxItem} onClick={() => setIsCheckedH(!isCheckedH)}>
- {isCheckedH ? <CheckSquare size={18} color="var(--primary)" /> : <Square size={18} color="#94A3B8" />}
+ {isCheckedH ? <CheckSquare size={18} color="var(--primary)" /> : <Square size={18} color="var(--text-muted)" />}
  H
  </div>
  
@@ -214,7 +214,7 @@ const MedicalCertificate: React.FC = () => {
  </button>
  
  <div className={styles.checkboxItem} onClick={() => setBlankCheck(!blankCheck)}>
- {blankCheck ? <CheckSquare size={18} color="var(--primary)" /> : <Square size={18} color="#94A3B8" />}
+ {blankCheck ? <CheckSquare size={18} color="var(--primary)" /> : <Square size={18} color="var(--text-muted)" />}
  </div>
  
  <button className={styles.secondaryBtn}>

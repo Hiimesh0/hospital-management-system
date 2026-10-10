@@ -42,7 +42,7 @@
   border-radius: 4px;
   font-size: 0.75rem;
   font-weight: 500;
-  color: #374151;
+  color: var(--text-main);
 }
 
 .section {
@@ -91,7 +91,7 @@
 .label {
   font-size: 0.75rem;
   font-weight: 600;
-  color: #374151;
+  color: var(--text-main);
   text-transform: uppercase;
   letter-spacing: 0.025em;
 }
@@ -199,7 +199,7 @@
 .btnSecondary {
   background: var(--surface);
   border-color: var(--border);
-  color: #374151;
+  color: var(--text-main);
   box-shadow: var(--shadow-sm);
 }
 
