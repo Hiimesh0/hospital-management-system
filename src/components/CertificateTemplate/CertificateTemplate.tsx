@@ -83,11 +83,11 @@ const CertificateTemplate: React.FC = () => {
  </button>
  
  <div className={styles.checkboxItem} onClick={() => setIsCheckedH(!isCheckedH)}>
- {isCheckedH ? <CheckSquare size={18} color="#2563EB" /> : <Square size={18} color="#94A3B8" />}
+ {isCheckedH ? <CheckSquare size={18} color="var(--primary)" /> : <Square size={18} color="#94A3B8" />}
  H
  </div>
  <div className={styles.checkboxItem} onClick={() => setBlankCheck(!blankCheck)} style={{ marginLeft: '12px' }}>
- {blankCheck ? <CheckSquare size={18} color="#2563EB" /> : <Square size={18} color="#94A3B8" />}
+ {blankCheck ? <CheckSquare size={18} color="var(--primary)" /> : <Square size={18} color="#94A3B8" />}
  </div>
  </div>
 

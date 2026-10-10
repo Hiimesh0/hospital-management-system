@@ -191,7 +191,7 @@ const PatientHistory: React.FC = () => {
  <div className={styles.row} style={{ alignItems: 'flex-end', marginTop: '8px' }}>
  <div className={styles.fieldGroup} style={{ flex: 2 }}>
  <label className={styles.label}>Next Visit</label>
- <div className={styles.row} style={{ padding: '8px 12px', border: '1px solid #DDE3EA', borderRadius: '6px', backgroundColor: '#FFFFFF' }}>
+ <div className={styles.row} style={{ padding: '8px 12px', border: '1px solid #DDE3EA', borderRadius: '6px', backgroundColor: 'var(--surface)' }}>
  <div className={styles.radioGroup}>
  <label className={styles.radioItem}>
  <input type="radio" name="nextVisit" /> Day

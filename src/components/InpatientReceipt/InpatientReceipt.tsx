@@ -66,7 +66,7 @@ const InpatientReceipt: React.FC = () => {
  <button 
  key={tab} 
  className={styles.tabBtn}
- style={activeTab === tab ? { backgroundColor: '#EFF6FF', borderColor: '#BFDBFE', color: '#1D4ED8' } : {}}
+ style={activeTab === tab ? { backgroundColor: 'var(--primary-soft)', borderColor: '#BFDBFE', color: 'var(--primary-hover)' } : {}}
  onClick={() => setActiveTab(tab)}
 >
  {tab}
@@ -275,7 +275,7 @@ const InpatientReceipt: React.FC = () => {
  </div>
 
  <div className={styles.summaryRow}>
- <span className={styles.summaryLabel} style={{ fontWeight: 600, color: '#172033' }}>Net (=)</span>
+ <span className={styles.summaryLabel} style={{ fontWeight: 600, color: 'var(--text-main)' }}>Net (=)</span>
  <input type="text" className={`${styles.input} ${styles.summaryValue}`} style={{ fontWeight: 600 }} readOnly />
  </div>
 
@@ -287,7 +287,7 @@ const InpatientReceipt: React.FC = () => {
  </div>
 
  <div className={styles.summaryRow} style={{ marginTop: '8px' }}>
- <span className={styles.summaryLabel} style={{ fontWeight: 600, color: '#172033' }}>Final Pay/Ret (=)</span>
+ <span className={styles.summaryLabel} style={{ fontWeight: 600, color: 'var(--text-main)' }}>Final Pay/Ret (=)</span>
  <input type="text" className={`${styles.input} ${styles.summaryValue} ${styles.summaryValueSuccess}`} readOnly />
  </div>
 

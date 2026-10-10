@@ -126,7 +126,7 @@ const Billing: React.FC = () => {
  </div>
 
  <div className={styles.formRow}>
- <label className={styles.formRowLabel} style={{ width: '100px', fontWeight: 600, color: '#172033' }}>Net Amt :</label>
+ <label className={styles.formRowLabel} style={{ width: '100px', fontWeight: 600, color: 'var(--text-main)' }}>Net Amt :</label>
  <input type="text" className={`${styles.input} ${styles.formRowInput} ${styles.inputReadOnly}`} readOnly />
  </div>
 
@@ -136,14 +136,14 @@ const Billing: React.FC = () => {
  </div>
 
  <div className={styles.formRow}>
- <label className={styles.formRowLabel} style={{ width: '100px', fontWeight: 600, color: '#DC2626' }}>Balance Amt :</label>
+ <label className={styles.formRowLabel} style={{ width: '100px', fontWeight: 600, color: 'var(--danger-hover)' }}>Balance Amt :</label>
  <input type="number" min="0" step="0.01" className={`${styles.input} ${styles.formRowInput} ${styles.inputReadOnly}`} readOnly />
  </div>
  </div>
 
  {/* Column 3: References */}
  <div className={styles.formColumn}>
- <button className={styles.secondaryBtn} style={{ width: '100%', justifyContent: 'center', backgroundColor: '#FFFBEB', borderColor: '#FDE68A', color: '#D97706' }}>
+ <button className={styles.secondaryBtn} style={{ width: '100%', justifyContent: 'center', backgroundColor: '#FFFBEB', borderColor: '#FDE68A', color: 'var(--warning-hover)' }}>
  <ShieldAlert size={16} /> Delete Multiple Test By OTP Before Amount Received
  </button>
 

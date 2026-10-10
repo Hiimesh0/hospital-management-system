@@ -3,13 +3,13 @@
   max-width: 1500px;
   margin: 0 auto;
   font-family: 'Inter', sans-serif;
-  color: #172033;
+  color: var(--text-main);
 }
 
 /* Header Sections */
 .headerCard {
-  background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 16px 24px;
   margin-bottom: 16px;
@@ -22,20 +22,20 @@
   align-items: center;
   margin-bottom: 16px;
   padding-bottom: 16px;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid var(--border);
   position: relative;
 }
 
 .doctorName {
   font-size: 15px;
   font-weight: 600;
-  color: #172033;
+  color: var(--text-main);
 }
 
 .pageTitle {
   font-size: 20px;
   font-weight: 600;
-  color: #172033;
+  color: var(--text-main);
   margin: 0;
   position: absolute;
   left: 50%;
@@ -44,7 +44,7 @@
 
 .recordCount {
   font-size: 15px;
-  color: #172033;
+  color: var(--text-main);
   font-weight: 600;
 }
 
@@ -59,14 +59,14 @@
   padding: 0 12px;
   border: 1px solid #DDE3EA;
   border-radius: 6px;
-  background-color: #FFFFFF;
-  color: #172033;
+  background-color: var(--surface);
+  color: var(--text-main);
   font-size: 13px;
   outline: none;
 }
 
 .select:focus {
-  border-color: #2563EB;
+  border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
@@ -75,22 +75,22 @@
   padding: 0 12px;
   border: 1px solid #DDE3EA;
   border-radius: 6px;
-  background-color: #FFFFFF;
-  color: #172033;
+  background-color: var(--surface);
+  color: var(--text-main);
   font-size: 13px;
   outline: none;
   width: 100%;
 }
 
 .input:focus {
-  border-color: #2563EB;
+  border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 .inputReadOnly {
-  background-color: #F8FAFC;
-  color: #475467;
-  border-color: #E2E8F0;
+  background-color: var(--bg-color);
+  color: var(--text-muted);
+  border-color: var(--border);
 }
 
 /* Info Grid */
@@ -119,13 +119,13 @@
 .label {
   font-size: 13px;
   font-weight: 500;
-  color: #475467;
+  color: var(--text-muted);
   white-space: nowrap;
 }
 
 .patientNameBadge {
-  background-color: #EFF6FF;
-  color: #1D4ED8;
+  background-color: var(--primary-soft);
+  color: var(--primary-hover);
   padding: 8px 16px;
   border-radius: 6px;
   font-weight: 600;
@@ -147,20 +147,20 @@
 
 .tabBtn {
   padding: 8px 16px;
-  background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 6px;
   font-size: 13px;
   font-weight: 500;
-  color: #475467;
+  color: var(--text-muted);
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.2s;
 }
 
 .tabBtn:hover {
-  background-color: #F8FAFC;
-  border-color: #CBD5E1;
+  background-color: var(--bg-color);
+  border-color: var(--border);
 }
 
 /* Main Layout */
@@ -177,10 +177,10 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
   margin-bottom: 24px;
-  background-color: #FFFFFF;
+  background-color: var(--surface);
   padding: 16px;
   border-radius: 8px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid var(--border);
 }
 
 /* Breakdown Tables Grid */
@@ -191,19 +191,19 @@
 }
 
 .tableSection {
-  background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
 }
 
 .tableHeader {
-  background-color: #F8FAFC;
+  background-color: var(--bg-color);
   padding: 10px 16px;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid var(--border);
   font-size: 14px;
   font-weight: 600;
-  color: #172033;
+  color: var(--text-main);
 }
 
 .dataTable {
@@ -217,15 +217,15 @@
   font-size: 12px;
   font-weight: 500;
   color: #667085;
-  border-bottom: 1px solid #E2E8F0;
-  background-color: #F8FAFC;
+  border-bottom: 1px solid var(--border);
+  background-color: var(--bg-color);
 }
 
 .dataTable td {
   padding: 10px 16px;
   font-size: 13px;
-  color: #172033;
-  border-bottom: 1px solid #F1F5F9;
+  color: var(--text-main);
+  border-bottom: 1px solid var(--bg-color);
 }
 
 .dataTable tr:last-child td {
@@ -236,8 +236,8 @@
   display: flex;
   justify-content: flex-end;
   padding: 12px 16px;
-  background-color: #F8FAFC;
-  border-top: 1px solid #E2E8F0;
+  background-color: var(--bg-color);
+  border-top: 1px solid var(--border);
   gap: 12px;
   align-items: center;
 }
@@ -250,8 +250,8 @@
 
 /* Summary Panel (Right Column) */
 .summaryPanel {
-  background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
   position: sticky;
@@ -259,12 +259,12 @@
 }
 
 .summaryHeader {
-  background-color: #F8FAFC;
+  background-color: var(--bg-color);
   padding: 16px;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid var(--border);
   font-size: 16px;
   font-weight: 600;
-  color: #172033;
+  color: var(--text-main);
 }
 
 .summaryContent {
@@ -282,7 +282,7 @@
 
 .summaryLabel {
   font-size: 13px;
-  color: #475467;
+  color: var(--text-muted);
   font-weight: 500;
 }
 
@@ -292,29 +292,29 @@
 }
 
 .summaryValueHigh {
-  background-color: #FEF2F2;
-  color: #DC2626;
+  background-color: var(--danger-soft);
+  color: var(--danger-hover);
   border-color: #FECACA;
   font-weight: 600;
 }
 
 .summaryValueWarning {
   background-color: #FFFBEB;
-  color: #D97706;
+  color: var(--warning-hover);
   border-color: #FDE68A;
   font-weight: 600;
 }
 
 .summaryValueSuccess {
-  background-color: #F0FDF4;
-  color: #16A34A;
-  border-color: #BBF7D0;
+  background-color: var(--success-soft);
+  color: var(--success);
+  border-color: var(--success-soft);
   font-weight: 600;
 }
 
 .divider {
   height: 1px;
-  background-color: #E2E8F0;
+  background-color: var(--border);
   margin: 4px 0;
 }
 
@@ -335,8 +335,8 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: #FFFFFF;
-  border-top: 1px solid #E2E8F0;
+  background-color: var(--surface);
+  border-top: 1px solid var(--border);
   padding: 16px 32px;
   display: flex;
   justify-content: space-between;
@@ -360,15 +360,15 @@
 .checkbox {
   width: 16px;
   height: 16px;
-  accent-color: #2563EB;
+  accent-color: var(--primary);
   cursor: pointer;
 }
 
 .primaryBtn {
   height: 40px;
   padding: 0 20px;
-  background-color: #2563EB;
-  color: #FFFFFF;
+  background-color: var(--primary);
+  color: var(--surface);
   border: none;
   border-radius: 6px;
   font-size: 14px;
@@ -381,7 +381,7 @@
 }
 
 .primaryBtn:hover:not(:disabled) {
-  background-color: #1D4ED8;
+  background-color: var(--primary-hover);
 }
 
 .primaryBtn:disabled {
@@ -392,8 +392,8 @@
 .secondaryBtn {
   height: 40px;
   padding: 0 20px;
-  background-color: #FFFFFF;
-  color: #172033;
+  background-color: var(--surface);
+  color: var(--text-main);
   border: 1px solid #DDE3EA;
   border-radius: 6px;
   font-size: 14px;
@@ -406,21 +406,21 @@
 }
 
 .secondaryBtn:hover:not(:disabled) {
-  background-color: #F8FAFC;
-  border-color: #CBD5E1;
+  background-color: var(--bg-color);
+  border-color: var(--border);
 }
 
 .secondaryBtn:disabled {
   color: #98A2B3;
-  background-color: #F8FAFC;
+  background-color: var(--bg-color);
   cursor: not-allowed;
 }
 
 .dangerBtn {
   height: 40px;
   padding: 0 20px;
-  background-color: #FFFFFF;
-  color: #DC2626;
+  background-color: var(--surface);
+  color: var(--danger-hover);
   border: 1px solid #FECACA;
   border-radius: 6px;
   font-size: 14px;
@@ -433,11 +433,11 @@
 }
 
 .dangerBtn:hover:not(:disabled) {
-  background-color: #FEF2F2;
+  background-color: var(--danger-soft);
 }
 
 .dangerBtn:disabled {
-  color: #FCA5A5;
-  border-color: #FEE2E2;
+  color: var(--danger-soft);
+  border-color: var(--danger-soft);
   cursor: not-allowed;
 }

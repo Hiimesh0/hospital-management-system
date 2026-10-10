@@ -3,7 +3,7 @@
   max-width: 1500px;
   margin: 0 auto;
   font-family: 'Inter', sans-serif;
-  color: #172033;
+  color: var(--text-main);
 }
 
 /* Header */
@@ -17,7 +17,7 @@
 .pageTitle {
   font-size: 20px;
   font-weight: 600;
-  color: #172033;
+  color: var(--text-main);
   margin: 0;
 }
 
@@ -27,17 +27,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 6px;
-  color: #475467;
+  color: var(--text-muted);
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .closeBtn:hover {
-  background-color: #F8FAFC;
-  color: #172033;
+  background-color: var(--bg-color);
+  color: var(--text-main);
 }
 
 /* Context & Actions Bar */
@@ -45,8 +45,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 16px 24px;
   margin-bottom: 24px;
@@ -60,18 +60,18 @@
 }
 
 .contextBlock {
-  background-color: #F8FAFC;
-  border: 1px solid #E2E8F0;
+  background-color: var(--bg-color);
+  border: 1px solid var(--border);
   border-radius: 6px;
   padding: 10px 16px;
   font-size: 14px;
   font-weight: 600;
-  color: #172033;
+  color: var(--text-main);
 }
 
 .contextBlockName {
-  color: #1D4ED8;
-  background-color: #EFF6FF;
+  color: var(--primary-hover);
+  background-color: var(--primary-soft);
   border-color: #BFDBFE;
 }
 
@@ -84,8 +84,8 @@
 .primaryBtn {
   height: 38px;
   padding: 0 20px;
-  background-color: #2563EB;
-  color: #FFFFFF;
+  background-color: var(--primary);
+  color: var(--surface);
   border: none;
   border-radius: 6px;
   font-size: 14px;
@@ -98,14 +98,14 @@
 }
 
 .primaryBtn:hover {
-  background-color: #1D4ED8;
+  background-color: var(--primary-hover);
 }
 
 .secondaryBtn {
   height: 38px;
   padding: 0 20px;
-  background-color: #FFFFFF;
-  color: #172033;
+  background-color: var(--surface);
+  color: var(--text-main);
   border: 1px solid #DDE3EA;
   border-radius: 6px;
   font-size: 14px;
@@ -118,20 +118,20 @@
 }
 
 .secondaryBtn:hover:not(:disabled) {
-  background-color: #F8FAFC;
-  border-color: #CBD5E1;
+  background-color: var(--bg-color);
+  border-color: var(--border);
 }
 
 .secondaryBtn:disabled {
   color: #98A2B3;
-  background-color: #F8FAFC;
+  background-color: var(--bg-color);
   cursor: not-allowed;
 }
 
 /* Entry Form Card */
 .formCard {
-  background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 24px;
   margin-bottom: 24px;
@@ -142,10 +142,10 @@
 .formCardHeader {
   font-size: 16px;
   font-weight: 600;
-  color: #172033;
+  color: var(--text-main);
   margin-bottom: 20px;
   padding-bottom: 12px;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -174,7 +174,7 @@
 .label {
   font-size: 13px;
   font-weight: 500;
-  color: #475467;
+  color: var(--text-muted);
 }
 
 .input, .select {
@@ -182,8 +182,8 @@
   padding: 0 12px;
   border: 1px solid #DDE3EA;
   border-radius: 6px;
-  background-color: #FFFFFF;
-  color: #172033;
+  background-color: var(--surface);
+  color: var(--text-main);
   font-size: 13px;
   outline: none;
   transition: all 0.2s;
@@ -191,7 +191,7 @@
 }
 
 .input:focus, .select:focus {
-  border-color: #2563EB;
+  border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
@@ -201,13 +201,13 @@
   gap: 12px;
   margin-top: 24px;
   padding-top: 16px;
-  border-top: 1px solid #F1F5F9;
+  border-top: 1px solid var(--bg-color);
 }
 
 /* Table Area */
 .tableCard {
-  background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
   overflow: hidden;
@@ -228,20 +228,20 @@
   padding: 12px 16px;
   font-size: 13px;
   font-weight: 600;
-  color: #475467;
-  border-bottom: 1px solid #E2E8F0;
-  background-color: #F8FAFC;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  background-color: var(--bg-color);
 }
 
 .dataTable td {
   padding: 12px 16px;
   font-size: 13px;
-  color: #172033;
-  border-bottom: 1px solid #F1F5F9;
+  color: var(--text-main);
+  border-bottom: 1px solid var(--bg-color);
 }
 
 .dataTable tbody tr:hover {
-  background-color: #F8FAFC;
+  background-color: var(--bg-color);
 }
 
 .dataTable tbody tr:last-child td {

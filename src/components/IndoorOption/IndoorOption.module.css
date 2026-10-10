@@ -6,8 +6,8 @@
 
 /* Patient Header Banner */
 .patientHeader {
-  background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 16px 24px;
   margin-bottom: 24px;
@@ -26,8 +26,8 @@
 .avatar {
   width: 48px;
   height: 48px;
-  background-color: #EFF6FF;
-  color: #2563EB;
+  background-color: var(--primary-soft);
+  color: var(--primary);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -39,7 +39,7 @@
 .patientName {
   margin: 0;
   font-size: 18px;
-  color: #172033;
+  color: var(--text-main);
   font-weight: 600;
 }
 
@@ -59,7 +59,7 @@
 .patientDetails span:not(:last-child)::after {
   content: "•";
   margin-left: 12px;
-  color: #CBD5E1;
+  color: var(--border);
 }
 
 /* Categorized Sections */
@@ -70,11 +70,11 @@
 .sectionTitle {
   font-size: 15px;
   font-weight: 600;
-  color: #475467;
+  color: var(--text-muted);
   margin-top: 0;
   margin-bottom: 16px;
   padding-bottom: 8px;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid var(--border);
 }
 
 /* Grid of Action Cards */
@@ -85,8 +85,8 @@
 }
 
 .actionCard {
-  background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 16px;
   display: flex;
@@ -99,8 +99,8 @@
 }
 
 .actionCard:hover {
-  border-color: #2563EB;
-  background-color: #F8FAFC;
+  border-color: var(--primary);
+  background-color: var(--bg-color);
   transform: translateY(-1px);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
@@ -109,8 +109,8 @@
   width: 36px;
   height: 36px;
   border-radius: 6px;
-  background-color: #EFF6FF;
-  color: #2563EB;
+  background-color: var(--primary-soft);
+  color: var(--primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -119,5 +119,5 @@
 .actionTitle {
   font-size: 14px;
   font-weight: 500;
-  color: #172033;
+  color: var(--text-main);
 }

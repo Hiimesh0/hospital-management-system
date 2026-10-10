@@ -5,7 +5,7 @@
   padding: 24px 32px;
   box-sizing: border-box;
   font-family: 'Inter', sans-serif;
-  color: #172033;
+  color: var(--text-main);
   background-color: #F7F8FA;
   min-height: 100vh;
   display: flex;
@@ -18,7 +18,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid var(--border);
   padding-bottom: 16px;
 }
 
@@ -31,22 +31,22 @@
 .recordCount {
   font-size: 14px;
   font-weight: 600;
-  color: #172033;
-  background-color: #F1F5F9;
+  color: var(--text-main);
+  background-color: var(--bg-color);
   padding: 6px 12px;
   border-radius: 6px;
 }
 
 .userBadge {
   font-size: 13px;
-  color: #64748B;
+  color: var(--text-muted);
   font-weight: 500;
 }
 
 .pageTitle {
   font-size: 20px;
   font-weight: 600;
-  color: #172033;
+  color: var(--text-main);
   margin: 0;
   flex: 1;
   text-align: center;
@@ -61,7 +61,7 @@
 .headerField .label {
   font-size: 13px;
   font-weight: 500;
-  color: #475467;
+  color: var(--text-muted);
   white-space: nowrap;
 }
 
@@ -81,8 +81,8 @@
 .content {
   display: flex;
   flex-direction: column;
-  background-color: #FFFFFF;
-  border: 1px solid #E5E7EB;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 24px;
   gap: 32px; /* Space between sections */
@@ -98,10 +98,10 @@
 .sectionTitle {
   font-size: 15px;
   font-weight: 600;
-  color: #172033;
+  color: var(--text-main);
   margin: 0 0 4px 0;
   padding-bottom: 8px;
-  border-bottom: 1px solid #F1F5F9;
+  border-bottom: 1px solid var(--bg-color);
 }
 
 /* Grid System */
@@ -139,16 +139,16 @@
 .label {
   font-size: 13px;
   font-weight: 500;
-  color: #475467;
+  color: var(--text-muted);
 }
 
 .input, .select, .textarea {
-  background-color: #FFFFFF;
+  background-color: var(--surface);
   border: 1px solid #DDE3EA;
   border-radius: 6px;
   padding: 10px 12px;
   font-size: 14px;
-  color: #172033;
+  color: var(--text-main);
   box-sizing: border-box;
   width: 100%;
   transition: all 0.2s ease;
@@ -166,12 +166,12 @@
 
 .input:focus, .select:focus, .textarea:focus {
   outline: none;
-  border-color: #2563EB;
+  border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 .input[readonly] {
-  background-color: #F8FAFC;
+  background-color: var(--bg-color);
   color: #667085;
 }
 
@@ -182,7 +182,7 @@
   gap: 8px;
   font-size: 13px;
   font-weight: 500;
-  color: #172033;
+  color: var(--text-main);
   cursor: pointer;
   height: 38px;
 }
@@ -208,28 +208,28 @@
 
 /* Specific buttons inside forms */
 .inlineBtn {
-  background-color: #F8FAFC;
+  background-color: var(--bg-color);
   border: 1px solid #DDE3EA;
   border-radius: 6px;
   height: 38px;
   padding: 0 16px;
   font-size: 13px;
   font-weight: 500;
-  color: #475467;
+  color: var(--text-muted);
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.2s;
 }
 
 .inlineBtn:hover {
-  background-color: #F1F5F9;
-  color: #172033;
+  background-color: var(--bg-color);
+  color: var(--text-main);
 }
 
 .primaryInlineBtn {
-  background-color: #EFF6FF;
+  background-color: var(--primary-soft);
   border: 1px solid #BFDBFE;
-  color: #1D4ED8;
+  color: var(--primary-hover);
   border-radius: 6px;
   height: 38px;
   padding: 0 16px;
@@ -241,7 +241,7 @@
 }
 
 .primaryInlineBtn:hover {
-  background-color: #DBEAFE;
+  background-color: var(--primary-soft);
 }
 
 /* Special Pink/Magenta text from screenshot for insurance */
@@ -256,7 +256,7 @@
   justify-content: space-between;
   align-items: center;
   padding-top: 24px;
-  border-top: 1px solid #E2E8F0;
+  border-top: 1px solid var(--border);
   margin-top: 8px;
 }
 
@@ -272,8 +272,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #FFFFFF;
-  color: #475467;
+  background-color: var(--surface);
+  color: var(--text-muted);
   border: 1px solid #DDE3EA;
   border-radius: 6px;
   cursor: pointer;
@@ -281,9 +281,9 @@
 }
 
 .navBtn:hover {
-  background-color: #F8FAFC;
-  border-color: #CBD5E1;
-  color: #172033;
+  background-color: var(--bg-color);
+  border-color: var(--border);
+  color: var(--text-main);
 }
 
 .utilsGroup {
@@ -299,8 +299,8 @@
 }
 
 .primaryBtn {
-  background-color: #2563EB;
-  color: #FFFFFF;
+  background-color: var(--primary);
+  color: var(--surface);
   border: none;
   border-radius: 6px;
   height: 38px;
@@ -315,12 +315,12 @@
 }
 
 .primaryBtn:hover {
-  background-color: #1D4ED8;
+  background-color: var(--primary-hover);
 }
 
 .secondaryBtn {
-  background-color: #FFFFFF;
-  color: #172033;
+  background-color: var(--surface);
+  color: var(--text-main);
   border: 1px solid #DDE3EA;
   border-radius: 6px;
   height: 38px;
@@ -335,19 +335,19 @@
 }
 
 .secondaryBtn:hover {
-  background-color: #F8FAFC;
-  border-color: #E2E8F0;
+  background-color: var(--bg-color);
+  border-color: var(--border);
 }
 
 .secondaryBtn:disabled {
   color: #98A2B3;
   cursor: not-allowed;
-  background-color: #F8FAFC;
+  background-color: var(--bg-color);
 }
 
 .tertiaryBtn {
   background: transparent;
-  color: #475467;
+  color: var(--text-muted);
   border: 1px solid transparent;
   border-radius: 6px;
   height: 38px;
@@ -359,6 +359,6 @@
 }
 
 .tertiaryBtn:hover {
-  background-color: #F8FAFC;
-  color: #172033;
+  background-color: var(--bg-color);
+  color: var(--text-main);
 }

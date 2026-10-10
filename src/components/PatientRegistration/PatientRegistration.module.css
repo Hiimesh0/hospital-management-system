@@ -20,7 +20,7 @@
 .title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #111827;
+  color: var(--text-main);
   margin: 0 0 0.25rem 0;
 }
 
@@ -36,7 +36,7 @@
 }
 
 .badge {
-  background: #f3f4f6;
+  background: var(--bg-color);
   border: 1px solid var(--border);
   padding: 0.25rem 0.75rem;
   border-radius: 4px;
@@ -52,7 +52,7 @@
 .sectionTitle {
   font-size: 1rem;
   font-weight: 600;
-  color: #111827;
+  color: var(--text-main);
   margin-bottom: 1.25rem;
   display: flex;
   align-items: center;
@@ -98,7 +98,7 @@
 
 .required::after {
   content: " *";
-  color: #dc2626;
+  color: var(--danger-hover);
 }
 
 .inputGroup {
@@ -108,11 +108,11 @@
 
 .input, .select {
   width: 100%;
-  background: #ffffff;
-  border: 1px solid #d1d5db;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 4px;
   padding: 0.5rem 0.75rem;
-  color: #111827;
+  color: var(--text-main);
   font-family: var(--font-family);
   font-size: 0.875rem;
   transition: var(--transition);
@@ -126,8 +126,8 @@
 }
 
 .input:read-only {
-  background: #f9fafb;
-  color: #6b7280;
+  background: var(--bg-color);
+  color: var(--text-muted);
   cursor: not-allowed;
 }
 
@@ -141,7 +141,7 @@
   width: 1rem;
   height: 1rem;
   border-radius: 4px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border);
   cursor: pointer;
 }
 
@@ -151,17 +151,17 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 1px dashed #9ca3af;
+  border: 1px dashed var(--text-muted);
   border-radius: 4px;
   padding: 1.5rem;
-  background: #f9fafb;
+  background: var(--bg-color);
   cursor: pointer;
   height: 100%;
   min-height: 120px;
 }
 
 .pictureUpload:hover {
-  background: #f3f4f6;
+  background: var(--bg-color);
 }
 
 .actions {
@@ -197,14 +197,14 @@
 }
 
 .btnSecondary {
-  background: #ffffff;
-  border-color: #d1d5db;
+  background: var(--surface);
+  border-color: var(--border);
   color: #374151;
   box-shadow: var(--shadow-sm);
 }
 
 .btnSecondary:hover {
-  background: #f9fafb;
+  background: var(--bg-color);
 }
 
 /* Split layout utilities for Communication & Address */

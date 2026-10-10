@@ -1,17 +1,34 @@
 :root {
   --font-family: 'Inter', system-ui, sans-serif;
   
-  --bg-color: #f3f4f6; /* Very light gray background */
-  --surface: #ffffff;
+  --bg-color: #F8FAFC;
+  --surface: #FFFFFF;
   
-  --border: #e5e7eb;
-  --border-focus: #2563eb; /* Trustworthy blue */
+  --border: #E2E8F0;
+  --border-focus: #4285F4;
   
-  --primary: #2563eb; 
-  --primary-hover: #1d4ed8;
+  /* Primary - Blue */
+  --primary: #4285F4;
+  --primary-hover: #3367D6;
+  --primary-soft: #EAF2FF;
   
-  --text-main: #111827;
-  --text-muted: #6b7280;
+  /* Success - Green */
+  --success: #34A853;
+  --success-hover: #2D9047;
+  --success-soft: #E8F5E9;
+  
+  /* Danger - Red */
+  --danger: #EA4335;
+  --danger-hover: #D93025;
+  --danger-soft: #FDECEA;
+  
+  /* Warning - Yellow */
+  --warning: #FBBC05;
+  --warning-hover: #F2A500;
+  --warning-soft: #FFF8E1;
+  
+  --text-main: #1F2937;
+  --text-muted: #64748B;
   
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);

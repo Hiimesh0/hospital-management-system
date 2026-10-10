@@ -99,7 +99,7 @@ const VisitingTypeMaster: React.FC = () => {
  {MOCK_DATA.map((row) => (
  <tr key={row.id} className={row.id === 1 ? styles.selectedRow : ''}>
  <td>
- {row.id === 1 ? <Play size={12} fill="#2563EB" color="#2563EB" /> : row.id}
+ {row.id === 1 ? <Play size={12} fill="var(--primary)" color="var(--primary)" /> : row.id}
  </td>
  <td>{row.roomType}</td>
  <td>{row.description}</td>

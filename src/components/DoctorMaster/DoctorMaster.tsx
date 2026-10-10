@@ -33,7 +33,7 @@ const DoctorMaster: React.FC = () => {
  <div className={styles.row}>
  <div className={styles.fieldGroup} style={{ flex: 1.5 }}>
  <label className={styles.label}>Dr Hos/Ref :</label>
- <select className={styles.input} style={{ backgroundColor: '#3B82F6', color: 'white', borderColor: '#2563EB' }}>
+ <select className={styles.input} style={{ backgroundColor: 'var(--primary)', color: 'white', borderColor: 'var(--primary)' }}>
  <option>Reference Doctor</option>
  <option>Hospital Doctor</option>
  </select>
@@ -84,8 +84,8 @@ const DoctorMaster: React.FC = () => {
  </div>
  <div className={styles.col} style={{ flex: 1.5, justifyContent: 'center', paddingTop: '10px' }}>
  <div className={styles.checkboxItem} onClick={() => setHospitalNameChecked(!hospitalNameChecked)}>
- {hospitalNameChecked ? <CheckSquare size={16} color="#2563EB" /> : <Square size={16} color="#94A3B8" />}
- <span style={{ color: hospitalNameChecked ? '#172033' : '#94A3B8' }}>Hospital Name</span>
+ {hospitalNameChecked ? <CheckSquare size={16} color="var(--primary)" /> : <Square size={16} color="#94A3B8" />}
+ <span style={{ color: hospitalNameChecked ? 'var(--text-main)' : '#94A3B8' }}>Hospital Name</span>
  </div>
  </div>
  <div className={styles.col} style={{ flex: 1 }}>
@@ -211,7 +211,7 @@ const DoctorMaster: React.FC = () => {
 
  <div className={styles.middleActions}>
  <div className={styles.printBtn} onClick={() => setPrint(!print)}>
- {print ? <CheckSquare size={18} color="#2563EB" /> : <Square size={18} />}
+ {print ? <CheckSquare size={18} color="var(--primary)" /> : <Square size={18} />}
  <span>Print</span>
  </div>
  <button className={styles.secondaryBtn} style={{ marginLeft: '16px' }}>

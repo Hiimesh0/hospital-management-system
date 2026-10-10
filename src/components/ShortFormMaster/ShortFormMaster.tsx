@@ -52,7 +52,7 @@ const ShortFormMaster: React.FC = () => {
 
  <div className={styles.middleActions}>
  <div className={styles.checkboxItem} onClick={() => setShouldPrint(!shouldPrint)} style={{ marginRight: '8px' }}>
- {shouldPrint ? <CheckSquare size={18} color="#2563EB" /> : <Square size={18} color="#94A3B8" />}
+ {shouldPrint ? <CheckSquare size={18} color="var(--primary)" /> : <Square size={18} color="#94A3B8" />}
  </div>
  <button className={styles.secondaryBtn}>
  <Printer size={16} /> Print

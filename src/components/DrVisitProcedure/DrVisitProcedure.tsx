@@ -38,7 +38,7 @@ const DrVisitProcedure: React.FC = () => {
  <button className={styles.secondaryBtn}>
  <Edit2 size={16} /> Update
  </button>
- <button className={styles.secondaryBtn} style={{ color: '#DC2626', borderColor: '#FCA5A5' }}>
+ <button className={styles.secondaryBtn} style={{ color: 'var(--danger-hover)', borderColor: 'var(--danger-soft)' }}>
  <Trash2 size={16} /> Delete
  </button>
  <button className={styles.secondaryBtn}>
@@ -123,7 +123,7 @@ const DrVisitProcedure: React.FC = () => {
  <button className={styles.secondaryBtn} onClick={() => setIsFormVisible(false)}>
  Cancel
  </button>
- <button className={styles.primaryBtn} style={{ backgroundColor: '#EAB308', color: '#172033' }}>
+ <button className={styles.primaryBtn} style={{ backgroundColor: 'var(--warning)', color: 'var(--text-main)' }}>
  <Save size={16} /> Save Entry
  </button>
  </div>

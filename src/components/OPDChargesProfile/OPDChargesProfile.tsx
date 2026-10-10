@@ -18,7 +18,7 @@ const OPDChargesProfile: React.FC = () => {
  <div className={styles.header}>
  <div className={styles.headerLeft}>
  <span className={styles.badge}>0 of 0</span>
- <span className={styles.badge} style={{ backgroundColor: '#EFF6FF', color: '#2563EB', borderColor: '#BFDBFE' }}>
+ <span className={styles.badge} style={{ backgroundColor: 'var(--primary-soft)', color: 'var(--primary)', borderColor: '#BFDBFE' }}>
  Test ID: --
  </span>
  <h1 className={styles.pageTitle}>OPD Charges / Diagnostics Test</h1>
@@ -71,12 +71,12 @@ const OPDChargesProfile: React.FC = () => {
  <input type="text" className={`${styles.input} ${styles.inputSmall}`} />
  </div>
  <div className={styles.checkboxItem} onClick={() => setIsBio(!isBio)}>
- {isBio ? <CheckSquare size={16} color="#2563EB" /> : <Square size={16} color="#94A3B8" />}
- <span style={{ color: isBio ? '#172033' : '#94A3B8' }}>BIO</span>
+ {isBio ? <CheckSquare size={16} color="var(--primary)" /> : <Square size={16} color="#94A3B8" />}
+ <span style={{ color: isBio ? 'var(--text-main)' : '#94A3B8' }}>BIO</span>
  </div>
  <div className={styles.checkboxItem} onClick={() => setIsActive(!isActive)}>
- {isActive ? <CheckSquare size={16} color="#2563EB" /> : <Square size={16} color="#94A3B8" />}
- <span style={{ color: isActive ? '#172033' : '#94A3B8' }}>ACTIVE</span>
+ {isActive ? <CheckSquare size={16} color="var(--primary)" /> : <Square size={16} color="#94A3B8" />}
+ <span style={{ color: isActive ? 'var(--text-main)' : '#94A3B8' }}>ACTIVE</span>
  </div>
  <div className={styles.fieldGroup} style={{ marginLeft: 'auto' }}>
  <label className={styles.label} style={{ width: '80px' }}>LIS Lab ID :</label>

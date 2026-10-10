@@ -75,7 +75,7 @@ const ContactList: React.FC = () => {
  <td style={{ fontWeight: 500 }}>{contact.name}</td>
  <td>{contact.phone}</td>
  <td>{contact.remarks}</td>
- <td style={{ fontFamily: 'monospace', color: '#475467' }}>{contact.direct}</td>
+ <td style={{ fontFamily: 'monospace', color: 'var(--text-muted)' }}>{contact.direct}</td>
  <td>{contact.address}</td>
  <td>{contact.department}</td>
  </tr>

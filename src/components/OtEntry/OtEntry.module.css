@@ -5,7 +5,7 @@
   padding: 24px 32px;
   box-sizing: border-box;
   font-family: 'Inter', sans-serif;
-  color: #172033;
+  color: var(--text-main);
   background-color: #F7F8FA;
   min-height: 100vh;
   display: flex;
@@ -14,14 +14,14 @@
 }
 
 .header {
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid var(--border);
   padding-bottom: 16px;
 }
 
 .pageTitle {
   font-size: 22px;
   font-weight: 600;
-  color: #172033;
+  color: var(--text-main);
   margin: 0;
 }
 
@@ -29,8 +29,8 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-  background-color: #FFFFFF;
-  border: 1px solid #E5E7EB;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 24px;
   flex: 1;
@@ -42,7 +42,7 @@
   flex-direction: column;
   gap: 16px;
   padding-bottom: 24px;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid var(--border);
 }
 
 .section:last-of-type {
@@ -53,7 +53,7 @@
 .sectionHeading {
   font-size: 15px;
   font-weight: 600;
-  color: #172033;
+  color: var(--text-main);
   margin: 0 0 4px 0;
 }
 
@@ -95,16 +95,16 @@
 .label {
   font-size: 13px;
   font-weight: 500;
-  color: #475467;
+  color: var(--text-muted);
 }
 
 .input, .select, .textarea {
-  background-color: #FFFFFF;
+  background-color: var(--surface);
   border: 1px solid #DDE3EA;
   border-radius: 6px;
   padding: 10px 12px;
   font-size: 14px;
-  color: #172033;
+  color: var(--text-main);
   box-sizing: border-box;
   width: 100%;
   transition: all 0.2s ease;
@@ -122,12 +122,12 @@
 
 .input:focus, .select:focus, .textarea:focus {
   outline: none;
-  border-color: #2563EB;
+  border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 .input[readonly] {
-  background-color: #F8FAFC;
+  background-color: var(--bg-color);
   color: #667085;
 }
 
@@ -153,8 +153,8 @@
 }
 
 .helpBtn:hover {
-  background-color: #F1F5F9;
-  color: #2563EB;
+  background-color: var(--bg-color);
+  color: var(--primary);
 }
 
 .inputWithHelp .input,
@@ -167,7 +167,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: #FFFFFF;
+  background-color: var(--surface);
   border: 1px solid #DDE3EA;
   border-radius: 6px;
   padding: 0 12px;
@@ -175,7 +175,7 @@
 }
 
 .timeWrapper:focus-within {
-  border-color: #2563EB;
+  border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
@@ -185,7 +185,7 @@
   outline: none;
   flex: 1;
   font-size: 14px;
-  color: #172033;
+  color: var(--text-main);
   padding: 0;
   background: transparent;
 }
@@ -196,7 +196,7 @@
   justify-content: space-between;
   align-items: center;
   padding-top: 24px;
-  border-top: 1px solid #E2E8F0;
+  border-top: 1px solid var(--border);
   margin-top: 8px;
 }
 
@@ -212,8 +212,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #FFFFFF;
-  color: #475467;
+  background-color: var(--surface);
+  color: var(--text-muted);
   border: 1px solid #DDE3EA;
   border-radius: 6px;
   cursor: pointer;
@@ -221,9 +221,9 @@
 }
 
 .navBtn:hover {
-  background-color: #F8FAFC;
-  border-color: #CBD5E1;
-  color: #172033;
+  background-color: var(--bg-color);
+  border-color: var(--border);
+  color: var(--text-main);
 }
 
 .actionGroup {
@@ -233,8 +233,8 @@
 }
 
 .primaryBtn {
-  background-color: #2563EB;
-  color: #FFFFFF;
+  background-color: var(--primary);
+  color: var(--surface);
   border: none;
   border-radius: 6px;
   height: 38px;
@@ -249,12 +249,12 @@
 }
 
 .primaryBtn:hover {
-  background-color: #1D4ED8;
+  background-color: var(--primary-hover);
 }
 
 .secondaryBtn {
-  background-color: #FFFFFF;
-  color: #172033;
+  background-color: var(--surface);
+  color: var(--text-main);
   border: 1px solid #DDE3EA;
   border-radius: 6px;
   height: 38px;
@@ -269,13 +269,13 @@
 }
 
 .secondaryBtn:hover {
-  background-color: #F8FAFC;
-  border-color: #E2E8F0;
+  background-color: var(--bg-color);
+  border-color: var(--border);
 }
 
 .tertiaryBtn {
   background: transparent;
-  color: #475467;
+  color: var(--text-muted);
   border: 1px solid transparent;
   border-radius: 6px;
   height: 38px;
@@ -287,6 +287,6 @@
 }
 
 .tertiaryBtn:hover {
-  background-color: #F8FAFC;
-  color: #172033;
+  background-color: var(--bg-color);
+  color: var(--text-main);
 }

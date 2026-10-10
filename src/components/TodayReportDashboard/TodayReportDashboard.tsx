@@ -27,7 +27,7 @@ const TodayReportDashboard: React.FC = () => {
  <button className={styles.groupBtn}>
  <RefreshCw size={14} style={{ marginRight: '4px', display: 'inline-block', verticalAlign: 'text-bottom' }} /> Refresh
  </button>
- <button className={`${styles.groupBtn} ${styles.active}`} style={{ backgroundColor: '#FEF08A', color: '#854D0E', borderBottom: '2px solid #EAB308' }}>
+ <button className={`${styles.groupBtn} ${styles.active}`} style={{ backgroundColor: '#FEF08A', color: '#854D0E', borderBottom: '2px solid var(--warning)' }}>
  ALL
  </button>
  </div>
@@ -53,7 +53,7 @@ const TodayReportDashboard: React.FC = () => {
  <input 
  type="text" 
  className={styles.searchInput} 
- style={{ backgroundColor: '#FEF08A', borderColor: '#EAB308' }} // Mimicking the yellow highlight in screenshot
+ style={{ backgroundColor: '#FEF08A', borderColor: 'var(--warning)' }} // Mimicking the yellow highlight in screenshot
  />
  </div>
  <button className={styles.iconBtn}>

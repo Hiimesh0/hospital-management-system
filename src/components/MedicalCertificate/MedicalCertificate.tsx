@@ -71,7 +71,7 @@ const MedicalCertificate: React.FC = () => {
 
  {/* Photo Column */}
  <div className={styles.photoColumn}>
- <div style={{ fontSize: '13px', fontWeight: 600, color: '#475467', textAlign: 'center', backgroundColor: '#FFFFFF', marginTop: '-24px', alignSelf: 'center', padding: '0 8px' }}>
+ <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-muted)', textAlign: 'center', backgroundColor: 'var(--surface)', marginTop: '-24px', alignSelf: 'center', padding: '0 8px' }}>
  Photograph
  </div>
  <div className={styles.fieldRow} style={{ justifyContent: 'center' }}>
@@ -170,19 +170,19 @@ const MedicalCertificate: React.FC = () => {
 
  <div className={styles.signatureRow}>
  <div className={styles.signatureBlock}>
- <div style={{ fontSize: '13px', fontWeight: 600, color: '#475467' }}>Patient's Signature And/Or Thumb<br/>Impression</div>
+ <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-muted)' }}>Patient's Signature And/Or Thumb<br/>Impression</div>
  <div className={styles.fieldGroupExpanded} style={{ marginTop: 'auto' }}>
- <span style={{ fontSize: '13px', fontWeight: 600, color: '#475467' }}>Date:</span>
+ <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-muted)' }}>Date:</span>
  <input type="date" className={`${styles.input} ${styles.inlineSelect}`}  max="2099-12-31" />
  </div>
  </div>
  <div className={styles.signatureBlock} style={{ flex: 1.5 }}>
  <div className={styles.fieldRow}>
- <label style={{ fontSize: '13px', fontWeight: 600, color: '#475467', paddingTop: '10px' }}>Treatment<br/>Given :</label>
+ <label style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-muted)', paddingTop: '10px' }}>Treatment<br/>Given :</label>
  <input type="text" className={styles.input} />
  </div>
  <div className={styles.fieldGroupExpanded} style={{ marginTop: 'auto', justifyContent: 'flex-end' }}>
- <span style={{ fontSize: '13px', fontWeight: 600, color: '#475467' }}>Date:</span>
+ <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-muted)' }}>Date:</span>
  <input type="date" className={`${styles.input} ${styles.inlineSelect}`}  max="2099-12-31" />
  </div>
  </div>
@@ -205,7 +205,7 @@ const MedicalCertificate: React.FC = () => {
 
  <div className={styles.middleActions}>
  <div className={styles.checkboxItem} onClick={() => setIsCheckedH(!isCheckedH)}>
- {isCheckedH ? <CheckSquare size={18} color="#2563EB" /> : <Square size={18} color="#94A3B8" />}
+ {isCheckedH ? <CheckSquare size={18} color="var(--primary)" /> : <Square size={18} color="#94A3B8" />}
  H
  </div>
  
@@ -214,7 +214,7 @@ const MedicalCertificate: React.FC = () => {
  </button>
  
  <div className={styles.checkboxItem} onClick={() => setBlankCheck(!blankCheck)}>
- {blankCheck ? <CheckSquare size={18} color="#2563EB" /> : <Square size={18} color="#94A3B8" />}
+ {blankCheck ? <CheckSquare size={18} color="var(--primary)" /> : <Square size={18} color="#94A3B8" />}
  </div>
  
  <button className={styles.secondaryBtn}>

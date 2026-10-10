@@ -5,7 +5,7 @@
   padding: 24px 32px;
   box-sizing: border-box;
   font-family: 'Inter', sans-serif;
-  color: #172033;
+  color: var(--text-main);
   background-color: #F7F8FA;
   min-height: 100vh;
   display: flex;
@@ -15,7 +15,7 @@
 }
 
 .header {
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid var(--border);
   padding-bottom: 16px;
   display: flex;
   flex-direction: column;
@@ -25,7 +25,7 @@
 .patientName {
   font-size: 22px;
   font-weight: 600;
-  color: #172033;
+  color: var(--text-main);
   margin: 0;
   text-align: center;
 }
@@ -40,8 +40,8 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-  background-color: #FFFFFF;
-  border: 1px solid #E5E7EB;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 24px;
 }
@@ -52,10 +52,10 @@
   grid-template-columns: 2fr 1fr 2fr auto;
   gap: 16px;
   align-items: flex-end;
-  background-color: #F8FAFC;
+  background-color: var(--bg-color);
   padding: 16px;
   border-radius: 6px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid var(--border);
 }
 
 .fieldGroup {
@@ -67,17 +67,17 @@
 .label {
   font-size: 12px;
   font-weight: 500;
-  color: #475467;
+  color: var(--text-muted);
 }
 
 .input {
   height: 38px;
-  background-color: #FFFFFF;
+  background-color: var(--surface);
   border: 1px solid #DDE3EA;
   border-radius: 6px;
   padding: 10px 12px;
   font-size: 13px;
-  color: #172033;
+  color: var(--text-main);
   box-sizing: border-box;
   width: 100%;
   transition: all 0.2s ease;
@@ -85,24 +85,24 @@
 
 .input:focus, .select:focus {
   outline: none;
-  border-color: #2563EB;
+  border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 .input[readonly] {
-  background-color: #F8FAFC;
+  background-color: var(--bg-color);
   color: #667085;
-  border-color: #E2E8F0;
+  border-color: var(--border);
 }
 
 .select {
   height: 38px;
-  background-color: #FFFFFF;
+  background-color: var(--surface);
   border: 1px solid #DDE3EA;
   border-radius: 6px;
   padding: 0 12px;
   font-size: 13px;
-  color: #172033;
+  color: var(--text-main);
   box-sizing: border-box;
   width: 100%;
 }
@@ -113,8 +113,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #2563EB;
-  color: #FFFFFF;
+  background-color: var(--primary);
+  color: var(--surface);
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -122,7 +122,7 @@
 }
 
 .iconBtn:hover {
-  background-color: #1D4ED8;
+  background-color: var(--primary-hover);
 }
 
 /* Main Two-Column Layout */
@@ -136,7 +136,7 @@
 .tableWrapper {
   width: 100%;
   overflow-x: auto;
-  border: 1px solid #E5E7EB;
+  border: 1px solid var(--border);
   border-radius: 6px;
 }
 
@@ -147,13 +147,13 @@
 }
 
 .dataTable th {
-  background-color: #F8FAFC;
-  color: #475467;
+  background-color: var(--bg-color);
+  color: var(--text-muted);
   font-weight: 500;
   font-size: 12px;
   padding: 10px 12px;
-  border-bottom: 1px solid #E5E7EB;
-  border-right: 1px solid #E5E7EB;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
   white-space: nowrap;
 }
 
@@ -164,9 +164,9 @@
 .dataTable td {
   padding: 10px 12px;
   font-size: 13px;
-  color: #172033;
-  border-bottom: 1px solid #E5E7EB;
-  border-right: 1px solid #E5E7EB;
+  color: var(--text-main);
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
 }
 
 .dataTable td:last-child {
@@ -174,7 +174,7 @@
 }
 
 .dataTable tbody tr:hover {
-  background-color: #F8FAFC;
+  background-color: var(--bg-color);
 }
 
 .dataTable tbody tr:last-child td {
@@ -200,7 +200,7 @@
   justify-content: space-between;
   align-items: center;
   padding-top: 24px;
-  border-top: 1px solid #E2E8F0;
+  border-top: 1px solid var(--border);
   margin-top: auto;
 }
 
@@ -211,8 +211,8 @@
 }
 
 .primaryBtn {
-  background-color: #2563EB;
-  color: #FFFFFF;
+  background-color: var(--primary);
+  color: var(--surface);
   border: none;
   border-radius: 6px;
   height: 38px;
@@ -227,12 +227,12 @@
 }
 
 .primaryBtn:hover {
-  background-color: #1D4ED8;
+  background-color: var(--primary-hover);
 }
 
 .secondaryBtn {
-  background-color: #FFFFFF;
-  color: #172033;
+  background-color: var(--surface);
+  color: var(--text-main);
   border: 1px solid #DDE3EA;
   border-radius: 6px;
   height: 38px;
@@ -247,14 +247,14 @@
 }
 
 .secondaryBtn:hover {
-  background-color: #F8FAFC;
-  border-color: #E2E8F0;
+  background-color: var(--bg-color);
+  border-color: var(--border);
 }
 
 .secondaryBtn.active {
-  background-color: #EFF6FF;
-  border-color: #2563EB;
-  color: #1D4ED8;
+  background-color: var(--primary-soft);
+  border-color: var(--primary);
+  color: var(--primary-hover);
 }
 
 .checkboxWrapper {
@@ -262,7 +262,7 @@
   align-items: center;
   gap: 6px;
   font-size: 13px;
-  color: #475467;
+  color: var(--text-muted);
   cursor: pointer;
 }
 
@@ -282,7 +282,7 @@
 }
 
 .modalContent {
-  background-color: #FFFFFF;
+  background-color: var(--surface);
   border-radius: 8px;
   width: 100%;
   max-width: 1100px;
@@ -293,7 +293,7 @@
 
 .modalHeader {
   padding: 16px 24px;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -302,7 +302,7 @@
 .modalTitle {
   font-size: 16px;
   font-weight: 600;
-  color: #2563EB; /* Blue as in the original */
+  color: var(--primary); /* Blue as in the original */
   margin: 0;
 }
 
@@ -320,7 +320,7 @@
 
 .closeBtn:hover {
   background-color: #F7F8FA;
-  color: #172033;
+  color: var(--text-main);
 }
 
 .modalBody {

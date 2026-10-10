@@ -13,10 +13,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #FFFFFF;
+  background-color: var(--surface);
   padding: 16px 20px;
   border-radius: 8px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid var(--border);
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
@@ -32,12 +32,12 @@
   border: 1px solid #DDE3EA;
   border-radius: 6px;
   font-size: 14px;
-  color: #172033;
+  color: var(--text-main);
   outline: none;
 }
 
 .datePicker:focus {
-  border-color: #2563EB;
+  border-color: var(--primary);
 }
 
 .buttonGroup {
@@ -50,12 +50,12 @@
 .groupBtn {
   padding: 0 16px;
   height: 38px;
-  background-color: #FFFFFF;
+  background-color: var(--surface);
   border: none;
   border-right: 1px solid #DDE3EA;
   font-size: 13px;
   font-weight: 500;
-  color: #475467;
+  color: var(--text-muted);
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -65,24 +65,24 @@
 }
 
 .groupBtn:hover {
-  background-color: #F8FAFC;
+  background-color: var(--bg-color);
 }
 
 .groupBtn.active {
-  background-color: #EFF6FF;
-  color: #1D4ED8;
+  background-color: var(--primary-soft);
+  color: var(--primary-hover);
   font-weight: 600;
 }
 
 .actionBtn {
   height: 38px;
   padding: 0 16px;
-  background-color: #FFFFFF;
+  background-color: var(--surface);
   border: 1px solid #DDE3EA;
   border-radius: 6px;
   font-size: 13px;
   font-weight: 500;
-  color: #475467;
+  color: var(--text-muted);
   cursor: pointer;
   transition: all 0.2s;
   display: flex;
@@ -91,8 +91,8 @@
 }
 
 .actionBtn:hover {
-  background-color: #F8FAFC;
-  border-color: #CBD5E1;
+  background-color: var(--bg-color);
+  border-color: var(--border);
 }
 
 /* Center Title */
@@ -105,7 +105,7 @@
 .pageTitle {
   font-size: 18px;
   font-weight: 600;
-  color: #172033;
+  color: var(--text-main);
   margin: 0;
   letter-spacing: 0.5px;
 }
@@ -127,7 +127,7 @@
 .searchLabel {
   font-size: 13px;
   font-weight: 600;
-  color: #475467;
+  color: var(--text-muted);
   margin-right: 8px;
 }
 
@@ -138,14 +138,14 @@
   border: 1px solid #DDE3EA;
   border-radius: 6px;
   font-size: 13px;
-  background-color: #FFFFFF;
+  background-color: var(--surface);
   transition: all 0.2s;
 }
 
 .searchInput:focus {
-  border-color: #2563EB;
+  border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-  background-color: #FFFFFF;
+  background-color: var(--surface);
 }
 
 .searchIcon {
@@ -160,24 +160,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #FFFFFF;
+  background-color: var(--surface);
   border: 1px solid #DDE3EA;
   border-radius: 6px;
-  color: #475467;
+  color: var(--text-muted);
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .iconBtn:hover {
-  background-color: #F1F5F9;
+  background-color: var(--bg-color);
   color: #1E293B;
 }
 
 /* Table Area */
 .tableWrapper {
   flex: 1;
-  background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
   display: flex;
@@ -199,12 +199,12 @@
 .th {
   position: sticky;
   top: 0;
-  background-color: #F8FAFC;
+  background-color: var(--bg-color);
   padding: 12px 16px;
   font-size: 12px;
   font-weight: 600;
-  color: #475467;
-  border-bottom: 1px solid #E2E8F0;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
   white-space: nowrap;
   z-index: 10;
 }
@@ -212,7 +212,7 @@
 .td {
   padding: 10px 16px;
   font-size: 13px;
-  border-bottom: 1px solid #F1F5F9;
+  border-bottom: 1px solid var(--bg-color);
   white-space: nowrap;
 }
 
@@ -221,27 +221,27 @@
 }
 
 .tr:hover {
-  background-color: #F8FAFC;
+  background-color: var(--bg-color);
 }
 
 /* Status Colors */
 .textDefault {
-  color: #172033;
+  color: var(--text-main);
   font-weight: 500;
 }
 
 .textGreen {
-  color: #16A34A;
+  color: var(--success);
   font-weight: 500;
 }
 
 .textBlue {
-  color: #2563EB;
+  color: var(--primary);
   font-weight: 500;
 }
 
 .textMuted {
-  color: #64748B;
+  color: var(--text-muted);
 }
 
 .alignCenter {

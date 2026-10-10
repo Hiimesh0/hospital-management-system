@@ -5,7 +5,7 @@
   padding: 24px 32px;
   box-sizing: border-box;
   font-family: 'Inter', sans-serif;
-  color: #172033;
+  color: var(--text-main);
   background-color: #F7F8FA;
   min-height: 100vh;
   display: flex;
@@ -18,14 +18,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid var(--border);
   padding-bottom: 16px;
 }
 
 .pageTitle {
   font-size: 22px;
   font-weight: 600;
-  color: #172033;
+  color: var(--text-main);
   margin: 0;
 }
 
@@ -33,7 +33,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: #EFF6FF;
+  background-color: var(--primary-soft);
   padding: 8px 16px;
   border-radius: 6px;
   border: 1px solid #BFDBFE;
@@ -41,7 +41,7 @@
 
 .companyLabel {
   font-size: 13px;
-  color: #1D4ED8;
+  color: var(--primary-hover);
   font-weight: 500;
 }
 
@@ -55,8 +55,8 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-  background-color: #FFFFFF;
-  border: 1px solid #E5E7EB;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 24px;
   flex: 1;
@@ -68,13 +68,13 @@
   align-items: center;
   gap: 16px;
   padding-bottom: 20px;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid var(--border);
 }
 
 .tagBtn {
-  background-color: #F8FAFC;
-  color: #475467;
-  border: 1px solid #E2E8F0;
+  background-color: var(--bg-color);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
   border-radius: 6px;
   padding: 10px 16px;
   font-size: 14px;
@@ -85,8 +85,8 @@
 .patientInfoBox {
   display: flex;
   align-items: center;
-  background-color: #F8FAFC;
-  border: 1px solid #E2E8F0;
+  background-color: var(--bg-color);
+  border: 1px solid var(--border);
   border-radius: 6px;
   flex: 1;
   overflow: hidden;
@@ -96,8 +96,8 @@
   padding: 10px 16px;
   font-size: 14px;
   font-weight: 600;
-  color: #172033;
-  border-right: 1px solid #E2E8F0;
+  color: var(--text-main);
+  border-right: 1px solid var(--border);
 }
 
 .infoSegment.name {
@@ -106,19 +106,19 @@
 
 .infoSegment.amount {
   flex: 1;
-  color: #16A34A; /* Success green for zero balance, or neutral if normal */
+  color: var(--success); /* Success green for zero balance, or neutral if normal */
 }
 
 .infoSegment.record {
   flex: 1;
   border-right: none;
-  color: #475467;
+  color: var(--text-muted);
   font-weight: 500;
 }
 
 .exitBtn {
-  background-color: #FFFFFF;
-  color: #172033;
+  background-color: var(--surface);
+  color: var(--text-main);
   border: 1px solid #DDE3EA;
   border-radius: 6px;
   height: 40px;
@@ -133,8 +133,8 @@
 }
 
 .exitBtn:hover {
-  background-color: #F8FAFC;
-  border-color: #E2E8F0;
+  background-color: var(--bg-color);
+  border-color: var(--border);
 }
 
 /* Entry Form */
@@ -142,8 +142,8 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  background-color: #F8FAFC;
-  border: 1px solid #E2E8F0;
+  background-color: var(--bg-color);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 20px;
 }
@@ -174,16 +174,16 @@
 .label {
   font-size: 13px;
   font-weight: 500;
-  color: #475467;
+  color: var(--text-muted);
 }
 
 .input, .select {
-  background-color: #FFFFFF;
+  background-color: var(--surface);
   border: 1px solid #DDE3EA;
   border-radius: 6px;
   padding: 10px 12px;
   font-size: 14px;
-  color: #172033;
+  color: var(--text-main);
   box-sizing: border-box;
   width: 100%;
   height: 38px;
@@ -193,7 +193,7 @@
 
 .input:focus, .select:focus {
   outline: none;
-  border-color: #2563EB;
+  border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
@@ -203,8 +203,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #2563EB;
-  color: #FFFFFF;
+  background-color: var(--primary);
+  color: var(--surface);
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -212,16 +212,16 @@
 }
 
 .addBtn:hover {
-  background-color: #1D4ED8;
+  background-color: var(--primary-hover);
 }
 
 /* Table */
 .tableWrapper {
   width: 100%;
   overflow-x: auto;
-  border: 1px solid #E5E7EB;
+  border: 1px solid var(--border);
   border-radius: 6px;
-  background-color: #FFFFFF;
+  background-color: var(--surface);
   flex: 1;
   min-height: 200px;
 }
@@ -233,30 +233,30 @@
 }
 
 .dataTable th {
-  background-color: #F8FAFC;
-  color: #475467;
+  background-color: var(--bg-color);
+  color: var(--text-muted);
   font-weight: 600;
   font-size: 13px;
   padding: 12px 16px;
-  border-bottom: 1px solid #E5E7EB;
+  border-bottom: 1px solid var(--border);
   white-space: nowrap;
 }
 
 .dataTable td {
   padding: 12px 16px;
   font-size: 14px;
-  color: #172033;
-  border-bottom: 1px solid #E5E7EB;
+  color: var(--text-main);
+  border-bottom: 1px solid var(--border);
 }
 
 .dataTable tbody tr:hover {
-  background-color: #F8FAFC;
+  background-color: var(--bg-color);
 }
 
 .emptyState {
   text-align: center;
   padding: 48px;
-  color: #64748B;
+  color: var(--text-muted);
   font-size: 14px;
   font-style: italic;
 }
@@ -274,7 +274,7 @@
 }
 
 .modalContent {
-  background-color: #FFFFFF;
+  background-color: var(--surface);
   border-radius: 12px;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   max-width: 90vw;
@@ -289,20 +289,20 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px 24px;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid var(--border);
 }
 
 .modalTitle {
   margin: 0;
   font-size: 18px;
   font-weight: 600;
-  color: #172033;
+  color: var(--text-main);
 }
 
 .closeBtn {
   background: none;
   border: none;
-  color: #64748B;
+  color: var(--text-muted);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -312,8 +312,8 @@
 }
 
 .closeBtn:hover {
-  background-color: #F1F5F9;
-  color: #0F172A;
+  background-color: var(--bg-color);
+  color: var(--text-main);
 }
 
 .modalBody {
@@ -322,8 +322,8 @@
 }
 
 .secondaryBtn {
-  background-color: #FFFFFF;
-  color: #172033;
+  background-color: var(--surface);
+  color: var(--text-main);
   border: 1px solid #DDE3EA;
   border-radius: 6px;
   height: 40px;
@@ -338,13 +338,13 @@
 }
 
 .secondaryBtn:hover {
-  background-color: #F8FAFC;
-  border-color: #E2E8F0;
+  background-color: var(--bg-color);
+  border-color: var(--border);
 }
 
 .primaryBtn {
-  background-color: #2563EB;
-  color: #FFFFFF;
+  background-color: var(--primary);
+  color: var(--surface);
   border: none;
   border-radius: 6px;
   height: 40px;
@@ -359,5 +359,5 @@
 }
 
 .primaryBtn:hover {
-  background-color: #1D4ED8;
+  background-color: var(--primary-hover);
 }

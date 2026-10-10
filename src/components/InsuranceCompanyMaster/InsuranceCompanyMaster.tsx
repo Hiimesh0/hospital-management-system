@@ -30,7 +30,7 @@ const InsuranceCompanyMaster: React.FC = () => {
  <div className={styles.row}>
  <div className={styles.fieldGroup} style={{ flex: 1.5 }}>
  <label className={styles.label}>Type :</label>
- <select className={styles.input} style={{ backgroundColor: '#3B82F6', color: 'white', borderColor: '#2563EB' }}>
+ <select className={styles.input} style={{ backgroundColor: 'var(--primary)', color: 'white', borderColor: 'var(--primary)' }}>
  <option>Credit</option>
  <option>Cash</option>
  </select>
@@ -71,7 +71,7 @@ const InsuranceCompanyMaster: React.FC = () => {
  </div>
  <div className={styles.fieldGroup} style={{ flex: 1 }}>
  <div className={styles.checkboxItem} style={{ color: '#94A3B8', cursor: 'not-allowed' }}>
- <Square size={16} color="#CBD5E1" />
+ <Square size={16} color="var(--border)" />
  <span>Default Hospital Name</span>
  </div>
  </div>
@@ -102,8 +102,8 @@ const InsuranceCompanyMaster: React.FC = () => {
  <div className={styles.row}>
  <div className={styles.fieldGroup} style={{ paddingLeft: '152px' }}>
  <div className={styles.checkboxItem} onClick={() => setNoIpdCharges(!noIpdCharges)}>
- {noIpdCharges ? <CheckSquare size={16} color="#2563EB" /> : <Square size={16} color="#94A3B8" />}
- <span style={{ color: noIpdCharges ? '#172033' : '#94A3B8' }}>Do not calculate IPD Service Charges</span>
+ {noIpdCharges ? <CheckSquare size={16} color="var(--primary)" /> : <Square size={16} color="#94A3B8" />}
+ <span style={{ color: noIpdCharges ? 'var(--text-main)' : '#94A3B8' }}>Do not calculate IPD Service Charges</span>
  </div>
  </div>
  </div>
@@ -144,7 +144,7 @@ const InsuranceCompanyMaster: React.FC = () => {
 
  <div className={styles.middleActions}>
  <div className={styles.printBtn} onClick={() => setPrint(!print)}>
- {print ? <CheckSquare size={18} color="#2563EB" /> : <Square size={18} />}
+ {print ? <CheckSquare size={18} color="var(--primary)" /> : <Square size={18} />}
  <span>Print</span>
  </div>
  <button className={styles.secondaryBtn} style={{ marginLeft: '16px', width: '200px', justifyContent: 'center' }}>

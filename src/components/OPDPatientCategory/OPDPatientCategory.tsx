@@ -47,7 +47,7 @@ const OPDPatientCategory: React.FC = () => {
 
  <div className={styles.middleActions}>
  <div className={styles.checkboxItem} onClick={() => setPrint(!print)}>
- {print ? <CheckSquare size={18} color="#2563EB" /> : <Square size={18} />}
+ {print ? <CheckSquare size={18} color="var(--primary)" /> : <Square size={18} />}
  <span>Print</span>
  </div>
  <button className={styles.secondaryBtn} style={{ marginLeft: '12px' }}>

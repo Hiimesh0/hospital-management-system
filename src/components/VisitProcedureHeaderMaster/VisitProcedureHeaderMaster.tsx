@@ -31,7 +31,7 @@ const VisitProcedureHeaderMaster: React.FC = () => {
  <div className={styles.row}>
  <div className={styles.fieldGroup} style={{ flex: 1, maxWidth: '400px' }}>
  <label className={styles.label}>Header For :</label>
- <select className={styles.input} style={{ backgroundColor: '#3B82F6', color: '#FFFFFF', border: 'none' }}>
+ <select className={styles.input} style={{ backgroundColor: 'var(--primary)', color: 'var(--surface)', border: 'none' }}>
  <option>Visiting Charge</option>
  <option>Other Charge</option>
  </select>
@@ -71,23 +71,23 @@ const VisitProcedureHeaderMaster: React.FC = () => {
 
  <div className={styles.checkboxGrid}>
  <div className={styles.checkboxItem} onClick={() => setNotCalcService(!notCalcService)}>
- {notCalcService ? <CheckSquare size={18} color="#2563EB" /> : <Square size={18} />}
+ {notCalcService ? <CheckSquare size={18} color="var(--primary)" /> : <Square size={18} />}
  <span>Not Calculate Service Charge</span>
  </div>
  <div className={styles.checkboxItem} onClick={() => setNotCalcUnderCare(!notCalcUnderCare)}>
- {notCalcUnderCare ? <CheckSquare size={18} color="#2563EB" /> : <Square size={18} />}
+ {notCalcUnderCare ? <CheckSquare size={18} color="var(--primary)" /> : <Square size={18} />}
  <span>Not Calculate In Under Care Reference Report</span>
  </div>
  
  {/* Blank space to align with grid if needed, but per screenshot Package is below Not Calculate Service Charge */}
  <div className={styles.checkboxItem} onClick={() => setIsPackage(!isPackage)} style={{ marginTop: '24px' }}>
- {isPackage ? <CheckSquare size={18} color="#2563EB" /> : <Square size={18} />}
+ {isPackage ? <CheckSquare size={18} color="var(--primary)" /> : <Square size={18} />}
  <span>Package</span>
  </div>
  <div /> {/* Empty cell to match layout */}
 
  <div className={styles.checkboxItem} onClick={() => setNotCalcInRef(!notCalcInRef)} style={{ marginTop: '12px' }}>
- {notCalcInRef ? <CheckSquare size={18} color="#2563EB" /> : <Square size={18} />}
+ {notCalcInRef ? <CheckSquare size={18} color="var(--primary)" /> : <Square size={18} />}
  <span>Not Calculate In Ref Report</span>
  </div>
  </div>

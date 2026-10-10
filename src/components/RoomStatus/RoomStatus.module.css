@@ -5,7 +5,7 @@
   padding: 24px 32px;
   box-sizing: border-box;
   font-family: 'Inter', sans-serif;
-  color: #172033;
+  color: var(--text-main);
   background-color: #F7F8FA;
   min-height: 100vh;
   display: flex;
@@ -37,31 +37,31 @@
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 6px;
   font-size: 13px;
   font-weight: 500;
-  color: #475467;
+  color: var(--text-muted);
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.2s;
 }
 
 .tab:hover {
-  background-color: #F8FAFC;
-  border-color: #CBD5E1;
+  background-color: var(--bg-color);
+  border-color: var(--border);
 }
 
 .tab.active {
-  background-color: #EFF6FF;
-  border-color: #2563EB;
-  color: #1D4ED8;
+  background-color: var(--primary-soft);
+  border-color: var(--primary);
+  color: var(--primary-hover);
 }
 
 .tabBadge {
-  background-color: #F1F5F9;
-  color: #64748B;
+  background-color: var(--bg-color);
+  color: var(--text-muted);
   padding: 2px 6px;
   border-radius: 12px;
   font-size: 11px;
@@ -69,8 +69,8 @@
 }
 
 .tab.active .tabBadge {
-  background-color: #2563EB;
-  color: #FFFFFF;
+  background-color: var(--primary);
+  color: var(--surface);
 }
 
 /* Header */
@@ -83,7 +83,7 @@
 .pageTitle {
   font-size: 20px;
   font-weight: 600;
-  color: #172033;
+  color: var(--text-main);
   margin: 0;
 }
 
@@ -97,8 +97,8 @@
 
 /* Room Card (Occupied) */
 .roomCard {
-  background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -108,12 +108,12 @@
 
 .roomCard:hover {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  border-color: #CBD5E1;
+  border-color: var(--border);
 }
 
 .cardHeader {
-  background-color: #F8FAFC;
-  border-bottom: 1px solid #E2E8F0;
+  background-color: var(--bg-color);
+  border-bottom: 1px solid var(--border);
   padding: 8px 12px;
   display: flex;
   justify-content: space-between;
@@ -122,7 +122,7 @@
 }
 
 .cardDate {
-  color: #64748B;
+  color: var(--text-muted);
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -146,13 +146,13 @@
 .roomId {
   font-size: 15px;
   font-weight: 700;
-  color: #0F172A;
+  color: var(--text-main);
 }
 
 .recordId {
   font-weight: 600;
-  color: #475467;
-  background-color: #F1F5F9;
+  color: var(--text-muted);
+  background-color: var(--bg-color);
   padding: 2px 6px;
   border-radius: 4px;
 }
@@ -178,20 +178,20 @@
 
 .patientAddress {
   font-size: 11px;
-  color: #64748B;
+  color: var(--text-muted);
 }
 
 .doctorName {
   font-size: 12px;
   font-weight: 500;
-  color: #2563EB;
+  color: var(--primary);
   margin-top: 4px;
 }
 
 /* Room Card (Unoccupied) */
 .roomCardEmpty {
-  background-color: #F8FAFC;
-  border: 1px dashed #CBD5E1;
+  background-color: var(--bg-color);
+  border: 1px dashed var(--border);
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -204,20 +204,20 @@
 }
 
 .roomCardEmpty:hover {
-  border-color: #2563EB;
-  background-color: #EFF6FF;
-  color: #2563EB;
+  border-color: var(--primary);
+  background-color: var(--primary-soft);
+  color: var(--primary);
 }
 
 .emptyRoomId {
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 8px;
-  color: #475467;
+  color: var(--text-muted);
 }
 
 .roomCardEmpty:hover .emptyRoomId {
-  color: #1D4ED8;
+  color: var(--primary-hover);
 }
 
 .emptyText {
@@ -227,8 +227,8 @@
 
 /* Summary Card */
 .summaryCard {
-  background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -240,7 +240,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid var(--border);
   font-size: 13px;
   font-weight: 600;
 }
@@ -250,26 +250,26 @@
 }
 
 .summaryRow.total {
-  background-color: #FEF3C7;
+  background-color: var(--warning-soft);
   color: #92400E;
 }
 
 .summaryRow.occupied {
-  color: #172033;
+  color: var(--text-main);
 }
 
 .summaryRow.unoccupied {
-  color: #475467;
+  color: var(--text-muted);
 }
 
 .summaryRow.booked {
-  color: #64748B;
+  color: var(--text-muted);
 }
 
 /* Footer Legend and Search */
 .footerSection {
-  background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -277,15 +277,15 @@
 }
 
 .legendBar {
-  background-color: #F8FAFC;
+  background-color: var(--bg-color);
   padding: 10px 16px;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid var(--border);
   display: flex;
   gap: 24px;
   flex-wrap: wrap;
   font-size: 11px;
   font-weight: 500;
-  color: #64748B;
+  color: var(--text-muted);
 }
 
 .legendItem {
@@ -314,7 +314,7 @@
   align-items: center;
   gap: 16px;
   padding-right: 24px;
-  border-right: 1px solid #E2E8F0;
+  border-right: 1px solid var(--border);
 }
 
 .checkboxGroup {
@@ -328,7 +328,7 @@
   align-items: center;
   gap: 6px;
   font-size: 12px;
-  color: #475467;
+  color: var(--text-muted);
   font-weight: 500;
 }
 
@@ -349,24 +349,24 @@
 .label {
   font-size: 12px;
   font-weight: 500;
-  color: #475467;
+  color: var(--text-muted);
 }
 
 .input {
   height: 36px;
-  background-color: #FFFFFF;
+  background-color: var(--surface);
   border: 1px solid #DDE3EA;
   border-radius: 6px;
   padding: 8px 12px;
   font-size: 13px;
-  color: #172033;
+  color: var(--text-main);
   width: 100%;
   box-sizing: border-box;
 }
 
 .input:focus {
   outline: none;
-  border-color: #2563EB;
+  border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
@@ -377,8 +377,8 @@
 }
 
 .secondaryBtn {
-  background-color: #FFFFFF;
-  color: #172033;
+  background-color: var(--surface);
+  color: var(--text-main);
   border: 1px solid #DDE3EA;
   border-radius: 6px;
   height: 36px;
@@ -393,13 +393,13 @@
 }
 
 .secondaryBtn:hover {
-  background-color: #F8FAFC;
-  border-color: #E2E8F0;
+  background-color: var(--bg-color);
+  border-color: var(--border);
 }
 
 .dangerBtn {
-  background-color: #FEF2F2;
-  color: #DC2626;
+  background-color: var(--danger-soft);
+  color: var(--danger-hover);
   border: 1px solid #FECACA;
   border-radius: 6px;
   height: 36px;
@@ -414,6 +414,6 @@
 }
 
 .dangerBtn:hover {
-  background-color: #FEE2E2;
-  border-color: #FCA5A5;
+  background-color: var(--danger-soft);
+  border-color: var(--danger-soft);
 }

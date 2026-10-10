@@ -3,7 +3,7 @@
   max-width: 1300px;
   margin: 0 auto;
   font-family: 'Inter', sans-serif;
-  color: #172033;
+  color: var(--text-main);
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -15,25 +15,25 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid var(--border);
   padding-bottom: 16px;
 }
 
 .pageTitle {
   font-size: 22px;
   font-weight: 600;
-  color: #172033;
+  color: var(--text-main);
   margin: 0;
 }
 
 .recordCounter {
   font-size: 14px;
   font-weight: 500;
-  color: #64748B;
-  background-color: #F8FAFC;
+  color: var(--text-muted);
+  background-color: var(--bg-color);
   padding: 6px 12px;
   border-radius: 6px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid var(--border);
 }
 
 /* Form Container */
@@ -46,8 +46,8 @@
 }
 
 .topSection {
-  background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 24px;
   display: flex;
@@ -71,7 +71,7 @@
 .label {
   font-size: 13px;
   font-weight: 600;
-  color: #475467;
+  color: var(--text-muted);
   white-space: nowrap;
 }
 
@@ -80,15 +80,15 @@
   padding: 0 12px;
   border: 1px solid #DDE3EA;
   border-radius: 6px;
-  background-color: #FFFFFF;
-  color: #172033;
+  background-color: var(--surface);
+  color: var(--text-main);
   font-size: 14px;
   outline: none;
   transition: all 0.2s;
 }
 
 .input:focus {
-  border-color: #2563EB;
+  border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
@@ -101,15 +101,15 @@
   align-items: center;
   gap: 8px;
   font-size: 14px;
-  color: #64748B;
+  color: var(--text-muted);
   cursor: default;
 }
 
 /* Charges Section */
 .chargesSection {
-  border: 1px solid #E2E8F0;
+  border: 1px solid var(--border);
   border-radius: 8px;
-  background-color: #FFFFFF;
+  background-color: var(--surface);
   display: flex;
   flex-direction: column;
   padding: 16px;
@@ -130,11 +130,11 @@
 
 .chargeField .label {
   text-align: center;
-  color: #172033;
+  color: var(--text-main);
 }
 
 .tableWrapper {
-  border: 1px solid #E2E8F0;
+  border: 1px solid var(--border);
   border-radius: 6px;
   overflow: hidden;
   min-height: 200px;
@@ -150,9 +150,9 @@
   padding: 10px 16px;
   font-size: 12px;
   font-weight: 600;
-  color: #475467;
-  border-bottom: 1px solid #E2E8F0;
-  background-color: #F8FAFC;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  background-color: var(--bg-color);
 }
 
 .dataTable th:first-child {
@@ -164,8 +164,8 @@
   text-align: right;
   padding: 10px 16px;
   font-size: 13px;
-  color: #172033;
-  border-bottom: 1px solid #F1F5F9;
+  color: var(--text-main);
+  border-bottom: 1px solid var(--bg-color);
 }
 
 .dataTable td:first-child {
@@ -178,8 +178,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px 24px;
-  background-color: #FFFFFF;
-  border-top: 1px solid #E2E8F0;
+  background-color: var(--surface);
+  border-top: 1px solid var(--border);
   border-radius: 8px;
   margin-top: auto;
 }
@@ -195,17 +195,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 6px;
-  color: #475467;
+  color: var(--text-muted);
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .navBtn:hover {
-  background-color: #F8FAFC;
-  color: #172033;
+  background-color: var(--bg-color);
+  color: var(--text-main);
 }
 
 .middleActions {
@@ -220,7 +220,7 @@
   gap: 8px;
   font-size: 14px;
   font-weight: 500;
-  color: #475467;
+  color: var(--text-muted);
   cursor: pointer;
 }
 
@@ -233,9 +233,9 @@
 .secondaryBtn {
   height: 40px;
   padding: 0 20px;
-  background-color: #FFFFFF;
-  color: #172033;
-  border: 1px solid #E2E8F0;
+  background-color: var(--surface);
+  color: var(--text-main);
+  border: 1px solid var(--border);
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
@@ -247,15 +247,15 @@
 }
 
 .secondaryBtn:hover {
-  background-color: #F8FAFC;
-  border-color: #CBD5E1;
+  background-color: var(--bg-color);
+  border-color: var(--border);
 }
 
 .primaryBtn {
   height: 40px;
   padding: 0 24px;
-  background-color: #2563EB;
-  color: #FFFFFF;
+  background-color: var(--primary);
+  color: var(--surface);
   border: none;
   border-radius: 6px;
   font-size: 14px;
@@ -268,5 +268,5 @@
 }
 
 .primaryBtn:hover {
-  background-color: #1D4ED8;
+  background-color: var(--primary-hover);
 }

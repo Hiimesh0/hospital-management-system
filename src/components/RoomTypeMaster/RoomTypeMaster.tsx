@@ -17,10 +17,10 @@ const COLORS_ROW_1 = [
  { code: '#FBCFE8', name: 'FS' },
  { code: '#E9D5FF', name: 'CT' },
  { code: '#67E8F9', name: 'GW' },
- { code: '#22C55E', name: '' },
+ { code: 'var(--success)', name: '' },
  { code: '#F97316', name: '' },
  { code: '#FACC15', name: '' },
- { code: '#D1D5DB', name: '' },
+ { code: 'var(--border)', name: '' },
  { code: '#854D0E', name: '' },
  { code: '#A7F3D0', name: '' },
  { code: '#6EE7B7', name: '' },
@@ -31,16 +31,16 @@ const COLORS_ROW_2 = [
  { code: '#86EFAC', name: 'SP' },
  { code: '#F0ABFC', name: 'DX' },
  { code: '#D9F99D', name: 'SS' },
- { code: '#FFFFFF', name: '' }, // empty space in screenshot
- { code: '#E2E8F0', name: 'IC' },
+ { code: 'var(--surface)', name: '' }, // empty space in screenshot
+ { code: 'var(--border)', name: 'IC' },
  { code: '#FBBF24', name: 'IS' },
  { code: '#FEF08A', name: 'DC' },
  { code: '#A855F7', name: 'EX' },
  { code: '#06B6D4', name: '' },
  { code: '#F472B6', name: '' },
- { code: '#EAB308', name: '' },
- { code: '#EF4444', name: '' },
- { code: '#FFFFFF', name: '' }, // empty
+ { code: 'var(--warning)', name: '' },
+ { code: 'var(--danger)', name: '' },
+ { code: 'var(--surface)', name: '' }, // empty
  { code: '#5EEAD4', name: '' },
  { code: '#38BDF8', name: '' },
  { code: '#0EA5E9', name: '' },
@@ -101,7 +101,7 @@ const RoomTypeMaster: React.FC = () => {
  <div 
  key={`r2-${i}`} 
  className={`${styles.colorBox} ${color.name === 'DX' ? styles.selected : ''}`} 
- style={{ backgroundColor: color.code, opacity: color.code === '#FFFFFF' ? 0 : 1 }}
+ style={{ backgroundColor: color.code, opacity: color.code === 'var(--surface)' ? 0 : 1 }}
 >
  {color.name}
  </div>
@@ -119,7 +119,7 @@ const RoomTypeMaster: React.FC = () => {
  className={styles.checkboxItem} 
  onClick={() => setCompulsory(!compulsory)}
 >
- {compulsory ? <CheckSquare size={18} color="#2563EB" /> : <Square size={18} />}
+ {compulsory ? <CheckSquare size={18} color="var(--primary)" /> : <Square size={18} />}
  <span>Room Charges As Compulsory In Indoor Register For this Room Type</span>
  </div>
  <div 
@@ -127,7 +127,7 @@ const RoomTypeMaster: React.FC = () => {
  onClick={() => setIcu(!icu)}
  style={{ marginLeft: '26px' }}
 >
- {icu ? <CheckSquare size={18} color="#2563EB" /> : <Square size={18} />}
+ {icu ? <CheckSquare size={18} color="var(--primary)" /> : <Square size={18} />}
  <span>ICU</span>
  </div>
  </div>
@@ -148,7 +148,7 @@ const RoomTypeMaster: React.FC = () => {
  <tbody>
  {MOCK_DATA.map((row) => (
  <tr key={row.id} className={row.id === 14 ? styles.selectedRow : ''}>
- <td style={{ color: row.id === 14 ? '#2563EB' : 'inherit' }}>
+ <td style={{ color: row.id === 14 ? 'var(--primary)' : 'inherit' }}>
  {row.id === 14 ? <Play size={12} fill="currentColor" /> : row.id}
  </td>
  <td>{row.shortName}</td>

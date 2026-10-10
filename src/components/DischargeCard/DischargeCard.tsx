@@ -26,7 +26,7 @@ const DischargeCard: React.FC = () => {
  <h1 className={styles.pageTitle}>Discharge Card</h1>
  <div className={styles.fieldGroup}>
  <span className={styles.headerInfoText}>Prepared By :</span>
- <span className={styles.headerInfoText} style={{ color: '#172033', fontWeight: 600 }}>--</span>
+ <span className={styles.headerInfoText} style={{ color: 'var(--text-main)', fontWeight: 600 }}>--</span>
  </div>
  </div>
 
@@ -170,7 +170,7 @@ const DischargeCard: React.FC = () => {
  </div>
 
  <div className={styles.actionGroup}>
- <button className={styles.primaryBtn} style={{ backgroundColor: '#EAB308', color: '#172033' }}>
+ <button className={styles.primaryBtn} style={{ backgroundColor: 'var(--warning)', color: 'var(--text-main)' }}>
  <Save size={18} /> Save
  </button>
  <button className={styles.secondaryBtn} disabled>

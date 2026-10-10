@@ -61,8 +61,8 @@ const NavigationBar = () => {
   const navLinkStyle = ({ isActive }: { isActive: boolean }) => ({
     padding: '10px 16px',
     borderRadius: '6px',
-    backgroundColor: isActive ? '#EFF6FF' : 'transparent',
-    color: isActive ? '#1D4ED8' : '#475467',
+    backgroundColor: isActive ? 'var(--primary-soft)' : 'transparent',
+    color: isActive ? 'var(--primary-hover)' : 'var(--text-muted)',
     textDecoration: 'none',
     fontWeight: 500,
     fontSize: '14px',
@@ -83,8 +83,8 @@ const NavigationBar = () => {
       width: '250px', 
       minWidth: '250px',
       padding: '24px 16px', 
-      backgroundColor: '#FFFFFF', 
-      borderRight: '1px solid #E2E8F0', 
+      backgroundColor: 'var(--surface)', 
+      borderRight: '1px solid var(--border)', 
       display: 'flex', 
       flexDirection: 'column', 
       gap: '8px', 
@@ -92,7 +92,7 @@ const NavigationBar = () => {
       boxSizing: 'border-box',
       height: '100vh'
     }}>
-      <div style={{ padding: '0 16px 16px', marginBottom: '16px', borderBottom: '1px solid #E2E8F0', fontSize: '18px', fontWeight: 'bold', color: '#172033', flexShrink: 0 }}>
+      <div style={{ padding: '0 16px 16px', marginBottom: '16px', borderBottom: '1px solid var(--border)', fontSize: '18px', fontWeight: 'bold', color: 'var(--text-main)', flexShrink: 0 }}>
         Hospital System
       </div>
       <NavLink to="/patient-registration" style={navLinkStyle}>
@@ -148,7 +148,7 @@ const NavigationBar = () => {
       </NavLink>
 
       {/* Nested Master Menu */}
-      <div style={{ marginTop: '8px', borderTop: '1px solid #E2E8F0', paddingTop: '8px' }}>
+      <div style={{ marginTop: '8px', borderTop: '1px solid var(--border)', paddingTop: '8px' }}>
         <button 
           onClick={() => setIsMasterOpen(!isMasterOpen)}
           style={{ 
@@ -157,7 +157,7 @@ const NavigationBar = () => {
             padding: '10px 16px', 
             backgroundColor: 'transparent', 
             border: 'none', 
-            color: '#475467', 
+            color: 'var(--text-muted)', 
             fontWeight: 600, 
             fontSize: '14px', 
             cursor: 'pointer',
@@ -273,7 +273,7 @@ const NavigationBar = () => {
       </div>
 
       {/* Nested Diagnostics Report Menu */}
-      <div style={{ marginTop: '8px', borderTop: '1px solid #E2E8F0', paddingTop: '8px' }}>
+      <div style={{ marginTop: '8px', borderTop: '1px solid var(--border)', paddingTop: '8px' }}>
         <button 
           onClick={() => setIsDiagnosticsReportOpen(!isDiagnosticsReportOpen)}
           style={{ 
@@ -282,7 +282,7 @@ const NavigationBar = () => {
             padding: '10px 16px', 
             backgroundColor: 'transparent', 
             border: 'none', 
-            color: '#475467', 
+            color: 'var(--text-muted)', 
             fontWeight: 600, 
             fontSize: '14px', 
             cursor: 'pointer',
@@ -313,7 +313,7 @@ const NavigationBar = () => {
       </div>
 
       {/* Nested Certificate Menu */}
-      <div style={{ marginTop: '8px', borderTop: '1px solid #E2E8F0', paddingTop: '8px' }}>
+      <div style={{ marginTop: '8px', borderTop: '1px solid var(--border)', paddingTop: '8px' }}>
         <button 
           onClick={() => setIsCertificateOpen(!isCertificateOpen)}
           style={{ 
@@ -322,7 +322,7 @@ const NavigationBar = () => {
             padding: '10px 16px', 
             backgroundColor: 'transparent', 
             border: 'none', 
-            color: '#475467', 
+            color: 'var(--text-muted)', 
             fontWeight: 600, 
             fontSize: '14px', 
             cursor: 'pointer',
@@ -353,7 +353,7 @@ const NavigationBar = () => {
       </div>
 
       {/* Nested Utility Menu */}
-      <div style={{ marginTop: '8px', borderTop: '1px solid #E2E8F0', paddingTop: '8px' }}>
+      <div style={{ marginTop: '8px', borderTop: '1px solid var(--border)', paddingTop: '8px' }}>
         <button 
           onClick={() => setIsUtilityOpen(!isUtilityOpen)}
           style={{ 
@@ -362,7 +362,7 @@ const NavigationBar = () => {
             padding: '10px 16px', 
             backgroundColor: 'transparent', 
             border: 'none', 
-            color: '#475467', 
+            color: 'var(--text-muted)', 
             fontWeight: 600, 
             fontSize: '14px', 
             cursor: 'pointer',

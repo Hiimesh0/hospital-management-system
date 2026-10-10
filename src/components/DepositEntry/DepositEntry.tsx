@@ -85,7 +85,7 @@ const DepositEntry: React.FC = () => {
  </div>
 
  <div className={styles.actionGroup}>
- <button className={styles.primaryBtn} style={{ backgroundColor: '#EAB308', color: '#172033' }}>
+ <button className={styles.primaryBtn} style={{ backgroundColor: 'var(--warning)', color: 'var(--text-main)' }}>
  <Plus size={16} /> Add
  </button>
  <button className={styles.secondaryBtn}>
