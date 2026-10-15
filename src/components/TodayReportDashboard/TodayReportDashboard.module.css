@@ -254,3 +254,27 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (TABLET & MOBILE)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .pageContainer { padding: 16px 20px; }
+}
+
+@media (max-width: 768px) {
+  .pageContainer { padding: 12px 14px; gap: 16px; }
+  .toolbar { flex-direction: column !important; align-items: stretch !important; gap: 12px !important; }
+  .titleContainer { order: -1; }
+  .leftControls { flex-wrap: wrap !important; width: 100% !important; gap: 8px !important; }
+  .datePicker { width: 100% !important; }
+  .buttonGroup { flex-wrap: wrap !important; width: 100% !important; }
+  .groupBtn { flex: 1 1 auto; text-align: center; }
+  .actionBtn { width: 100% !important; justify-content: center; }
+  .tableWrapper, .tableSection, .tableContainer { overflow-x: auto !important; width: 100% !important; max-width: 100% !important; -webkit-overflow-scrolling: touch !important; }
+  .dataTable, table { min-width: 540px !important; width: 100% !important; }
+}
+
+@media (max-width: 480px) {
+  .pageContainer { padding: 10px; gap: 12px; }
+}

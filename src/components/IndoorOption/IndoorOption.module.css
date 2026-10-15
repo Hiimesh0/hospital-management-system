@@ -121,3 +121,21 @@
   font-weight: 500;
   color: var(--text-main);
 }
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (TABLET & MOBILE)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .pageContainer { padding: 16px 20px; }
+}
+
+@media (max-width: 768px) {
+  .pageContainer { padding: 12px 14px; gap: 16px; }
+  .formCard, .mainSection, .section { padding: 16px; gap: 16px; }
+}
+
+@media (max-width: 480px) {
+  .pageContainer { padding: 10px; gap: 12px; }
+  .formCard, .mainSection, .section { padding: 12px; gap: 12px; }
+  .grid { grid-template-columns: 1fr !important; }
+}

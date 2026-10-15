@@ -306,3 +306,27 @@
   background-color: var(--bg-color);
   cursor: not-allowed;
 }
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (TABLET & MOBILE)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .pageContainer { padding: 16px 20px; }
+}
+
+@media (max-width: 768px) {
+  .pageContainer { padding: 12px 14px; gap: 16px; }
+  .entryRow { flex-direction: column !important; align-items: stretch !important; gap: 12px !important; min-width: 0 !important; width: 100% !important; }
+  .fieldGroup, .fieldGroupHorizontal, .formRow, .inputWithUnit { flex-direction: column !important; align-items: stretch !important; gap: 6px !important; width: 100% !important; min-width: 0 !important; }
+  .label, .formRowLabel { width: auto !important; min-width: 0 !important; text-align: left !important; white-space: normal !important; padding-top: 0 !important; }
+  .tableSection { max-width: 100% !important; width: 100% !important; min-width: 0 !important; }
+  .input, .select, .textarea { width: 100% !important; min-height: 38px; }
+  .actionBar, .actionGroup { flex-wrap: wrap !important; gap: 8px !important; width: 100% !important; justify-content: stretch !important; position: static !important; }
+  .actionBar button, .actionBar > *, .actionGroup button, .actionGroup > * { flex: 1 1 auto; min-width: 110px; min-height: 40px; justify-content: center; }
+  .tableWrapper, .tableSection, .tableContainer { overflow-x: auto !important; width: 100% !important; max-width: 100% !important; -webkit-overflow-scrolling: touch !important; }
+  .dataTable, table { min-width: 540px !important; width: 100% !important; }
+}
+
+@media (max-width: 480px) {
+  .pageContainer { padding: 10px; gap: 12px; }
+}

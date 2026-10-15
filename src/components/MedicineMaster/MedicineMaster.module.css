@@ -240,3 +240,27 @@
   background-color: var(--danger-soft);
   border-color: var(--danger-soft);
 }
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (TABLET & MOBILE)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .pageContainer { padding: 16px 20px; }
+  .mainGrid { grid-template-columns: 1fr; gap: 16px; }
+}
+
+@media (max-width: 768px) {
+  .pageContainer { padding: 12px 14px; gap: 16px; }
+  .header, .topHeader { flex-direction: column; align-items: stretch; gap: 12px; padding-bottom: 12px; }
+  .mainGrid { grid-template-columns: 1fr; gap: 12px; }
+  .fieldGroup, .fieldGroupHorizontal, .formRow, .inputWithUnit { flex-direction: column !important; align-items: stretch !important; gap: 6px !important; width: 100% !important; min-width: 0 !important; }
+  .label { width: auto !important; min-width: 0 !important; text-align: left !important; white-space: normal !important; padding-top: 0 !important; }
+  .formSection { max-width: 100% !important; width: 100% !important; min-width: 0 !important; }
+  .input, .select, .textarea { width: 100% !important; min-height: 38px; }
+  .actionBar { flex-wrap: wrap !important; gap: 8px !important; width: 100% !important; justify-content: stretch !important; position: static !important; }
+  .actionBar > button, .actionBar button  { flex: 1 1 auto; min-width: 110px; min-height: 40px; justify-content: center; }
+}
+
+@media (max-width: 480px) {
+  .pageContainer { padding: 10px; gap: 12px; }
+}

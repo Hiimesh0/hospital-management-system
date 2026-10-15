@@ -243,12 +243,26 @@
 /* Responsive */
 @media (max-width: 480px) {
   .pageContainer {
-    padding: 20px;
-    align-items: flex-start;
+    padding: 16px;
+    align-items: center;
   }
   .loginCard {
-    padding: 32px 24px;
+    padding: 28px 20px;
     box-shadow: none;
     border-color: var(--border);
+    gap: 24px;
+  }
+}
+
+@media (max-width: 360px) {
+  .pageContainer {
+    padding: 10px;
+  }
+  .loginCard {
+    padding: 24px 14px;
+    gap: 20px;
+  }
+  .title {
+    font-size: 20px;
   }
 }
