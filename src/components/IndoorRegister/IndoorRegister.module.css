@@ -377,8 +377,11 @@
   .formCard, .mainSection, .section { padding: 16px; gap: 16px; }
   .header, .topHeader { flex-direction: column; align-items: stretch; gap: 12px; padding-bottom: 12px; }
   .headerLeft, .headerRight, .titleArea, .headerActions { flex-wrap: wrap; justify-content: space-between; width: 100%; gap: 8px; }
-  .col2, .col3, .col4, .col5, .col6, .col7, .col12 { grid-column: span 12 !important; width: 100% !important; }
+  .col1, .col2, .col3, .col4, .col5, .col6, .col7, .col12 { grid-column: span 12 !important; width: 100% !important; }
+  .grid12 { grid-template-columns: 1fr !important; }
   .fieldGroup, .fieldGroupHorizontal, .formRow, .inputWithUnit { flex-direction: column !important; align-items: stretch !important; gap: 6px !important; width: 100% !important; min-width: 0 !important; }
+  .inputWithAction { flex-wrap: wrap !important; width: 100% !important; gap: 6px !important; }
+  .inputWithAction > * { flex: 1 1 auto !important; }
   .label { width: auto !important; min-width: 0 !important; text-align: left !important; white-space: normal !important; padding-top: 0 !important; }
   .input, .select, .textarea { width: 100% !important; min-height: 38px; }
   .actionBar, .actionGroup, .navGroup { flex-wrap: wrap !important; gap: 8px !important; width: 100% !important; justify-content: stretch !important; position: static !important; }

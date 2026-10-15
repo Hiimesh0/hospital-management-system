@@ -53,7 +53,7 @@ const VisitProcedureHeaderMaster: React.FC = () => {
  </div>
 
  <div className={styles.row}>
- <div className={styles.fieldGroup} style={{ width: '380px' }}>
+ <div className={styles.fieldGroup} style={{ maxWidth: '380px', width: '100%' }}>
  <label className={styles.label}>Priority :</label>
  <input type="text" className={styles.input} />
  </div>

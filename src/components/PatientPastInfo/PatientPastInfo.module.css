@@ -261,6 +261,7 @@
   .searchGrid { grid-template-columns: 1fr !important; gap: 12px !important; }
   .summaryGrid { grid-template-columns: 1fr !important; gap: 12px !important; }
   .searchGrid, .summaryGrid { flex-direction: column !important; align-items: stretch !important; gap: 12px !important; min-width: 0 !important; width: 100% !important; }
+  .summarySection { flex-direction: column !important; align-items: stretch !important; gap: 16px !important; }
   .fieldGroup, .fieldGroupHorizontal, .formRow, .inputWithUnit { flex-direction: column !important; align-items: stretch !important; gap: 6px !important; width: 100% !important; min-width: 0 !important; }
   .label { width: auto !important; min-width: 0 !important; text-align: left !important; white-space: normal !important; padding-top: 0 !important; }
   .tableSection, .summaryValue { max-width: 100% !important; width: 100% !important; min-width: 0 !important; }

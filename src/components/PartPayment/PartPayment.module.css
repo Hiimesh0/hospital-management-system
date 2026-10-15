@@ -366,7 +366,8 @@
   .actionBar button, .actionBar > *, .actionGroup button, .actionGroup > *, .modalActionGroup button, .modalActionGroup > * { flex: 1 1 auto; min-width: 110px; min-height: 40px; justify-content: center; }
   .tableWrapper, .tableSection, .tableContainer { overflow-x: auto !important; width: 100% !important; max-width: 100% !important; -webkit-overflow-scrolling: touch !important; }
   .dataTable, table { min-width: 540px !important; width: 100% !important; }
-  .modalContent { width: 96vw !important; max-width: 96vw !important; max-height: 88vh !important; overflow-y: auto !important; margin: 8px !important; }
+  .modalOverlay { padding: 8px !important; }
+  .modalContent { width: calc(100vw - 16px) !important; max-width: calc(100vw - 16px) !important; max-height: 90vh !important; overflow-y: auto !important; margin: 0 auto !important; }
   .modalBody { padding: 14px !important; gap: 14px !important; }
   .modalEntryRow { grid-template-columns: 1fr !important; gap: 10px !important; }
 }

@@ -47,7 +47,7 @@ const InpatientBill: React.FC = () => {
  <label className={styles.label}>Patient:</label>
  <div className={styles.patientNameBadge}>--</div>
  </div>
- <div className={`${styles.fieldGroup} ${styles.col2}`} style={{ position: 'absolute', top: '75px', right: '24px' }}>
+ <div className={`${styles.fieldGroup} ${styles.col2} ${styles.extraBillField}`}>
  <input type="text" className={styles.input} />
  </div>
  </div>

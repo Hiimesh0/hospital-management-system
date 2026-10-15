@@ -132,6 +132,8 @@
 @media (max-width: 768px) {
   .pageContainer { padding: 12px 14px; gap: 16px; }
   .formCard, .mainSection, .section { padding: 16px; gap: 16px; }
+  .grid { grid-template-columns: 1fr !important; }
+  .actionTitle { word-break: break-word !important; }
 }
 
 @media (max-width: 480px) {

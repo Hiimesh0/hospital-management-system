@@ -81,12 +81,12 @@ const RoomTypeMaster: React.FC = () => {
 
  <div className={styles.fieldGroup}>
  <label className={styles.label} style={{ width: '90px' }}>Description :</label>
- <input type="text" className={styles.input} style={{ width: '400px' }} />
+ <input type="text" className={styles.input} style={{ maxWidth: '400px', width: '100%' }} />
  </div>
 
  <div className={styles.row} style={{ marginTop: '8px' }}>
  <label className={styles.label} style={{ width: '90px' }}>Display Color :</label>
- <div className={styles.colorPaletteSection} style={{ flex: 1 }}>
+ <div className={styles.colorPaletteSection} style={{ flex: 1, minWidth: 0 }}>
  <div className={styles.colorGrid}>
  {COLORS_ROW_1.map((color, i) => (
  <div 

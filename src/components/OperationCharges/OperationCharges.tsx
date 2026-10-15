@@ -22,7 +22,7 @@ const OperationCharges: React.FC = () => {
  
  {/* Context Bar */}
  <div className={styles.contextBar}>
- <div style={{ display: 'flex', gap: '8px' }}>
+ <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
  <div className={styles.tagBtn}>Operation Entry</div>
  <button className={styles.secondaryBtn} onClick={() => setIsPackageModalOpen(true)}>
  By Package
@@ -124,7 +124,7 @@ const OperationCharges: React.FC = () => {
  {/* Package Modal */}
  {isPackageModalOpen && (
  <div className={styles.modalOverlay}>
- <div className={styles.modalContent} style={{ width: '900px' }}>
+ <div className={styles.modalContent} style={{ width: '100%', maxWidth: '900px' }}>
  <div className={styles.modalHeader}>
  <h2 className={styles.modalTitle}>Operation Entry By Package</h2>
  <button className={styles.closeBtn} onClick={() => setIsPackageModalOpen(false)}>
@@ -133,7 +133,7 @@ const OperationCharges: React.FC = () => {
  </div>
  
  <div className={styles.modalBody}>
- <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 2fr', gap: '16px', marginBottom: '16px' }}>
+ <div className={styles.formRow} style={{ gap: '16px', marginBottom: '16px' }}>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Date</label>
  <input type="date" className={styles.input}  max="2099-12-31" />
@@ -144,13 +144,13 @@ const OperationCharges: React.FC = () => {
  <option value="MA">MA</option>
  </select>
  </div>
- <div className={styles.fieldGroup}>
+ <div className={styles.fieldGroup} style={{ flex: 2 }}>
  <label className={styles.label}>Operation Group Name</label>
  <input type="text" className={styles.input} />
  </div>
  </div>
 
- <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr auto', gap: '16px', alignItems: 'end', marginBottom: '24px' }}>
+ <div className={styles.formRow} style={{ gap: '16px', alignItems: 'end', marginBottom: '24px' }}>
  <div className={styles.fieldGroup}>
  <label className={styles.label}>Doctor Name</label>
  <input type="text" className={styles.input} />

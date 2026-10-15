@@ -267,6 +267,8 @@
   .toolbar { flex-direction: column !important; align-items: stretch !important; gap: 12px !important; }
   .titleContainer { order: -1; }
   .leftControls { flex-wrap: wrap !important; width: 100% !important; gap: 8px !important; }
+  .rightControls { flex-wrap: wrap !important; width: 100% !important; gap: 8px !important; }
+  .searchContainer { width: 100% !important; flex: 1 1 auto !important; }
   .datePicker { width: 100% !important; }
   .buttonGroup { flex-wrap: wrap !important; width: 100% !important; }
   .groupBtn { flex: 1 1 auto; text-align: center; }

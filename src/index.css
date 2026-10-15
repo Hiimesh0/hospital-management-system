@@ -349,10 +349,148 @@ button {
   .appMainContent {
     padding-top: var(--mobile-header-height);
     height: calc(100vh - var(--mobile-header-height));
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
   }
 }
 
-/* Small mobile (<= 480px) */
+/* Mobile & Tablet Strict Responsive Safeguards (<= 768px) */
+@media (max-width: 768px) {
+  /* Prevent horizontal page blowout */
+  .appMainContent, .appMainContent > *, [class*="pageContainer"], [class*="content"] {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  [class*="pageContainer"] {
+    padding: 12px !important;
+    gap: 14px !important;
+  }
+
+  /* Universal header and title responsiveness */
+  [class*="header"], [class*="Header"], [class*="topHeader"], [class*="TopHeader"] {
+    flex-wrap: wrap !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    position: relative !important;
+  }
+
+  [class*="pageTitle"], [class*="PageTitle"], [class*="modalTitle"] {
+    position: static !important;
+    transform: none !important;
+    left: auto !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    max-width: 100% !important;
+    font-size: 18px !important;
+  }
+
+  /* Responsive Action Bars & Button Groups */
+  [class*="actionBar"], [class*="ActionBar"], [class*="actionGroup"], [class*="ActionGroup"],
+  [class*="bottomActions"], [class*="footerActions"], [class*="navControls"],
+  [class*="middleActions"], [class*="rightActions"], [class*="leftActions"],
+  [class*="buttonRow"], [class*="ButtonRow"] {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    position: static !important;
+    justify-content: stretch !important;
+  }
+
+  [class*="actionBar"] > button, [class*="actionBar"] button,
+  [class*="actionGroup"] > button, [class*="actionGroup"] button,
+  [class*="bottomActions"] > button, [class*="bottomActions"] button,
+  [class*="footerActions"] > button, [class*="footerActions"] button,
+  [class*="buttonRow"] > button, [class*="buttonRow"] button {
+    flex: 1 1 auto !important;
+    min-width: 80px !important;
+    max-width: 100% !important;
+    min-height: 38px !important;
+    justify-content: center !important;
+    text-align: center !important;
+    white-space: normal !important;
+    padding: 8px 12px !important;
+  }
+
+  [class*="navControls"], [class*="middleActions"], [class*="rightActions"], [class*="headerActions"], [class*="titleArea"] {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    align-items: center !important;
+    max-width: 100% !important;
+  }
+
+  [class*="navBtn"], [class*="iconBtn"] {
+    flex: 0 0 36px !important;
+    min-width: 36px !important;
+    max-width: 36px !important;
+    width: 36px !important;
+    height: 36px !important;
+    padding: 0 !important;
+  }
+
+  /* Universal Table Containers */
+  [class*="tableWrapper"], [class*="TableWrapper"], [class*="tableSection"], [class*="TableSection"],
+  [class*="tableContainer"], [class*="TableContainer"], [class*="responsiveTable"] {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  [class*="tableWrapper"] table, [class*="TableWrapper"] table,
+  [class*="tableSection"] table, [class*="TableSection"] table,
+  [class*="tableContainer"] table, [class*="TableContainer"] table,
+  .dataTable, table {
+    min-width: 520px !important;
+    width: 100% !important;
+  }
+
+  /* Universal Modal / Drawer responsiveness */
+  [class*="modalOverlay"], [class*="ModalOverlay"] {
+    padding: 8px !important;
+  }
+
+  [class*="modalContent"], [class*="ModalContent"], [class*="modalCard"], [class*="ModalCard"] {
+    width: calc(100vw - 16px) !important;
+    max-width: calc(100vw - 16px) !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Form & layout rows */
+  [class*="contextBar"], [class*="ContextBar"], [class*="formRow"], [class*="entryRow"],
+  [class*="summaryRow"], [class*="splitSection"], [class*="mainLayout"], [class*="lowerSection"] {
+    flex-wrap: wrap !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  /* Form inputs & controls */
+  input, select, textarea, [class*="input"], [class*="select"], [class*="textarea"] {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  label, [class*="label"], [class*="Label"] {
+    max-width: 100% !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+  }
+}
+
+/* Small mobile (<= 480px, including iPhone 16 / iPhone SE / 320px) */
 @media (max-width: 480px) {
   .sidebarNav {
     width: 88vw;
@@ -361,6 +499,22 @@ button {
 
   .mobileTopBrand {
     font-size: 14px;
+  }
+
+  [class*="pageContainer"] {
+    padding: 8px !important;
+    gap: 10px !important;
+  }
+
+  [class*="formCard"], [class*="mainSection"], [class*="section"] {
+    padding: 10px !important;
+    gap: 10px !important;
+  }
+
+  [class*="modalContent"], [class*="ModalContent"], [class*="modalCard"] {
+    width: calc(100vw - 8px) !important;
+    max-width: calc(100vw - 8px) !important;
+    padding: 10px !important;
   }
 }
 

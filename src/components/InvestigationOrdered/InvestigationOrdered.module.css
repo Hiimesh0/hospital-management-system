@@ -302,8 +302,14 @@
   .pageContainer { padding: 12px 14px; gap: 16px; }
   .content { padding: 16px; gap: 16px; }
   .header, .topHeader { flex-direction: column; align-items: stretch; gap: 12px; padding-bottom: 12px; }
+  .formRow { grid-template-columns: 1fr !important; gap: 10px !important; }
+  .formRow2 { grid-template-columns: 1fr !important; gap: 10px !important; }
+  .lowerSection { flex-direction: column !important; align-items: stretch !important; gap: 16px !important; width: 100% !important; }
+  .mainArea { width: 100% !important; min-width: 0 !important; }
+  .actionsSide { width: 100% !important; border-left: none !important; border-top: 1px solid var(--border); padding-left: 0 !important; padding-top: 16px !important; flex-direction: row !important; flex-wrap: wrap !important; }
+  .actionsSide > button { flex: 1 1 110px !important; }
   .entryRow { flex-direction: column !important; align-items: stretch !important; gap: 12px !important; min-width: 0 !important; width: 100% !important; }
-  .fieldGroup, .fieldGroupHorizontal, .formRow, .inputWithUnit { flex-direction: column !important; align-items: stretch !important; gap: 6px !important; width: 100% !important; min-width: 0 !important; }
+  .fieldGroup, .fieldGroupHorizontal, .inputWithUnit { flex-direction: column !important; align-items: stretch !important; gap: 6px !important; width: 100% !important; min-width: 0 !important; }
   .label { width: auto !important; min-width: 0 !important; text-align: left !important; white-space: normal !important; padding-top: 0 !important; }
   .input, .select, .textarea { width: 100% !important; min-height: 38px; }
   .tableWrapper, .tableSection, .tableContainer { overflow-x: auto !important; width: 100% !important; max-width: 100% !important; -webkit-overflow-scrolling: touch !important; }
