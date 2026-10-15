@@ -32,7 +32,7 @@ const InpatientReceipt: React.FC = () => {
  <select className={styles.select}>
  <option value="GEN">GEN</option>
  </select>
- <input type="text" className={styles.input} style={{ width: '120px' }} />
+ <input type="text" className={`${styles.input} ${styles.headerInput}`}  />
  </div>
  </div>
 
@@ -101,19 +101,19 @@ const InpatientReceipt: React.FC = () => {
  
  {/* Column 1 */}
  <div>
- <div className={styles.baseChargesGrid} style={{ gridTemplateColumns: 'auto 1fr', padding: '0', border: 'none', gap: '12px 16px', backgroundColor: 'transparent' }}>
- <div style={{gridColumn: '2', textAlign: 'center', fontSize: '12px', color: 'var(--text-muted)', fontWeight: 500}}>Rate</div>
+              <div className={styles.receiptChargesGrid}>
+                <div className={styles.rateHeader}>Rate</div>
  
- <label className={styles.label} style={{ textAlign: 'right', alignSelf: 'center' }}>Admission :</label>
+ <label className={`${styles.label} ${styles.chargeLabel}`}>Admission :</label>
  <input type="text" className={styles.input} style={{ textAlign: 'right' }} />
  
- <label className={styles.label} style={{ textAlign: 'right', alignSelf: 'center' }}>Registration :</label>
+ <label className={`${styles.label} ${styles.chargeLabel}`}>Registration :</label>
  <input type="text" className={styles.input} style={{ textAlign: 'right' }} />
  
- <label className={styles.label} style={{ textAlign: 'right', alignSelf: 'center' }}>Room :</label>
+ <label className={`${styles.label} ${styles.chargeLabel}`}>Room :</label>
  <input type="text" className={styles.input} style={{ textAlign: 'right' }} />
  
- <label className={styles.label} style={{ textAlign: 'right', alignSelf: 'center' }}>GST :</label>
+ <label className={`${styles.label} ${styles.chargeLabel}`}>GST :</label>
  <input type="text" className={styles.input} style={{ textAlign: 'right' }} />
  </div>
 

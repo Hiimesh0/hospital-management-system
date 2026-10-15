@@ -174,6 +174,35 @@
 }
 
 /* Base Charges Grid */
+
+.headerInput {
+  width: 120px;
+}
+
+.receiptChargesGrid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px 16px;
+  align-items: center;
+  background-color: transparent;
+  padding: 0;
+  border: none;
+  margin-bottom: 24px;
+}
+
+.rateHeader {
+  grid-column: 2;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.chargeLabel {
+  text-align: right;
+  align-self: center;
+}
+
 .baseChargesGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -482,27 +511,217 @@
 @media (max-width: 1024px) {
   .pageContainer { padding: 16px 20px; }
   .col2, .col3, .col4 { grid-column: span 6; }
+  .mainLayout { grid-template-columns: 1fr !important; gap: 20px !important; margin-bottom: 32px !important; }
 }
 
 @media (max-width: 768px) {
-  .pageContainer { padding: 12px 14px; gap: 16px; }
-  .header, .topHeader { flex-direction: column; align-items: stretch; gap: 12px; padding-bottom: 12px; }
-  .headerLeft, .headerRight, .titleArea, .headerActions { flex-wrap: wrap; justify-content: space-between; width: 100%; gap: 8px; }
-  .pageTitle { position: static !important; transform: none !important; text-align: left; }
+  .pageContainer { padding: 12px 14px; gap: 16px; margin-bottom: 0 !important; }
+  .header, .topHeader { flex-direction: column !important; align-items: stretch !important; gap: 12px !important; padding-bottom: 12px !important; position: relative !important; }
+  .headerLeft, .headerRight, .titleArea, .headerActions { flex-wrap: wrap !important; justify-content: space-between !important; width: 100% !important; gap: 8px !important; }
+  .pageTitle { position: static !important; transform: none !important; text-align: center !important; font-size: 18px !important; margin: 4px 0 !important; }
+  .headerInput { flex: 1 1 100px !important; width: auto !important; max-width: 100% !important; }
+
   .col2, .col3, .col4, .col6, .col8, .col12 { grid-column: span 12 !important; width: 100% !important; }
   .infoGrid { grid-template-columns: 1fr !important; gap: 12px !important; }
-  .tablesGrid { grid-template-columns: 1fr !important; gap: 12px !important; }
-  .baseChargesGrid { grid-template-columns: 1fr !important; gap: 12px !important; }
-  .fieldGroup, .fieldGroupHorizontal, .formRow, .inputWithUnit { flex-direction: column !important; align-items: stretch !important; gap: 6px !important; width: 100% !important; min-width: 0 !important; }
-  .label { width: auto !important; min-width: 0 !important; text-align: left !important; white-space: normal !important; padding-top: 0 !important; }
-  .tableSection, .summaryValue { max-width: 100% !important; width: 100% !important; min-width: 0 !important; }
-  .input, .select, .textarea { width: 100% !important; min-height: 38px; }
-  .actionBar, .actionGroup { flex-wrap: wrap !important; gap: 8px !important; width: 100% !important; justify-content: stretch !important; position: static !important; }
-  .actionBar button, .actionBar > *, .actionGroup button, .actionGroup > * { flex: 1 1 auto; min-width: 110px; min-height: 40px; justify-content: center; }
-  .tableWrapper, .tableSection, .tableContainer { overflow-x: auto !important; width: 100% !important; max-width: 100% !important; -webkit-overflow-scrolling: touch !important; }
-  .dataTable, table { min-width: 540px !important; width: 100% !important; }
+  
+  .mainLayout { grid-template-columns: 1fr !important; gap: 20px !important; margin-bottom: 24px !important; }
+  .tablesGrid { grid-template-columns: 1fr !important; gap: 16px !important; }
+  
+  .receiptChargesGrid { 
+    grid-template-columns: 1fr !important; 
+    gap: 8px !important; 
+    margin-bottom: 16px !important; 
+  }
+  .rateHeader { display: none !important; }
+  .chargeLabel { text-align: left !important; align-self: flex-start !important; }
+  
+  .baseChargesGrid { 
+    grid-template-columns: 1fr !important; 
+    gap: 10px !important; 
+    padding: 12px !important;
+  }
+  
+  .fieldGroup, .fieldGroupHorizontal, .formRow, .inputWithUnit { 
+    flex-direction: column !important; 
+    align-items: stretch !important; 
+    gap: 6px !important; 
+    width: 100% !important; 
+    min-width: 0 !important; 
+  }
+  
+  .label { 
+    width: auto !important; 
+    min-width: 0 !important; 
+    text-align: left !important; 
+    white-space: normal !important; 
+    padding-top: 0 !important; 
+  }
+  
+  .tableSection { 
+    max-width: 100% !important; 
+    width: 100% !important; 
+    min-width: 0 !important; 
+    overflow-x: auto !important; 
+    -webkit-overflow-scrolling: touch !important; 
+  }
+  
+  .dataTable { 
+    min-width: 0 !important; 
+    width: 100% !important; 
+  }
+
+  .tableFooter {
+    justify-content: space-between !important;
+  }
+  
+  .summaryPanel {
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: 16px !important;
+  }
+  
+  .summaryContent {
+    padding: 14px !important;
+    gap: 12px !important;
+  }
+  
+  .summaryRow {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+  
+  .summaryLabel {
+    flex: 1 1 auto !important;
+    width: auto !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+  }
+  
+  .summaryValue { 
+    width: 130px !important; 
+    max-width: 100% !important; 
+    flex-shrink: 0 !important;
+  }
+  
+  .multiInputRow {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    flex-shrink: 0 !important;
+  }
+  
+  .percentInput {
+    width: 50px !important;
+  }
+
+  .paymentEntryRow {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+  
+  .paymentEntryRow select {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+  }
+  
+  .paymentEntryRow input {
+    flex: 1 1 calc(100% - 56px) !important;
+    width: auto !important;
+  }
+  
+  .paymentEntryRow button {
+    flex: 0 0 44px !important;
+    width: 44px !important;
+    height: 38px !important;
+    min-width: 44px !important;
+  }
+
+  .paymentTotals {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  
+  .paymentTotalItem {
+    display: flex !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+  }
+
+  .input, .select, .textarea { 
+    width: 100% !important; 
+    min-height: 38px; 
+    box-sizing: border-box !important;
+  }
+  
+  .actionBar { 
+    position: static !important; 
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 14px !important; 
+    width: 100% !important; 
+    padding: 16px 12px !important;
+    box-shadow: none !important;
+    border-radius: 8px !important;
+    margin-top: 20px !important;
+  }
+  
+  .actionGroup { 
+    display: flex !important;
+    flex-wrap: wrap !important; 
+    gap: 8px !important; 
+    width: 100% !important; 
+    align-items: center !important;
+  }
+  
+  .actionGroup > button, .actionBar button { 
+    flex: 1 1 120px !important; 
+    min-width: 90px !important; 
+    min-height: 40px !important; 
+    justify-content: center !important; 
+  }
+  
+  .actionItem {
+    flex: 0 0 auto !important;
+    min-width: auto !important;
+    width: auto !important;
+    height: auto !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    padding: 0 4px !important;
+  }
+  
+  .checkbox {
+    width: 18px !important;
+    height: 18px !important;
+    flex-shrink: 0 !important;
+  }
 }
 
 @media (max-width: 480px) {
-  .pageContainer { padding: 10px; gap: 12px; }
+  .pageContainer { padding: 8px !important; gap: 10px !important; }
+  .headerCard { padding: 12px 10px !important; }
+  .summaryContent { padding: 10px !important; }
+  .actionGroup > button, .actionBar button { flex: 1 1 100% !important; }
+  .summaryRow {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 4px !important;
+  }
+  .summaryValue {
+    width: 100% !important;
+  }
+  .multiInputRow {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+  .multiInputRow .summaryValue {
+    flex: 1 !important;
+  }
 }
