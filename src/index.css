@@ -35,7 +35,7 @@
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   
   --transition: all 0.2s ease-in-out;
-  --sidebar-width: 260px;
+  --sidebar-width: 270px;
   --mobile-header-height: 56px;
 }
 
@@ -146,10 +146,10 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
-  min-width: 42px;
-  min-height: 42px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   background-color: transparent;
   border: 1px solid var(--border);
   border-radius: 8px;

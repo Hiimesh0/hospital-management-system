@@ -1,6 +1,53 @@
 import React, { Suspense, lazy, useState, useEffect } from 'react';
 import { HashRouter, Routes, Route, NavLink, Navigate, useLocation } from 'react-router-dom';
-import { Menu, X, LogOut } from 'lucide-react';
+import {
+  Menu,
+  X,
+  LogOut,
+  ChevronDown,
+  UserPlus,
+  History,
+  CreditCard,
+  BedDouble,
+  DoorOpen,
+  HeartPulse,
+  BadgeDollarSign,
+  FileSpreadsheet,
+  Layers,
+  Receipt,
+  FileText,
+  Wallet,
+  Calculator,
+  Stethoscope,
+  Microscope,
+  Hospital,
+  FolderPlus,
+  Pill,
+  FileSignature,
+  Bed,
+  MessageSquareCheck,
+  Boxes,
+  Building,
+  Clock,
+  ListPlus,
+  ClipboardList,
+  Users,
+  Building2,
+  UserCheck,
+  ShieldCheck,
+  UserCog,
+  BarChart3,
+  FileCode,
+  LayoutTemplate,
+  LayoutDashboard,
+  Award,
+  FileX,
+  FileCheck2,
+  Scale,
+  FileBadge,
+  Contact,
+  Radio
+} from 'lucide-react';
 
 // Lazy load the components
 const Login = lazy(() => import('./components/Login/Login'));
@@ -47,6 +94,131 @@ const MedicalCertificate = lazy(() => import('./components/MedicalCertificate/Me
 const MlcCertificate = lazy(() => import('./components/MlcCertificate/MlcCertificate'));
 const CertificateTemplate = lazy(() => import('./components/CertificateTemplate/CertificateTemplate'));
 
+// Reusable Sidebar NavLink with Lucide Icon and Active State
+interface SidebarLinkProps {
+  to: string;
+  icon: React.ComponentType<{ size?: number; strokeWidth?: number; style?: React.CSSProperties; 'aria-hidden'?: boolean | 'true' | 'false' }>;
+  label: string;
+  onClick: () => void;
+  nestedLevel?: number;
+}
+
+const SidebarLink: React.FC<SidebarLinkProps> = ({ to, icon: Icon, label, onClick, nestedLevel = 0 }) => {
+  const paddingLeft = nestedLevel === 0 ? '12px' : nestedLevel === 1 ? '24px' : '36px';
+  const fontSize = nestedLevel === 0 ? '13.5px' : nestedLevel === 1 ? '13px' : '12px';
+
+  return (
+    <NavLink
+      to={to}
+      onClick={onClick}
+      style={({ isActive }) => ({
+        padding: `8px 12px 8px ${paddingLeft}`,
+        borderRadius: '6px',
+        backgroundColor: isActive ? 'var(--primary-soft)' : 'transparent',
+        color: isActive ? 'var(--primary)' : 'var(--text-muted)',
+        textDecoration: 'none',
+        fontWeight: isActive ? 600 : 500,
+        fontSize,
+        fontFamily: 'Inter, sans-serif',
+        transition: 'all 0.15s ease-in-out',
+        whiteSpace: 'nowrap',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '9px',
+        minHeight: '38px',
+        borderLeft: isActive ? '3px solid var(--primary)' : '3px solid transparent'
+      })}
+    >
+      {({ isActive }) => (
+        <>
+          <Icon
+            size={18}
+            strokeWidth={isActive ? 2.2 : 1.75}
+            style={{
+              color: isActive ? 'var(--primary)' : 'var(--text-muted)',
+              flexShrink: 0,
+              transition: 'color 0.15s ease-in-out'
+            }}
+            aria-hidden="true"
+          />
+          <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{label}</span>
+        </>
+      )}
+    </NavLink>
+  );
+};
+
+// Collapsible Navigation Accordion Group with Lucide Icons
+interface NavGroupProps {
+  title: string;
+  icon: React.ComponentType<{ size?: number; strokeWidth?: number; style?: React.CSSProperties; 'aria-hidden'?: boolean | 'true' | 'false' }>;
+  isOpen: boolean;
+  onToggle: () => void;
+  nestedLevel?: number;
+  children: React.ReactNode;
+}
+
+const NavGroup: React.FC<NavGroupProps> = ({ title, icon: Icon, isOpen, onToggle, nestedLevel = 0, children }) => {
+  const paddingLeft = nestedLevel === 0 ? '12px' : '24px';
+  const fontSize = nestedLevel === 0 ? '13.5px' : '13px';
+
+  return (
+    <div style={{ marginTop: nestedLevel === 0 ? '6px' : '2px', paddingTop: nestedLevel === 0 ? '6px' : '0' }}>
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={isOpen}
+        style={{
+          width: '100%',
+          textAlign: 'left',
+          padding: `8px 12px 8px ${paddingLeft}`,
+          backgroundColor: isOpen ? 'rgba(66, 133, 244, 0.05)' : 'transparent',
+          border: 'none',
+          borderRadius: '6px',
+          color: isOpen ? 'var(--text-main)' : 'var(--text-muted)',
+          fontWeight: 600,
+          fontSize,
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          minHeight: '38px',
+          transition: 'all 0.15s ease-in-out',
+          fontFamily: 'Inter, sans-serif'
+        }}
+      >
+        <span style={{ display: 'flex', alignItems: 'center', gap: '9px' }}>
+          <Icon
+            size={18}
+            strokeWidth={1.8}
+            style={{
+              color: isOpen ? 'var(--primary)' : 'var(--text-muted)',
+              flexShrink: 0
+            }}
+            aria-hidden="true"
+          />
+          {title}
+        </span>
+        <ChevronDown
+          size={16}
+          style={{
+            transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+            transition: 'transform 0.2s ease',
+            color: 'var(--text-muted)',
+            flexShrink: 0
+          }}
+          aria-hidden="true"
+        />
+      </button>
+      {isOpen && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '2px' }}>
+          {children}
+        </div>
+      )}
+    </div>
+  );
+};
+
 // Navigation Bar Component (only shown when authenticated)
 interface NavigationBarProps {
   isOpen: boolean;
@@ -56,41 +228,56 @@ interface NavigationBarProps {
 
 const NavigationBar: React.FC<NavigationBarProps> = ({ isOpen, onClose, onLogout }) => {
   const location = useLocation();
-  const [isMasterOpen, setIsMasterOpen] = useState(false);
-  const [isMasterIpdOpen, setIsMasterIpdOpen] = useState(false);
-  const [isMasterOpdOpen, setIsMasterOpdOpen] = useState(false);
-  const [isDiagnosticsReportOpen, setIsDiagnosticsReportOpen] = useState(false);
-  const [isCertificateOpen, setIsCertificateOpen] = useState(false);
-  const [isUtilityOpen, setIsUtilityOpen] = useState(false);
-  
-  if (location.pathname === '/login') return null;
+  const p = location.pathname;
 
-  const navLinkStyle = ({ isActive }: { isActive: boolean }) => ({
-    padding: '10px 14px',
-    borderRadius: '6px',
-    backgroundColor: isActive ? 'var(--primary-soft)' : 'transparent',
-    color: isActive ? 'var(--primary-hover)' : 'var(--text-muted)',
-    textDecoration: 'none',
-    fontWeight: 500,
-    fontSize: '14px',
-    fontFamily: 'Inter, sans-serif',
-    transition: 'all 0.15s ease-in-out',
-    whiteSpace: 'nowrap' as const,
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    minHeight: '40px'
-  });
+  // Active route matching for accordion groups
+  const isMasterActive = [
+    '/patient-history', '/medicine-master', '/standard-prescription-master',
+    '/advice-master', '/bed-master', '/operation-group-master',
+    '/room-type-master', '/visiting-type-master', '/visit-procedure-header-master',
+    '/opd-patient-category', '/opd-charges-master', '/department-master',
+    '/doctor-master', '/insurance-company-master', '/opd-charges-profile'
+  ].includes(p);
+  const isMasterIpdActive = [
+    '/advice-master', '/bed-master', '/operation-group-master',
+    '/room-type-master', '/visiting-type-master', '/visit-procedure-header-master'
+  ].includes(p);
+  const isMasterOpdActive = [
+    '/opd-patient-category', '/opd-charges-master', '/department-master',
+    '/doctor-master', '/insurance-company-master', '/opd-charges-profile'
+  ].includes(p);
+  const isDiagActive = [
+    '/echo-report', '/short-form-master', '/report-template', '/today-report-dashboard'
+  ].includes(p);
+  const isCertActive = [
+    '/death-certificate', '/medical-certificate', '/mlc-certificate', '/certificate-template'
+  ].includes(p);
+  const isUtilActive = [
+    '/contact-list', '/intercomm-display'
+  ].includes(p);
 
-  const nestedLinkStyle = ({ isActive }: { isActive: boolean }) => ({
-    ...navLinkStyle({ isActive }),
-    paddingLeft: '28px',
-    fontSize: '13px',
-    minHeight: '36px'
-  });
+  const [masterExpanded, setMasterExpanded] = useState<boolean | null>(null);
+  const [ipdExpanded, setIpdExpanded] = useState<boolean | null>(null);
+  const [opdExpanded, setOpdExpanded] = useState<boolean | null>(null);
+  const [diagExpanded, setDiagExpanded] = useState<boolean | null>(null);
+  const [certExpanded, setCertExpanded] = useState<boolean | null>(null);
+  const [utilExpanded, setUtilExpanded] = useState<boolean | null>(null);
+
+  const isMasterOpen = masterExpanded ?? isMasterActive;
+  const isMasterIpdOpen = ipdExpanded ?? isMasterIpdActive;
+  const isMasterOpdOpen = opdExpanded ?? isMasterOpdActive;
+  const isDiagnosticsReportOpen = diagExpanded ?? isDiagActive;
+  const isCertificateOpen = certExpanded ?? isCertActive;
+  const isUtilityOpen = utilExpanded ?? isUtilActive;
+
+  if (p === '/login') return null;
 
   return (
-    <aside className={`sidebarNav ${isOpen ? 'drawerOpen' : ''}`} aria-label="Main Navigation">
+    <aside
+      id="main-sidebar-nav"
+      className={`sidebarNav ${isOpen ? 'drawerOpen' : ''}`}
+      aria-label="Main Navigation"
+    >
       <div className="sidebarHeader">
         <div className="sidebarTitle">
           <span style={{ 
@@ -110,309 +297,112 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ isOpen, onClose, onLogout
         <button 
           onClick={onClose} 
           className="sidebarCloseBtn"
-          aria-label="Close navigation menu"
+          aria-label="Close navigation"
         >
-          <X size={20} />
+          <X size={20} aria-hidden="true" />
         </button>
       </div>
 
       <div className="sidebarLinks">
-        <NavLink to="/patient-registration" style={navLinkStyle} onClick={onClose}>
-          Patient Registration
-        </NavLink>
-        <NavLink to="/patient-past-info" style={navLinkStyle} onClick={onClose}>
-          Patient Past Info
-        </NavLink>
-        <NavLink to="/part-payment" style={navLinkStyle} onClick={onClose}>
-          Part Payment
-        </NavLink>
-        <NavLink to="/room-charges" style={navLinkStyle} onClick={onClose}>
-          Room Charges
-        </NavLink>
-        <NavLink to="/room-status" style={navLinkStyle} onClick={onClose}>
-          Room Status
-        </NavLink>
-        <NavLink to="/ot-entry" style={navLinkStyle} onClick={onClose}>
-          OT Entry
-        </NavLink>
-        <NavLink to="/operation-charges" style={navLinkStyle} onClick={onClose}>
-          Operation Charges
-        </NavLink>
-        <NavLink to="/indoor-summary" style={navLinkStyle} onClick={onClose}>
-          Indoor Summary
-        </NavLink>
-        <NavLink to="/indoor-option" style={navLinkStyle} onClick={onClose}>
-          Indoor Option
-        </NavLink>
-        <NavLink to="/inpatient-receipt" style={navLinkStyle} onClick={onClose}>
-          Inpatient Receipt
-        </NavLink>
-        <NavLink to="/inpatient-bill" style={navLinkStyle} onClick={onClose}>
-          Inpatient Bill
-        </NavLink>
-        <NavLink to="/discharge-card" style={navLinkStyle} onClick={onClose}>
-          Discharge Card
-        </NavLink>
-        <NavLink to="/deposit-entry" style={navLinkStyle} onClick={onClose}>
-          Deposit Entry
-        </NavLink>
-        <NavLink to="/billing" style={navLinkStyle} onClick={onClose}>
-          Billing
-        </NavLink>
-        <NavLink to="/dr-visit-procedure" style={navLinkStyle} onClick={onClose}>
-          Dr. Visit & Procedure
-        </NavLink>
-        <NavLink to="/investigation-ordered" style={navLinkStyle} onClick={onClose}>
-          Investigation Ordered
-        </NavLink>
-        <NavLink to="/indoor-register" style={navLinkStyle} onClick={onClose}>
-          Indoor Register
-        </NavLink>
+        {/* 17 Primary Menu Items with Specific Healthcare Icons */}
+        <SidebarLink to="/patient-registration" icon={UserPlus} label="Patient Registration" onClick={onClose} />
+        <SidebarLink to="/patient-past-info" icon={History} label="Patient Past Info" onClick={onClose} />
+        <SidebarLink to="/part-payment" icon={CreditCard} label="Part Payment" onClick={onClose} />
+        <SidebarLink to="/room-charges" icon={BedDouble} label="Room Charges" onClick={onClose} />
+        <SidebarLink to="/room-status" icon={DoorOpen} label="Room Status" onClick={onClose} />
+        <SidebarLink to="/ot-entry" icon={HeartPulse} label="OT Entry" onClick={onClose} />
+        <SidebarLink to="/operation-charges" icon={BadgeDollarSign} label="Operation Charges" onClick={onClose} />
+        <SidebarLink to="/indoor-summary" icon={FileSpreadsheet} label="Indoor Summary" onClick={onClose} />
+        <SidebarLink to="/indoor-option" icon={Layers} label="Indoor Option" onClick={onClose} />
+        <SidebarLink to="/inpatient-receipt" icon={Receipt} label="Inpatient Receipt" onClick={onClose} />
+        <SidebarLink to="/inpatient-bill" icon={FileText} label="Inpatient Bill" onClick={onClose} />
+        <SidebarLink to="/discharge-card" icon={LogOut} label="Discharge Card" onClick={onClose} />
+        <SidebarLink to="/deposit-entry" icon={Wallet} label="Deposit Entry" onClick={onClose} />
+        <SidebarLink to="/billing" icon={Calculator} label="Billing" onClick={onClose} />
+        <SidebarLink to="/dr-visit-procedure" icon={Stethoscope} label="Dr. Visit & Procedure" onClick={onClose} />
+        <SidebarLink to="/investigation-ordered" icon={Microscope} label="Investigation Ordered" onClick={onClose} />
+        <SidebarLink to="/indoor-register" icon={Hospital} label="Indoor Register" onClick={onClose} />
 
-        {/* Nested Master Menu */}
-        <div style={{ marginTop: '8px', borderTop: '1px solid var(--border)', paddingTop: '8px' }}>
-          <button 
-            onClick={() => setIsMasterOpen(!isMasterOpen)}
-            style={{ 
-              width: '100%', 
-              textAlign: 'left', 
-              padding: '10px 14px', 
-              backgroundColor: 'transparent', 
-              border: 'none', 
-              color: 'var(--text-muted)', 
-              fontWeight: 600, 
-              fontSize: '14px', 
-              cursor: 'pointer',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              minHeight: '40px'
-            }}
+        {/* Master Accordion */}
+        <NavGroup
+          title="Master"
+          icon={FolderPlus}
+          isOpen={isMasterOpen}
+          onToggle={() => setMasterExpanded(!isMasterOpen)}
+        >
+          <SidebarLink to="/patient-history" icon={History} label="Clinical / Patient History" onClick={onClose} nestedLevel={1} />
+          <SidebarLink to="/medicine-master" icon={Pill} label="Medicine Master" onClick={onClose} nestedLevel={1} />
+          <SidebarLink to="/standard-prescription-master" icon={FileSignature} label="Standard Prescription Master" onClick={onClose} nestedLevel={1} />
+
+          {/* IPD Master Sub-group */}
+          <NavGroup
+            title="IPD Master"
+            icon={Bed}
+            isOpen={isMasterIpdOpen}
+            onToggle={() => setIpdExpanded(!isMasterIpdOpen)}
+            nestedLevel={1}
           >
-            Master
-            <span style={{ fontSize: '10px' }}>{isMasterOpen ? '▼' : '▶'}</span>
-          </button>
-          {isMasterOpen && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '4px' }}>
-              <NavLink to="/patient-history" style={nestedLinkStyle} onClick={onClose}>
-                Clinical / Patient History
-              </NavLink>
-              <NavLink to="/medicine-master" style={nestedLinkStyle} onClick={onClose}>
-                Medicine Master
-              </NavLink>
-              <NavLink to="/standard-prescription-master" style={nestedLinkStyle} onClick={onClose}>
-                Standard Prescription Master
-              </NavLink>
-              
-              {/* IPD Sub-menu */}
-              <button 
-                onClick={() => setIsMasterIpdOpen(!isMasterIpdOpen)}
-                style={{ 
-                  ...navLinkStyle({ isActive: false }),
-                  paddingLeft: '28px',
-                  textAlign: 'left',
-                  backgroundColor: 'transparent',
-                  border: 'none',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  width: '100%',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  minHeight: '36px'
-                }}
-              >
-                IPD Master
-                <span style={{ fontSize: '10px' }}>{isMasterIpdOpen ? '▼' : '▶'}</span>
-              </button>
-              {isMasterIpdOpen && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                  <NavLink to="/advice-master" style={{ ...nestedLinkStyle({ isActive: location.pathname === '/advice-master' }), paddingLeft: '44px', fontSize: '12px' }} onClick={onClose}>
-                    Advice Master
-                  </NavLink>
-                  <NavLink to="/bed-master" style={{ ...nestedLinkStyle({ isActive: location.pathname === '/bed-master' }), paddingLeft: '44px', fontSize: '12px' }} onClick={onClose}>
-                    Bed Master
-                  </NavLink>
-                  <NavLink to="/operation-group-master" style={{ ...nestedLinkStyle({ isActive: location.pathname === '/operation-group-master' }), paddingLeft: '44px', fontSize: '12px' }} onClick={onClose}>
-                    Operation Group Master
-                  </NavLink>
-                  <NavLink to="/room-type-master" style={{ ...nestedLinkStyle({ isActive: location.pathname === '/room-type-master' }), paddingLeft: '44px', fontSize: '12px' }} onClick={onClose}>
-                    Room Type Master
-                  </NavLink>
-                  <NavLink to="/visiting-type-master" style={{ ...nestedLinkStyle({ isActive: location.pathname === '/visiting-type-master' }), paddingLeft: '44px', fontSize: '12px' }} onClick={onClose}>
-                    Visiting Type Master
-                  </NavLink>
-                  <NavLink to="/visit-procedure-header-master" style={{ ...nestedLinkStyle({ isActive: location.pathname === '/visit-procedure-header-master' }), paddingLeft: '44px', fontSize: '12px' }} onClick={onClose}>
-                    Visit Procedure Header Master
-                  </NavLink>
-                </div>
-              )}
+            <SidebarLink to="/advice-master" icon={MessageSquareCheck} label="Advice Master" onClick={onClose} nestedLevel={2} />
+            <SidebarLink to="/bed-master" icon={Bed} label="Bed Master" onClick={onClose} nestedLevel={2} />
+            <SidebarLink to="/operation-group-master" icon={Boxes} label="Operation Group Master" onClick={onClose} nestedLevel={2} />
+            <SidebarLink to="/room-type-master" icon={Building} label="Room Type Master" onClick={onClose} nestedLevel={2} />
+            <SidebarLink to="/visiting-type-master" icon={Clock} label="Visiting Type Master" onClick={onClose} nestedLevel={2} />
+            <SidebarLink to="/visit-procedure-header-master" icon={ListPlus} label="Visit Procedure Header Master" onClick={onClose} nestedLevel={2} />
+          </NavGroup>
 
-              {/* OPD Sub-menu */}
-              <button 
-                onClick={() => setIsMasterOpdOpen(!isMasterOpdOpen)}
-                style={{ 
-                  ...navLinkStyle({ isActive: false }),
-                  paddingLeft: '28px',
-                  textAlign: 'left',
-                  backgroundColor: 'transparent',
-                  border: 'none',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  width: '100%',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  minHeight: '36px'
-                }}
-              >
-                OPD Master
-                <span style={{ fontSize: '10px' }}>{isMasterOpdOpen ? '▼' : '▶'}</span>
-              </button>
-              {isMasterOpdOpen && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                  <NavLink to="/opd-patient-category" style={{ ...nestedLinkStyle({ isActive: location.pathname === '/opd-patient-category' }), paddingLeft: '44px', fontSize: '12px' }} onClick={onClose}>
-                    OPD Patient Category
-                  </NavLink>
-                  <NavLink to="/opd-charges-master" style={{ ...nestedLinkStyle({ isActive: location.pathname === '/opd-charges-master' }), paddingLeft: '44px', fontSize: '12px' }} onClick={onClose}>
-                    OPD Charges Master
-                  </NavLink>
-                  <NavLink to="/department-master" style={{ ...nestedLinkStyle({ isActive: location.pathname === '/department-master' }), paddingLeft: '44px', fontSize: '12px' }} onClick={onClose}>
-                    Department Master
-                  </NavLink>
-                  <NavLink to="/doctor-master" style={{ ...nestedLinkStyle({ isActive: location.pathname === '/doctor-master' }), paddingLeft: '44px', fontSize: '12px' }} onClick={onClose}>
-                    Doctor Master
-                  </NavLink>
-                  <NavLink to="/insurance-company-master" style={{ ...nestedLinkStyle({ isActive: location.pathname === '/insurance-company-master' }), paddingLeft: '44px', fontSize: '12px' }} onClick={onClose}>
-                    Insurance Company Master
-                  </NavLink>
-                  <NavLink to="/opd-charges-profile" style={{ ...nestedLinkStyle({ isActive: location.pathname === '/opd-charges-profile' }), paddingLeft: '44px', fontSize: '12px' }} onClick={onClose}>
-                    OPD Charges Profile
-                  </NavLink>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Nested Diagnostics Report Menu */}
-        <div style={{ marginTop: '8px', borderTop: '1px solid var(--border)', paddingTop: '8px' }}>
-          <button 
-            onClick={() => setIsDiagnosticsReportOpen(!isDiagnosticsReportOpen)}
-            style={{ 
-              width: '100%', 
-              textAlign: 'left', 
-              padding: '10px 14px', 
-              backgroundColor: 'transparent', 
-              border: 'none', 
-              color: 'var(--text-muted)', 
-              fontWeight: 600, 
-              fontSize: '14px', 
-              cursor: 'pointer',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              minHeight: '40px'
-            }}
+          {/* OPD Master Sub-group */}
+          <NavGroup
+            title="OPD Master"
+            icon={ClipboardList}
+            isOpen={isMasterOpdOpen}
+            onToggle={() => setOpdExpanded(!isMasterOpdOpen)}
+            nestedLevel={1}
           >
-            Diagnostics Report
-            <span style={{ fontSize: '10px' }}>{isDiagnosticsReportOpen ? '▼' : '▶'}</span>
-          </button>
-          {isDiagnosticsReportOpen && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '4px' }}>
-              <NavLink to="/echo-report" style={nestedLinkStyle} onClick={onClose}>
-                Echo Report
-              </NavLink>
-              <NavLink to="/short-form-master" style={nestedLinkStyle} onClick={onClose}>
-                Short Form Master
-              </NavLink>
-              <NavLink to="/report-template" style={nestedLinkStyle} onClick={onClose}>
-                Report Template
-              </NavLink>
-              <NavLink to="/today-report-dashboard" style={nestedLinkStyle} onClick={onClose}>
-                Today Report Dashboard
-              </NavLink>
-            </div>
-          )}
-        </div>
+            <SidebarLink to="/opd-patient-category" icon={Users} label="OPD Patient Category" onClick={onClose} nestedLevel={2} />
+            <SidebarLink to="/opd-charges-master" icon={BadgeDollarSign} label="OPD Charges Master" onClick={onClose} nestedLevel={2} />
+            <SidebarLink to="/department-master" icon={Building2} label="Department Master" onClick={onClose} nestedLevel={2} />
+            <SidebarLink to="/doctor-master" icon={UserCheck} label="Doctor Master" onClick={onClose} nestedLevel={2} />
+            <SidebarLink to="/insurance-company-master" icon={ShieldCheck} label="Insurance Company Master" onClick={onClose} nestedLevel={2} />
+            <SidebarLink to="/opd-charges-profile" icon={UserCog} label="OPD Charges Profile" onClick={onClose} nestedLevel={2} />
+          </NavGroup>
+        </NavGroup>
 
-        {/* Nested Certificate Menu */}
-        <div style={{ marginTop: '8px', borderTop: '1px solid var(--border)', paddingTop: '8px' }}>
-          <button 
-            onClick={() => setIsCertificateOpen(!isCertificateOpen)}
-            style={{ 
-              width: '100%', 
-              textAlign: 'left', 
-              padding: '10px 14px', 
-              backgroundColor: 'transparent', 
-              border: 'none', 
-              color: 'var(--text-muted)', 
-              fontWeight: 600, 
-              fontSize: '14px', 
-              cursor: 'pointer',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              minHeight: '40px'
-            }}
-          >
-            Certificate
-            <span style={{ fontSize: '10px' }}>{isCertificateOpen ? '▼' : '▶'}</span>
-          </button>
-          {isCertificateOpen && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '4px' }}>
-              <NavLink to="/death-certificate" style={nestedLinkStyle} onClick={onClose}>
-                Death Certificate
-              </NavLink>
-              <NavLink to="/medical-certificate" style={nestedLinkStyle} onClick={onClose}>
-                Medical Certificate
-              </NavLink>
-              <NavLink to="/mlc-certificate" style={nestedLinkStyle} onClick={onClose}>
-                MLC Certificate
-              </NavLink>
-              <NavLink to="/certificate-template" style={nestedLinkStyle} onClick={onClose}>
-                Certificate Template
-              </NavLink>
-            </div>
-          )}
-        </div>
+        {/* Diagnostics Report Accordion */}
+        <NavGroup
+          title="Diagnostics Report"
+          icon={BarChart3}
+          isOpen={isDiagnosticsReportOpen}
+          onToggle={() => setDiagExpanded(!isDiagnosticsReportOpen)}
+        >
+          <SidebarLink to="/echo-report" icon={HeartPulse} label="Echo Report" onClick={onClose} nestedLevel={1} />
+          <SidebarLink to="/short-form-master" icon={FileCode} label="Short Form Master" onClick={onClose} nestedLevel={1} />
+          <SidebarLink to="/report-template" icon={LayoutTemplate} label="Report Template" onClick={onClose} nestedLevel={1} />
+          <SidebarLink to="/today-report-dashboard" icon={LayoutDashboard} label="Today Report Dashboard" onClick={onClose} nestedLevel={1} />
+        </NavGroup>
 
-        {/* Nested Utility Menu */}
-        <div style={{ marginTop: '8px', borderTop: '1px solid var(--border)', paddingTop: '8px' }}>
-          <button 
-            onClick={() => setIsUtilityOpen(!isUtilityOpen)}
-            style={{ 
-              width: '100%', 
-              textAlign: 'left', 
-              padding: '10px 14px', 
-              backgroundColor: 'transparent', 
-              border: 'none', 
-              color: 'var(--text-muted)', 
-              fontWeight: 600, 
-              fontSize: '14px', 
-              cursor: 'pointer',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              minHeight: '40px'
-            }}
-          >
-            Utility
-            <span style={{ fontSize: '10px' }}>{isUtilityOpen ? '▼' : '▶'}</span>
-          </button>
-          {isUtilityOpen && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '4px' }}>
-              <NavLink to="/contact-list" style={nestedLinkStyle} onClick={onClose}>
-                Contact List
-              </NavLink>
-              <NavLink to="/intercomm-display" style={nestedLinkStyle} onClick={onClose}>
-                Intercomm Display
-              </NavLink>
-            </div>
-          )}
-        </div>
+        {/* Certificate Accordion */}
+        <NavGroup
+          title="Certificate"
+          icon={Award}
+          isOpen={isCertificateOpen}
+          onToggle={() => setCertExpanded(!isCertificateOpen)}
+        >
+          <SidebarLink to="/death-certificate" icon={FileX} label="Death Certificate" onClick={onClose} nestedLevel={1} />
+          <SidebarLink to="/medical-certificate" icon={FileCheck2} label="Medical Certificate" onClick={onClose} nestedLevel={1} />
+          <SidebarLink to="/mlc-certificate" icon={Scale} label="MLC Certificate" onClick={onClose} nestedLevel={1} />
+          <SidebarLink to="/certificate-template" icon={FileBadge} label="Certificate Template" onClick={onClose} nestedLevel={1} />
+        </NavGroup>
+
+        {/* Utility Accordion */}
+        <NavGroup
+          title="Utility"
+          icon={Contact}
+          isOpen={isUtilityOpen}
+          onToggle={() => setUtilExpanded(!isUtilityOpen)}
+        >
+          <SidebarLink to="/contact-list" icon={Contact} label="Contact List" onClick={onClose} nestedLevel={1} />
+          <SidebarLink to="/intercomm-display" icon={Radio} label="Intercomm Display" onClick={onClose} nestedLevel={1} />
+        </NavGroup>
       </div>
 
       <div className="sidebarFooter">
@@ -433,8 +423,9 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ isOpen, onClose, onLogout
             cursor: 'pointer',
             transition: 'all 0.2s'
           }}
+          aria-label="Sign out of hospital management system"
         >
-          <LogOut size={16} />
+          <LogOut size={16} aria-hidden="true" />
           Sign Out
         </button>
       </div>
@@ -474,16 +465,18 @@ function App() {
         
         {/* Mobile Top Header */}
         {isAuthenticated && (
-          <header className="mobileTopBar">
+          <header className="mobileTopBar" role="banner">
             <button 
               className="mobileMenuBtn" 
               onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
-              aria-label="Toggle navigation menu"
+              aria-label={isMobileNavOpen ? "Close navigation" : "Open navigation"}
+              aria-expanded={isMobileNavOpen}
+              aria-controls="main-sidebar-nav"
             >
-              {isMobileNavOpen ? <X size={22} /> : <Menu size={22} />}
+              {isMobileNavOpen ? <X size={22} aria-hidden="true" /> : <Menu size={22} aria-hidden="true" />}
             </button>
             <div className="mobileTopBrand">
-              <span className="mobileTopBrandCross">+</span>
+              <span className="mobileTopBrandCross" aria-hidden="true">+</span>
               Hospital System
             </div>
             <button 
@@ -491,7 +484,7 @@ function App() {
               onClick={handleLogout}
               aria-label="Sign out"
             >
-              <LogOut size={14} />
+              <LogOut size={14} aria-hidden="true" />
               Exit
             </button>
           </header>
