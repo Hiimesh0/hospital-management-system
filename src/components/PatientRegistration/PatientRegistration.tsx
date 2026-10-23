@@ -1,44 +1,21 @@
-import React, { useState } from 'react';
-import { CheckCircle2, AlertCircle, X, Search, UserCheck } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import {
+  CheckCircle2,
+  AlertCircle,
+  X,
+  Search,
+  ListPlus,
+  RotateCcw,
+  ArrowLeft,
+  Save,
+  Edit2
+} from 'lucide-react';
+import { patientApi } from '../../api/patientApi';
+import type { PatientRecord, PatientFormData } from '../../api/patientApi';
 import styles from './PatientRegistration.module.css';
 
-interface PatientRecord {
-  uhid: string;
-  category: string;
-  firstName: string;
-  middleName: string;
-  lastName: string;
-  birthDate: string;
-  age: string;
-  ageUnit: string;
-  sex: string;
-  hospitalDoctor: string;
-  referenceBy: string;
-  religion: string;
-  maritalStatus: string;
-  weight: string;
-  height: string;
-  mobile: string;
-  email: string;
-  streetAddress: string;
-  city: string;
-  state: string;
-  pinCode: string;
-  autoSms: boolean;
-  estimate: string;
-  aadharNo: string;
-  panNo: string;
-  mediclaim: string;
-  membershipId: string;
-  employeeId: string;
-  companyName: string;
-  remark: string;
-  registeredAt: string;
-}
-
-const STORAGE_KEY = 'mixu_registered_patients';
-
-const defaultFormState = {
+const defaultFormState: PatientFormData = {
   category: 'NEW',
   firstName: '',
   middleName: '',
@@ -71,20 +48,116 @@ const defaultFormState = {
 };
 
 const PatientRegistration: React.FC = () => {
-  const [formData, setFormData] = useState(defaultFormState);
-  const [records, setRecords] = useState<PatientRecord[]>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const currentUhid = `UHID-${1000 + records.length + 1}`;
-  const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [formData, setFormData] = useState<PatientFormData>(defaultFormState);
+  const [initialEditData, setInitialEditData] = useState<PatientFormData | null>(null);
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
+  const [editId, setEditId] = useState<string | null>(null);
+
+  const [totalRecordsCount, setTotalRecordsCount] = useState<number>(0);
+  const [assignedUhidPreview, setAssignedUhidPreview] = useState<string>('UHID-1001');
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string; uhid?: string } | null>(null);
+
+  // Search Lookup Modal
+  const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
+  const [lookupQuery, setLookupQuery] = useState<string>('');
+  const [lookupPatients, setLookupPatients] = useState<PatientRecord[]>([]);
+
+  // Load record count & initial preview UHID from backend
+  const fetchBackendMeta = useCallback(async () => {
+    try {
+      const data = await patientApi.getPatients();
+      const list = data.patients || [];
+      setTotalRecordsCount(list.length);
+      setLookupPatients(list);
+
+      // Compute next available UHID
+      let maxNum = 1000;
+      list.forEach(p => {
+        const u = p.uhid || p.id || '';
+        if (u.startsWith('UHID-')) {
+          const num = parseInt(u.replace('UHID-', ''), 10);
+          if (!isNaN(num) && num > maxNum) maxNum = num;
+        }
+      });
+      setAssignedUhidPreview(`UHID-${maxNum + 1}`);
+    } catch {
+      // Backend offline fallback handled gracefully
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchBackendMeta();
+  }, [fetchBackendMeta]);
+
+  // Check URL query parameters for ?id=UHID-XXXX (Edit Mode)
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const idParam = params.get('id');
+
+    if (idParam) {
+      setIsEditMode(true);
+      setEditId(idParam);
+      patientApi
+        .getPatientById(idParam)
+        .then(res => {
+          if (res.patient) {
+            const p = res.patient;
+            const loaded: PatientFormData = {
+              category: p.category || 'NEW',
+              firstName: p.firstName || '',
+              middleName: p.middleName || '',
+              lastName: p.lastName || '',
+              birthDate: p.birthDate || '',
+              age: p.age || '',
+              ageUnit: p.ageUnit || 'Years',
+              sex: p.sex || 'Male',
+              hospitalDoctor: p.hospitalDoctor || 'Dr. NILESH MAHALE',
+              referenceBy: p.referenceBy || '',
+              religion: p.religion || 'Hindu',
+              maritalStatus: p.maritalStatus || '',
+              weight: p.weight || '',
+              height: p.height || '',
+              mobile: p.mobile || '',
+              email: p.email || '',
+              streetAddress: p.streetAddress || '',
+              city: p.city || 'SURAT',
+              state: p.state || 'GUJARAT',
+              pinCode: p.pinCode || '',
+              autoSms: p.autoSms !== undefined ? p.autoSms : true,
+              estimate: p.estimate || '',
+              aadharNo: p.aadharNo || '',
+              panNo: p.panNo || '',
+              mediclaim: p.mediclaim || '',
+              membershipId: p.membershipId || '',
+              employeeId: p.employeeId || '',
+              companyName: p.companyName || '',
+              remark: p.remark || ''
+            };
+            setFormData(loaded);
+            setInitialEditData(loaded);
+            setNotification({
+              type: 'success',
+              message: `Loaded patient ${p.uhid} (${p.firstName} ${p.lastName}) for editing.`
+            });
+          }
+        })
+        .catch(err => {
+          setNotification({
+            type: 'error',
+            message: `Could not load patient '${idParam}': ${err.message}`
+          });
+        });
+    } else {
+      setIsEditMode(false);
+      setEditId(null);
+      setFormData(defaultFormState);
+      setInitialEditData(null);
+    }
+  }, [location.search]);
 
   // Handle Birth Date change to auto-calculate Age
   const handleBirthDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -127,153 +200,188 @@ const PatientRegistration: React.FC = () => {
     setFormData(prev => ({ ...prev, [name]: checked }));
   };
 
-  const handleAddPatient = (e?: React.FormEvent) => {
+  // Submit Handler: Supports both Create and Update operations
+  const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
+    if (isSubmitting) return;
 
-    // Required fields validation
-    if (!formData.firstName.trim()) {
+    // Validate Required Fields
+    const trimmedFirstName = formData.firstName.trim();
+    if (!trimmedFirstName) {
       setNotification({ type: 'error', message: 'First Name is required.' });
       return;
     }
-    if (!formData.age.trim()) {
+    if (trimmedFirstName.length < 2) {
+      setNotification({ type: 'error', message: 'First Name must contain at least 2 characters.' });
+      return;
+    }
+
+    const trimmedAge = formData.age.trim();
+    if (!trimmedAge) {
       setNotification({ type: 'error', message: 'Age is required.' });
       return;
     }
-    if (!formData.mobile.trim()) {
+    const ageNum = parseInt(trimmedAge, 10);
+    if (isNaN(ageNum) || ageNum < 0 || ageNum > 130) {
+      setNotification({ type: 'error', message: 'Please enter a valid age between 0 and 130.' });
+      return;
+    }
+
+    const trimmedMobile = formData.mobile.trim();
+    if (!trimmedMobile) {
       setNotification({ type: 'error', message: 'Mobile Number is required.' });
       return;
     }
+    const cleanMobile = trimmedMobile.replace(/[-+\s]/g, '');
+    if (!cleanMobile.match(/^[0-9]{10,15}$/)) {
+      setNotification({ type: 'error', message: 'Please enter a valid 10-15 digit mobile number.' });
+      return;
+    }
+
     if (!formData.hospitalDoctor.trim()) {
       setNotification({ type: 'error', message: 'Hospital Doctor is required.' });
       return;
     }
 
-    const newPatient: PatientRecord = {
-      uhid: currentUhid,
-      category: formData.category,
-      firstName: formData.firstName.trim(),
-      middleName: formData.middleName.trim(),
-      lastName: formData.lastName.trim(),
-      birthDate: formData.birthDate,
-      age: formData.age.trim(),
-      ageUnit: formData.ageUnit,
-      sex: formData.sex,
-      hospitalDoctor: formData.hospitalDoctor.trim(),
-      referenceBy: formData.referenceBy.trim(),
-      religion: formData.religion,
-      maritalStatus: formData.maritalStatus,
-      weight: formData.weight.trim(),
-      height: formData.height.trim(),
-      mobile: formData.mobile.trim(),
-      email: formData.email.trim(),
-      streetAddress: formData.streetAddress.trim(),
-      city: formData.city.trim(),
-      state: formData.state.trim(),
-      pinCode: formData.pinCode.trim(),
-      autoSms: formData.autoSms,
-      estimate: formData.estimate.trim(),
-      aadharNo: formData.aadharNo.trim(),
-      panNo: formData.panNo.trim(),
-      mediclaim: formData.mediclaim.trim(),
-      membershipId: formData.membershipId.trim(),
-      employeeId: formData.employeeId.trim(),
-      companyName: formData.companyName.trim(),
-      remark: formData.remark.trim(),
-      registeredAt: new Date().toLocaleDateString('en-GB')
-    };
-
-    const updatedRecords = [newPatient, ...records];
-    setRecords(updatedRecords);
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedRecords));
-    } catch {
-      // LocalStorage quota fallback
-    }
-
-    setNotification({
-      type: 'success',
-      message: `Patient ${newPatient.firstName} ${newPatient.lastName} registered successfully with ${currentUhid}!`
-    });
-
-    // Reset form for next patient registration
-    setFormData(defaultFormState);
-  };
-
-  const handleResetForm = () => {
-    setFormData(defaultFormState);
+    setIsSubmitting(true);
     setNotification(null);
+
+    try {
+      if (isEditMode && editId) {
+        // UPDATE EXISTING PATIENT
+        const res = await patientApi.updatePatient(editId, formData);
+        setNotification({
+          type: 'success',
+          message: `Patient ${res.patient.firstName} ${res.patient.lastName} (${res.patient.uhid}) updated successfully!`,
+          uhid: res.patient.uhid
+        });
+        setInitialEditData(formData);
+        fetchBackendMeta();
+      } else {
+        // CREATE NEW PATIENT
+        const res = await patientApi.createPatient(formData);
+        const newUhid = res.patient.uhid;
+        setNotification({
+          type: 'success',
+          message: `Patient ${res.patient.firstName} ${res.patient.lastName} registered successfully with ${newUhid}!`,
+          uhid: newUhid
+        });
+
+        // Reset form for next patient registration
+        setFormData(defaultFormState);
+        fetchBackendMeta();
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Operation failed.';
+      setNotification({ type: 'error', message: msg });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const filteredRecords = records.filter(p => {
-    const query = searchQuery.toLowerCase().trim();
-    if (!query) return true;
+  // Reset or clear form
+  const handleResetForm = () => {
+    if (isEditMode && initialEditData) {
+      setFormData(initialEditData);
+      setNotification({ type: 'success', message: 'Form values restored to loaded patient record.' });
+    } else {
+      setFormData(defaultFormState);
+      setNotification(null);
+    }
+  };
+
+  // Switch back to create new patient mode
+  const handleSwitchToCreateMode = () => {
+    setIsEditMode(false);
+    setEditId(null);
+    setFormData(defaultFormState);
+    setInitialEditData(null);
+    navigate('/patient-registration');
+  };
+
+  // Filter lookup patients in search modal
+  const filteredLookup = lookupPatients.filter(p => {
+    const q = lookupQuery.toLowerCase().trim();
+    if (!q) return true;
     return (
-      p.uhid.toLowerCase().includes(query) ||
-      p.firstName.toLowerCase().includes(query) ||
-      p.lastName.toLowerCase().includes(query) ||
-      p.mobile.includes(query)
+      p.uhid.toLowerCase().includes(q) ||
+      p.firstName.toLowerCase().includes(q) ||
+      p.lastName.toLowerCase().includes(q) ||
+      p.mobile.includes(q)
     );
   });
 
   return (
     <div className={`${styles.container} ${styles.pageContainer}`}>
+      {/* Header */}
       <header className={styles.header}>
         <div>
-          <h1 className={styles.title}>Patient Registration</h1>
-          <p className={styles.subtitle}>Register and manage patient information</p>
+          <h1 className={styles.title}>
+            {isEditMode ? `Edit Patient Record: ${editId}` : 'Patient Registration'}
+          </h1>
+          <p className={styles.subtitle}>
+            {isEditMode
+              ? 'Update existing patient details in JSON storage'
+              : 'Register new patient and save securely to JSON storage'}
+          </p>
         </div>
         <div className={styles.metaInfo}>
           <span className={styles.badge}>
-            Records: {records.length}
+            {isEditMode ? 'MODE: EDITING' : 'MODE: CREATE'}
           </span>
           <span className={styles.badge}>
-            Assigned: {currentUhid}
+            Total Records: {totalRecordsCount}
           </span>
+          {!isEditMode && (
+            <span className={styles.badge} style={{ color: 'var(--primary)', fontWeight: 600 }}>
+              Next UHID: {assignedUhidPreview}
+            </span>
+          )}
         </div>
       </header>
 
-      {/* Notifications */}
+      {/* Notifications Banner */}
       {notification && (
         <div className={notification.type === 'success' ? styles.alertSuccess : styles.alertError} role="alert">
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             {notification.type === 'success' ? <CheckCircle2 size={18} /> : <AlertCircle size={18} />}
             <span>{notification.message}</span>
           </div>
-          <button
-            type="button"
-            onClick={() => setNotification(null)}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', display: 'flex' }}
-            aria-label="Dismiss alert"
-          >
-            <X size={16} />
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {notification.type === 'success' && (
+              <button
+                type="button"
+                className={`${styles.btn} ${styles.btnSecondary}`}
+                style={{ height: '28px', fontSize: '0.75rem', padding: '0 8px' }}
+                onClick={() => navigate('/patient-registration-list')}
+              >
+                <ListPlus size={13} style={{ marginRight: '4px' }} /> View in Patient List
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => setNotification(null)}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit' }}
+            >
+              <X size={16} />
+            </button>
+          </div>
         </div>
       )}
 
-      <form onSubmit={handleAddPatient}>
-        {/* Primary Identity Section */}
+      {/* Form Element */}
+      <form onSubmit={handleSubmit} noValidate>
+        {/* Section 1: Basic Information */}
         <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Primary Identity</h2>
+          <h2 className={styles.sectionTitle}>Basic Information</h2>
           <div className={styles.formGrid}>
             <div className={`${styles.formGroup} ${styles.colSpan2}`}>
-              <label className={styles.label}>UHID</label>
-              <input
-                type="text"
-                className={styles.input}
-                value={currentUhid}
-                readOnly
-                title="Auto-generated UHID"
-              />
-            </div>
-
-            <div className={`${styles.formGroup} ${styles.colSpan2}`}>
-              <label className={`${styles.label} ${styles.required}`}>Category</label>
+              <label className={styles.label}>Category</label>
               <select
                 name="category"
                 className={styles.select}
                 value={formData.category}
                 onChange={handleInputChange}
-                required
               >
                 <option value="NEW">NEW</option>
                 <option value="OLD">OLD</option>
@@ -281,19 +389,21 @@ const PatientRegistration: React.FC = () => {
             </div>
 
             <div className={`${styles.formGroup} ${styles.colSpan3}`}>
-              <label className={`${styles.label} ${styles.required}`}>First Name</label>
+              <label className={styles.label}>
+                First Name <span className={styles.required}>*</span>
+              </label>
               <input
                 type="text"
                 name="firstName"
+                required
                 className={styles.input}
                 value={formData.firstName}
                 onChange={handleInputChange}
-                placeholder="e.g. Vinubhai"
-                required
+                placeholder="e.g. Ramesh"
               />
             </div>
 
-            <div className={`${styles.formGroup} ${styles.colSpan2}`}>
+            <div className={`${styles.formGroup} ${styles.colSpan3}`}>
               <label className={styles.label}>Middle Name</label>
               <input
                 type="text"
@@ -301,11 +411,11 @@ const PatientRegistration: React.FC = () => {
                 className={styles.input}
                 value={formData.middleName}
                 onChange={handleInputChange}
-                placeholder="e.g. Kantibhai"
+                placeholder="e.g. Kumar"
               />
             </div>
 
-            <div className={`${styles.formGroup} ${styles.colSpan3}`}>
+            <div className={`${styles.formGroup} ${styles.colSpan4}`}>
               <label className={styles.label}>Last Name</label>
               <input
                 type="text"
@@ -313,7 +423,7 @@ const PatientRegistration: React.FC = () => {
                 className={styles.input}
                 value={formData.lastName}
                 onChange={handleInputChange}
-                placeholder="e.g. Sakariya"
+                placeholder="e.g. Patel"
               />
             </div>
 
@@ -325,31 +435,31 @@ const PatientRegistration: React.FC = () => {
                 className={styles.input}
                 value={formData.birthDate}
                 onChange={handleBirthDateChange}
-                max="2099-12-31"
               />
             </div>
 
             <div className={`${styles.formGroup} ${styles.colSpan3}`}>
-              <label className={`${styles.label} ${styles.required}`}>Age</label>
-              <div className={styles.inputGroup}>
+              <label className={styles.label}>
+                Age <span className={styles.required}>*</span>
+              </label>
+              <div className={styles.inlineInputs}>
                 <input
                   type="number"
                   name="age"
+                  min="0"
+                  max="130"
+                  required
                   className={styles.input}
-                  style={{ flex: 1 }}
                   value={formData.age}
                   onChange={handleAgeChange}
-                  min="0"
-                  max="125"
-                  placeholder="45"
-                  required
+                  placeholder="35"
                 />
                 <select
                   name="ageUnit"
                   className={styles.select}
-                  style={{ flex: 1, minWidth: '90px' }}
                   value={formData.ageUnit}
                   onChange={handleInputChange}
+                  style={{ maxWidth: '100px' }}
                 >
                   <option value="Years">Years</option>
                   <option value="Months">Months</option>
@@ -359,7 +469,9 @@ const PatientRegistration: React.FC = () => {
             </div>
 
             <div className={`${styles.formGroup} ${styles.colSpan3}`}>
-              <label className={styles.label}>Sex</label>
+              <label className={styles.label}>
+                Sex <span className={styles.required}>*</span>
+              </label>
               <select
                 name="sex"
                 className={styles.select}
@@ -371,51 +483,41 @@ const PatientRegistration: React.FC = () => {
                 <option value="Other">Other</option>
               </select>
             </div>
-
-            <div className={`${styles.formGroup} ${styles.colSpan3}`}>
-              <label className={styles.label}>Photograph</label>
-              <div className={styles.inputGroup} style={{ alignItems: 'center' }}>
-                <button type="button" className={`${styles.btn} ${styles.btnSecondary}`}>Select Picture</button>
-                <label className={styles.checkboxGroup}>
-                  <input type="checkbox" className={styles.checkbox} />
-                  <span style={{ fontSize: '0.85rem' }}>Clear</span>
-                </label>
-              </div>
-            </div>
           </div>
         </section>
 
-        {/* Demographics & Clinical Section (Language & Wedding Date removed) */}
+        {/* Section 2: Demographics & Clinical (Grid Rebalanced - 12 Columns) */}
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Demographics & Clinical</h2>
           <div className={styles.formGrid}>
             <div className={`${styles.formGroup} ${styles.colSpan6}`}>
-              <label className={`${styles.label} ${styles.required}`}>Hospital Doctor</label>
-              <div className={styles.inputGroup}>
-                <input
-                  type="text"
-                  name="hospitalDoctor"
-                  className={styles.input}
-                  value={formData.hospitalDoctor}
-                  onChange={handleInputChange}
-                  required
-                />
-                <button type="button" className={`${styles.btn} ${styles.btnSecondary}`}>Change</button>
-              </div>
+              <label className={styles.label}>
+                Hospital Doctor <span className={styles.required}>*</span>
+              </label>
+              <select
+                name="hospitalDoctor"
+                className={styles.select}
+                value={formData.hospitalDoctor}
+                onChange={handleInputChange}
+              >
+                <option value="Dr. NILESH MAHALE">Dr. NILESH MAHALE</option>
+                <option value="Dr. ASHOK PATEL">Dr. ASHOK PATEL</option>
+                <option value="Dr. SHARMA">Dr. SHARMA</option>
+                <option value="Dr. R. K. DESAI">Dr. R. K. DESAI</option>
+              </select>
             </div>
-
             <div className={`${styles.formGroup} ${styles.colSpan6}`}>
               <label className={styles.label}>Reference By</label>
-              <div className={styles.inputGroup}>
-                <input
-                  type="text"
-                  name="referenceBy"
-                  className={styles.input}
-                  value={formData.referenceBy}
-                  onChange={handleInputChange}
-                />
-                <button type="button" className={`${styles.btn} ${styles.btnSecondary}`}>Search</button>
-              </div>
+              <select
+                name="referenceBy"
+                className={styles.select}
+                value={formData.referenceBy}
+                onChange={handleInputChange}
+              >
+                <option value="DR. NIKUNJ VITHALANI">DR. NIKUNJ VITHALANI</option>
+                <option value="DR. ANAND SHAH">DR. ANAND SHAH</option>
+                <option value="SELF">SELF</option>
+              </select>
             </div>
 
             <div className={`${styles.formGroup} ${styles.colSpan3}`}>
@@ -429,10 +531,11 @@ const PatientRegistration: React.FC = () => {
                 <option value="Hindu">Hindu</option>
                 <option value="Muslim">Muslim</option>
                 <option value="Christian">Christian</option>
+                <option value="Sikh">Sikh</option>
+                <option value="Jain">Jain</option>
                 <option value="Other">Other</option>
               </select>
             </div>
-
             <div className={`${styles.formGroup} ${styles.colSpan3}`}>
               <label className={styles.label}>Marital Status</label>
               <select
@@ -441,139 +544,150 @@ const PatientRegistration: React.FC = () => {
                 value={formData.maritalStatus}
                 onChange={handleInputChange}
               >
-                <option value="">Select...</option>
-                <option value="Married">Married</option>
+                <option value="">Select</option>
                 <option value="Single">Single</option>
+                <option value="Married">Married</option>
+                <option value="Widowed">Widowed</option>
+                <option value="Divorced">Divorced</option>
               </select>
             </div>
-
             <div className={`${styles.formGroup} ${styles.colSpan3}`}>
               <label className={styles.label}>Weight (kg)</label>
               <input
                 type="number"
                 name="weight"
+                step="0.1"
+                min="0"
+                max="300"
                 className={styles.input}
                 value={formData.weight}
                 onChange={handleInputChange}
-                placeholder="e.g. 68"
+                placeholder="e.g. 70"
               />
             </div>
-
             <div className={`${styles.formGroup} ${styles.colSpan3}`}>
               <label className={styles.label}>Height (cm)</label>
               <input
                 type="number"
                 name="height"
+                min="0"
+                max="250"
                 className={styles.input}
                 value={formData.height}
                 onChange={handleInputChange}
-                placeholder="e.g. 172"
+                placeholder="e.g. 175"
               />
             </div>
           </div>
         </section>
 
-        {/* Communication & Address Details */}
-        <div className={styles.formGrid}>
-          <div className={`${styles.colSpan6} ${styles.splitSectionLeft}`}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-              <h2 className={styles.sectionTitle} style={{ margin: 0 }}>Communication</h2>
-              <label className={styles.checkboxGroup}>
-                <input
-                  type="checkbox"
-                  name="autoSms"
-                  className={styles.checkbox}
-                  checked={formData.autoSms}
-                  onChange={handleCheckboxChange}
-                />
-                <span style={{ fontSize: '0.85rem' }}>Auto SMS</span>
-              </label>
-            </div>
-            <div className={styles.formGrid}>
-              <div className={`${styles.formGroup} ${styles.colSpan12}`}>
-                <label className={`${styles.label} ${styles.required}`}>Mobile</label>
-                <input
-                  type="tel"
-                  name="mobile"
-                  className={styles.input}
-                  pattern="[0-9]{10,15}"
-                  title="Please enter a valid mobile number (10-15 digits)"
-                  value={formData.mobile}
-                  onChange={handleInputChange}
-                  placeholder="9879745263"
-                  required
-                />
+        {/* Section 3: Contact & Address */}
+        <section className={styles.section}>
+          <div className={styles.formGrid}>
+            {/* Communication Details */}
+            <div className={`${styles.colSpan6} ${styles.splitSectionLeft}`}>
+              <h2 className={styles.sectionTitle}>Communication Details</h2>
+              <div className={styles.formGrid}>
+                <div className={`${styles.formGroup} ${styles.colSpan6}`}>
+                  <label className={styles.label}>
+                    Mobile <span className={styles.required}>*</span>
+                  </label>
+                  <input
+                    type="tel"
+                    name="mobile"
+                    required
+                    pattern="[0-9]{10,15}"
+                    className={styles.input}
+                    value={formData.mobile}
+                    onChange={handleInputChange}
+                    placeholder="9876543210"
+                  />
+                </div>
+                <div className={`${styles.formGroup} ${styles.colSpan6}`}>
+                  <label className={styles.label}>Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    className={styles.input}
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    placeholder="patient@example.com"
+                  />
+                </div>
+                <div className={`${styles.formGroup} ${styles.colSpan12}`}>
+                  <div className={styles.checkboxGroup}>
+                    <input
+                      type="checkbox"
+                      id="autoSms"
+                      name="autoSms"
+                      className={styles.checkbox}
+                      checked={formData.autoSms}
+                      onChange={handleCheckboxChange}
+                    />
+                    <label htmlFor="autoSms" className={styles.checkboxLabel}>
+                      Enable Automated SMS & Notifications
+                    </label>
+                  </div>
+                </div>
               </div>
-              <div className={`${styles.formGroup} ${styles.colSpan12}`}>
-                <label className={styles.label}>Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  className={styles.input}
-                  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                  title="Please enter a valid email address"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="patient@example.com"
-                />
+            </div>
+
+            {/* Address Details */}
+            <div className={`${styles.colSpan6} ${styles.splitSectionRight}`}>
+              <h2 className={styles.sectionTitle}>Address Details</h2>
+              <div className={styles.formGrid}>
+                <div className={`${styles.formGroup} ${styles.colSpan12}`}>
+                  <label className={styles.label}>Street Address</label>
+                  <input
+                    type="text"
+                    name="streetAddress"
+                    className={styles.input}
+                    value={formData.streetAddress}
+                    onChange={handleInputChange}
+                    placeholder="House/Flat No, Street, Landmark"
+                  />
+                </div>
+                <div className={`${styles.formGroup} ${styles.colSpan4}`}>
+                  <label className={styles.label}>City</label>
+                  <input
+                    type="text"
+                    name="city"
+                    className={styles.input}
+                    value={formData.city}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div className={`${styles.formGroup} ${styles.colSpan4}`}>
+                  <label className={styles.label}>State</label>
+                  <input
+                    type="text"
+                    name="state"
+                    className={styles.input}
+                    value={formData.state}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div className={`${styles.formGroup} ${styles.colSpan4}`}>
+                  <label className={styles.label}>PIN Code</label>
+                  <input
+                    type="text"
+                    name="pinCode"
+                    pattern="[0-9]{6}"
+                    maxLength={6}
+                    className={styles.input}
+                    value={formData.pinCode}
+                    onChange={handleInputChange}
+                    placeholder="395001"
+                  />
+                </div>
               </div>
             </div>
           </div>
+        </section>
 
-          <div className={`${styles.colSpan6} ${styles.splitSectionRight}`}>
-            <h2 className={styles.sectionTitle}>Address Details</h2>
-            <div className={styles.formGrid}>
-              <div className={`${styles.formGroup} ${styles.colSpan12}`}>
-                <label className={styles.label}>Street Address</label>
-                <input
-                  type="text"
-                  name="streetAddress"
-                  className={styles.input}
-                  value={formData.streetAddress}
-                  onChange={handleInputChange}
-                  placeholder="398 Shubh Nandini Rasi Kamrej"
-                />
-              </div>
-              <div className={`${styles.formGroup} ${styles.colSpan6}`}>
-                <label className={styles.label}>City</label>
-                <input
-                  type="text"
-                  name="city"
-                  className={styles.input}
-                  value={formData.city}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className={`${styles.formGroup} ${styles.colSpan6}`}>
-                <label className={styles.label}>State</label>
-                <input
-                  type="text"
-                  name="state"
-                  className={styles.input}
-                  value={formData.state}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className={`${styles.formGroup} ${styles.colSpan12}`}>
-                <label className={styles.label}>Pin Code</label>
-                <input
-                  type="text"
-                  name="pinCode"
-                  className={styles.input}
-                  value={formData.pinCode}
-                  onChange={handleInputChange}
-                  placeholder="395006"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '2.5rem 0' }} />
-
-        {/* Other Details Section (Education, Occupation, Spouse Occupation removed) */}
-        <section className={styles.section} style={{ marginBottom: 0 }}>
-          <h2 className={styles.sectionTitle}>Other Details</h2>
+        {/* Section 4: Other Details (Grid Rebalanced - 12 Columns) */}
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>Other Details & Identification</h2>
           <div className={styles.formGrid}>
             <div className={`${styles.formGroup} ${styles.colSpan3}`}>
               <label className={styles.label}>Estimate</label>
@@ -590,6 +704,7 @@ const PatientRegistration: React.FC = () => {
               <input
                 type="text"
                 name="aadharNo"
+                maxLength={14}
                 className={styles.input}
                 value={formData.aadharNo}
                 onChange={handleInputChange}
@@ -601,6 +716,7 @@ const PatientRegistration: React.FC = () => {
               <input
                 type="text"
                 name="panNo"
+                maxLength={10}
                 className={styles.input}
                 value={formData.panNo}
                 onChange={handleInputChange}
@@ -617,8 +733,9 @@ const PatientRegistration: React.FC = () => {
                 onChange={handleInputChange}
               />
             </div>
+
             <div className={`${styles.formGroup} ${styles.colSpan3}`}>
-              <label className={styles.label}>Membership Id</label>
+              <label className={styles.label}>Membership ID</label>
               <input
                 type="text"
                 name="membershipId"
@@ -628,7 +745,7 @@ const PatientRegistration: React.FC = () => {
               />
             </div>
             <div className={`${styles.formGroup} ${styles.colSpan3}`}>
-              <label className={styles.label}>Employee Id</label>
+              <label className={styles.label}>Employee ID</label>
               <input
                 type="text"
                 name="employeeId"
@@ -660,47 +777,78 @@ const PatientRegistration: React.FC = () => {
           </div>
         </section>
 
-        {/* Action Bar */}
+        {/* Action Button Bar */}
         <div className={styles.actions}>
           <button
             type="button"
             className={`${styles.btn} ${styles.btnSecondary}`}
             onClick={handleResetForm}
+            disabled={isSubmitting}
+            title={isEditMode ? 'Restore original loaded values' : 'Clear all input fields'}
           >
-            Exit / Clear
+            <RotateCcw size={15} style={{ marginRight: '6px' }} />
+            {isEditMode ? 'Reset Values' : 'Clear Form'}
           </button>
+
+          {isEditMode ? (
+            <button
+              type="button"
+              className={`${styles.btn} ${styles.btnSecondary}`}
+              onClick={handleSwitchToCreateMode}
+              disabled={isSubmitting}
+            >
+              <ArrowLeft size={15} style={{ marginRight: '6px' }} />
+              Cancel Edit
+            </button>
+          ) : (
+            <button
+              type="button"
+              className={`${styles.btn} ${styles.btnSecondary}`}
+              onClick={() => setIsSearchOpen(true)}
+            >
+              <Search size={15} style={{ marginRight: '6px' }} />
+              Quick Search Patient ({lookupPatients.length})
+            </button>
+          )}
+
           <button
             type="button"
             className={`${styles.btn} ${styles.btnSecondary}`}
-            onClick={() => setIsSearchOpen(true)}
+            onClick={() => navigate('/patient-registration-list')}
           >
-            <Search size={15} style={{ marginRight: '6px' }} />
-            Search Patient ({records.length})
+            <ListPlus size={15} style={{ marginRight: '6px' }} />
+            Patient Registration List
           </button>
-          <button
-            type="button"
-            className={`${styles.btn} ${styles.btnSecondary}`}
-            onClick={() => handleAddPatient()}
-          >
-            Update
-          </button>
+
           <button
             type="submit"
             className={`${styles.btn} ${styles.btnPrimary}`}
+            disabled={isSubmitting}
           >
-            <UserCheck size={16} style={{ marginRight: '6px' }} />
-            Add Patient
+            {isSubmitting ? (
+              <span>Saving to JSON...</span>
+            ) : isEditMode ? (
+              <>
+                <Edit2 size={16} style={{ marginRight: '6px' }} />
+                Update Patient Record
+              </>
+            ) : (
+              <>
+                <Save size={16} style={{ marginRight: '6px' }} />
+                Register / Save Patient
+              </>
+            )}
           </button>
         </div>
       </form>
 
-      {/* Patient Search Lookup Modal */}
+      {/* Quick Search Patient Lookup Modal */}
       {isSearchOpen && (
         <div className={styles.modalBackdrop} onClick={() => setIsSearchOpen(false)}>
           <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
               <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-main)', fontWeight: 600 }}>
-                Registered Patients ({records.length})
+                Backend Registered Patients ({lookupPatients.length})
               </h3>
               <button
                 type="button"
@@ -715,20 +863,20 @@ const PatientRegistration: React.FC = () => {
               <input
                 type="text"
                 className={styles.input}
-                placeholder="Search by UHID, Name, or Mobile..."
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
+                placeholder="Instant Search by UHID, Name, or Mobile..."
+                value={lookupQuery}
+                onChange={e => setLookupQuery(e.target.value)}
                 autoFocus
               />
             </div>
 
             <div style={{ maxHeight: '360px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              {filteredRecords.length === 0 ? (
+              {filteredLookup.length === 0 ? (
                 <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-muted)' }}>
-                  No registered patients found. Register a new patient to view here.
+                  No registered patients found. Register a new patient in the form.
                 </div>
               ) : (
-                filteredRecords.map(p => (
+                filteredLookup.map(p => (
                   <div
                     key={p.uhid}
                     style={{
@@ -754,42 +902,11 @@ const PatientRegistration: React.FC = () => {
                       className={`${styles.btn} ${styles.btnSecondary}`}
                       style={{ fontSize: '0.75rem', padding: '4px 8px' }}
                       onClick={() => {
-                        setFormData({
-                          category: p.category,
-                          firstName: p.firstName,
-                          middleName: p.middleName,
-                          lastName: p.lastName,
-                          birthDate: p.birthDate,
-                          age: p.age,
-                          ageUnit: p.ageUnit,
-                          sex: p.sex,
-                          hospitalDoctor: p.hospitalDoctor,
-                          referenceBy: p.referenceBy,
-                          religion: p.religion,
-                          maritalStatus: p.maritalStatus,
-                          weight: p.weight,
-                          height: p.height,
-                          mobile: p.mobile,
-                          email: p.email,
-                          streetAddress: p.streetAddress,
-                          city: p.city,
-                          state: p.state,
-                          pinCode: p.pinCode,
-                          autoSms: p.autoSms,
-                          estimate: p.estimate,
-                          aadharNo: p.aadharNo,
-                          panNo: p.panNo,
-                          mediclaim: p.mediclaim,
-                          membershipId: p.membershipId,
-                          employeeId: p.employeeId,
-                          companyName: p.companyName,
-                          remark: p.remark
-                        });
+                        navigate(`/patient-registration?id=${encodeURIComponent(p.uhid)}`);
                         setIsSearchOpen(false);
-                        setNotification({ type: 'success', message: `Loaded patient ${p.uhid} into form.` });
                       }}
                     >
-                      Load Record
+                      Load for Editing
                     </button>
                   </div>
                 ))

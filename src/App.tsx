@@ -56,6 +56,7 @@ import mixuLogo from './assets/mixu-infosystem-logo.png';
 // Lazy load the components
 const Login = lazy(() => import('./components/Login/Login'));
 const PatientRegistration = lazy(() => import('./components/PatientRegistration/PatientRegistration'));
+const PatientRegistrationList = lazy(() => import('./components/PatientRegistrationList/PatientRegistrationList'));
 const PatientPastInfo = lazy(() => import('./components/PatientPastInfo/PatientPastInfo'));
 const PartPayment = lazy(() => import('./components/PartPayment/PartPayment'));
 const RoomCharges = lazy(() => import('./components/RoomCharges/RoomCharges'));
@@ -109,8 +110,9 @@ interface NavItemConfig {
 
 // Complete Navigation Tree discovered from the application
 const NAVIGATION_TREE: NavItemConfig[] = [
-  // 17 Primary Single Items
+  // 18 Primary Single Items
   { id: 'patient-registration', title: 'Patient Registration', icon: UserPlus, to: '/patient-registration' },
+  { id: 'patient-registration-list', title: 'Patient Registration List', icon: Users, to: '/patient-registration-list' },
   { id: 'patient-past-info', title: 'Patient Past Info', icon: History, to: '/patient-past-info' },
   { id: 'part-payment', title: 'Part Payment', icon: CreditCard, to: '/part-payment' },
   { id: 'room-charges', title: 'Room Charges', icon: BedDouble, to: '/room-charges' },
@@ -1140,6 +1142,7 @@ function App() {
                   <Route path="/login" element={<Navigate to="/patient-registration" replace />} />
                   <Route path="/" element={<Navigate to="/patient-registration" replace />} />
                   <Route path="/patient-registration" element={<PatientRegistration />} />
+                  <Route path="/patient-registration-list" element={<PatientRegistrationList />} />
                   <Route path="/patient-past-info" element={<PatientPastInfo />} />
                   <Route path="/part-payment" element={<PartPayment />} />
                   <Route path="/room-charges" element={<RoomCharges />} />
