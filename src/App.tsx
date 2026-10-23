@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useState, useEffect, useRef } from 'react';
+import React, { Suspense, lazy, useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { HashRouter, Routes, Route, NavLink, Navigate, useLocation } from 'react-router-dom';
 import {
   Menu,
@@ -205,6 +205,51 @@ const NavGroup: React.FC<NavGroupProps> = ({
   flyoutTop = 0,
   children
 }) => {
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const flyoutRef = useRef<HTMLDivElement | null>(null);
+  const [flyoutStyle, setFlyoutStyle] = useState<{ top: number; maxHeight?: number }>({
+    top: flyoutTop || 0
+  });
+
+  useLayoutEffect(() => {
+    if (!isCollapsed || !isOpen) return;
+
+    const updatePosition = () => {
+      if (!buttonRef.current) return;
+      const btnRect = buttonRef.current.getBoundingClientRect();
+      const parentTop = btnRect.top;
+      const viewportHeight = window.innerHeight;
+      const margin = 12;
+
+      const flyoutEl = flyoutRef.current;
+      const flyoutHeight = flyoutEl ? flyoutEl.offsetHeight : 180;
+
+      // Primary rule: Top edge of submenu aligns directly with top edge of parent button
+      let targetTop = parentTop;
+
+      // Boundary rule: If extending beyond bottom of viewport, adjust upward only as much as necessary
+      if (targetTop + flyoutHeight + margin > viewportHeight) {
+        targetTop = Math.max(margin, viewportHeight - flyoutHeight - margin);
+      }
+
+      const availableMaxHeight = Math.max(160, viewportHeight - (2 * margin));
+
+      setFlyoutStyle({
+        top: targetTop,
+        maxHeight: availableMaxHeight
+      });
+    };
+
+    updatePosition();
+
+    window.addEventListener('resize', updatePosition);
+    window.addEventListener('scroll', updatePosition, true);
+    return () => {
+      window.removeEventListener('resize', updatePosition);
+      window.removeEventListener('scroll', updatePosition, true);
+    };
+  }, [isCollapsed, isOpen, flyoutTop]);
+
   const paddingLeft = isCollapsed ? '0px' : nestedLevel === 0 ? '12px' : '24px';
   const fontSize = nestedLevel === 0 ? '13.5px' : '13px';
 
@@ -220,10 +265,10 @@ const NavGroup: React.FC<NavGroupProps> = ({
       }}
     >
       <button
+        ref={buttonRef}
         type="button"
         onClick={onToggle}
         aria-expanded={isOpen}
-        title={isCollapsed ? title : undefined}
         style={{
           width: '100%',
           textAlign: 'left',
@@ -304,8 +349,12 @@ const NavGroup: React.FC<NavGroupProps> = ({
       {/* Collapsed Mode: Anchored Floating Flyout Submenu */}
       {isCollapsed && isOpen && (
         <div
+          ref={flyoutRef}
           className="sidebarFlyout"
-          style={{ top: Math.max(12, Math.min(flyoutTop, window.innerHeight - 380)) }}
+          style={{
+            top: `${flyoutStyle.top}px`,
+            maxHeight: flyoutStyle.maxHeight ? `${flyoutStyle.maxHeight}px` : 'calc(100vh - 24px)'
+          }}
           role="region"
           aria-label={`${title} submenu`}
         >
@@ -394,7 +443,8 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
     }
     setHoveredGroupId(groupId);
     if (isCollapsed) {
-      const rect = e.currentTarget.getBoundingClientRect();
+      const btn = e.currentTarget.querySelector('button');
+      const rect = btn ? btn.getBoundingClientRect() : e.currentTarget.getBoundingClientRect();
       setFlyoutTop(rect.top);
       setActiveTooltip(null);
     }
