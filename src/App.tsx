@@ -1,10 +1,13 @@
-import React, { Suspense, lazy, useState, useEffect } from 'react';
+import React, { Suspense, lazy, useState, useEffect, useRef } from 'react';
 import { HashRouter, Routes, Route, NavLink, Navigate, useLocation } from 'react-router-dom';
 import {
   Menu,
   X,
   LogOut,
   ChevronDown,
+  ChevronRight,
+  PanelLeftClose,
+  PanelLeftOpen,
   UserPlus,
   History,
   CreditCard,
@@ -48,6 +51,7 @@ import {
   Contact,
   Radio
 } from 'lucide-react';
+import mixuLogo from './assets/mixu-infosystem-logo.png';
 
 // Lazy load the components
 const Login = lazy(() => import('./components/Login/Login'));
@@ -101,18 +105,37 @@ interface SidebarLinkProps {
   label: string;
   onClick: () => void;
   nestedLevel?: number;
+  isCollapsed?: boolean;
+  onHoverTooltip?: (e: React.MouseEvent, label: string) => void;
+  onLeaveTooltip?: () => void;
 }
 
-const SidebarLink: React.FC<SidebarLinkProps> = ({ to, icon: Icon, label, onClick, nestedLevel = 0 }) => {
-  const paddingLeft = nestedLevel === 0 ? '12px' : nestedLevel === 1 ? '24px' : '36px';
+const SidebarLink: React.FC<SidebarLinkProps> = ({
+  to,
+  icon: Icon,
+  label,
+  onClick,
+  nestedLevel = 0,
+  isCollapsed = false,
+  onHoverTooltip,
+  onLeaveTooltip
+}) => {
+  const paddingLeft = isCollapsed ? '0px' : nestedLevel === 0 ? '12px' : nestedLevel === 1 ? '24px' : '36px';
   const fontSize = nestedLevel === 0 ? '13.5px' : nestedLevel === 1 ? '13px' : '12px';
 
   return (
     <NavLink
       to={to}
       onClick={onClick}
+      onMouseEnter={(e) => {
+        if (isCollapsed && onHoverTooltip) onHoverTooltip(e, label);
+      }}
+      onMouseLeave={() => {
+        if (isCollapsed && onLeaveTooltip) onLeaveTooltip();
+      }}
+      title={isCollapsed ? label : undefined}
       style={({ isActive }) => ({
-        padding: `8px 12px 8px ${paddingLeft}`,
+        padding: isCollapsed ? '9px 0' : `8px 12px 8px ${paddingLeft}`,
         borderRadius: '6px',
         backgroundColor: isActive ? 'var(--primary-soft)' : 'transparent',
         color: isActive ? 'var(--primary)' : 'var(--text-muted)',
@@ -124,9 +147,12 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({ to, icon: Icon, label, onClic
         whiteSpace: 'nowrap',
         display: 'flex',
         alignItems: 'center',
+        justifyContent: isCollapsed ? 'center' : 'flex-start',
         gap: '9px',
         minHeight: '38px',
-        borderLeft: isActive ? '3px solid var(--primary)' : '3px solid transparent'
+        borderLeft: isCollapsed ? 'none' : isActive ? '3px solid var(--primary)' : '3px solid transparent',
+        borderRight: isCollapsed && isActive ? '3px solid var(--primary)' : 'none',
+        position: 'relative'
       })}
     >
       {({ isActive }) => (
@@ -141,96 +167,181 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({ to, icon: Icon, label, onClic
             }}
             aria-hidden="true"
           />
-          <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{label}</span>
+          {!isCollapsed && (
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{label}</span>
+          )}
         </>
       )}
     </NavLink>
   );
 };
 
-// Collapsible Navigation Accordion Group with Lucide Icons
+// Collapsible Navigation Group with Smart Hover & Flyout Support
 interface NavGroupProps {
+  id: string;
   title: string;
   icon: React.ComponentType<{ size?: number; strokeWidth?: number; style?: React.CSSProperties; 'aria-hidden'?: boolean | 'true' | 'false' }>;
   isOpen: boolean;
+  isChildActive: boolean;
+  isCollapsed: boolean;
+  onMouseEnter: (e: React.MouseEvent<HTMLDivElement>) => void;
+  onMouseLeave: () => void;
   onToggle: () => void;
   nestedLevel?: number;
+  flyoutTop?: number;
   children: React.ReactNode;
 }
 
-const NavGroup: React.FC<NavGroupProps> = ({ title, icon: Icon, isOpen, onToggle, nestedLevel = 0, children }) => {
-  const paddingLeft = nestedLevel === 0 ? '12px' : '24px';
+const NavGroup: React.FC<NavGroupProps> = ({
+  title,
+  icon: Icon,
+  isOpen,
+  isChildActive,
+  isCollapsed,
+  onMouseEnter,
+  onMouseLeave,
+  onToggle,
+  nestedLevel = 0,
+  flyoutTop = 0,
+  children
+}) => {
+  const paddingLeft = isCollapsed ? '0px' : nestedLevel === 0 ? '12px' : '24px';
   const fontSize = nestedLevel === 0 ? '13.5px' : '13px';
 
   return (
-    <div style={{ marginTop: nestedLevel === 0 ? '6px' : '2px', paddingTop: nestedLevel === 0 ? '6px' : '0' }}>
+    <div
+      className="navGroupWrapper"
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      style={{
+        marginTop: nestedLevel === 0 ? '6px' : '2px',
+        paddingTop: nestedLevel === 0 ? '6px' : '0',
+        position: 'relative'
+      }}
+    >
       <button
         type="button"
         onClick={onToggle}
         aria-expanded={isOpen}
+        title={isCollapsed ? title : undefined}
         style={{
           width: '100%',
           textAlign: 'left',
-          padding: `8px 12px 8px ${paddingLeft}`,
-          backgroundColor: isOpen ? 'rgba(66, 133, 244, 0.05)' : 'transparent',
+          padding: isCollapsed ? '9px 0' : `8px 12px 8px ${paddingLeft}`,
+          backgroundColor: isOpen || isChildActive ? 'rgba(66, 133, 244, 0.08)' : 'transparent',
           border: 'none',
           borderRadius: '6px',
-          color: isOpen ? 'var(--text-main)' : 'var(--text-muted)',
+          color: isOpen || isChildActive ? 'var(--primary)' : 'var(--text-muted)',
           fontWeight: 600,
           fontSize,
           cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
+          justifyContent: isCollapsed ? 'center' : 'space-between',
           minHeight: '38px',
           transition: 'all 0.15s ease-in-out',
-          fontFamily: 'Inter, sans-serif'
+          fontFamily: 'Inter, sans-serif',
+          position: 'relative',
+          borderLeft: isCollapsed ? 'none' : isChildActive ? '3px solid var(--primary)' : '3px solid transparent',
+          borderRight: isCollapsed && isChildActive ? '3px solid var(--primary)' : 'none'
         }}
       >
-        <span style={{ display: 'flex', alignItems: 'center', gap: '9px' }}>
+        <span style={{ display: 'flex', alignItems: 'center', gap: '9px', minWidth: 0 }}>
           <Icon
             size={18}
-            strokeWidth={1.8}
+            strokeWidth={isChildActive ? 2.1 : 1.8}
             style={{
-              color: isOpen ? 'var(--primary)' : 'var(--text-muted)',
+              color: isChildActive || isOpen ? 'var(--primary)' : 'var(--text-muted)',
               flexShrink: 0
             }}
             aria-hidden="true"
           />
-          {title}
+          {!isCollapsed && (
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {title}
+            </span>
+          )}
         </span>
-        <ChevronDown
-          size={16}
-          style={{
-            transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-            transition: 'transform 0.2s ease',
-            color: 'var(--text-muted)',
-            flexShrink: 0
-          }}
-          aria-hidden="true"
-        />
+
+        {!isCollapsed && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            {isChildActive && <span className="navGroupActiveDot" aria-label="Active category indicator" />}
+            <ChevronDown
+              size={16}
+              style={{
+                transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                transition: 'transform 0.2s ease',
+                color: isOpen || isChildActive ? 'var(--primary)' : 'var(--text-muted)',
+                flexShrink: 0
+              }}
+              aria-hidden="true"
+            />
+          </div>
+        )}
+
+        {isCollapsed && isChildActive && (
+          <span
+            style={{
+              position: 'absolute',
+              top: '6px',
+              right: '6px',
+              width: '6px',
+              height: '6px',
+              borderRadius: '50%',
+              backgroundColor: 'var(--primary)'
+            }}
+          />
+        )}
       </button>
-      {isOpen && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '2px' }}>
+
+      {/* Expanded Mode: Inline Accordion Submenu beneath Parent */}
+      {!isCollapsed && isOpen && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '3px' }}>
           {children}
+        </div>
+      )}
+
+      {/* Collapsed Mode: Anchored Floating Flyout Submenu */}
+      {isCollapsed && isOpen && (
+        <div
+          className="sidebarFlyout"
+          style={{ top: Math.max(12, Math.min(flyoutTop, window.innerHeight - 380)) }}
+          role="region"
+          aria-label={`${title} submenu`}
+        >
+          <div className="flyoutHeader">
+            <Icon size={16} style={{ color: 'var(--primary)' }} />
+            <span>{title}</span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            {children}
+          </div>
         </div>
       )}
     </div>
   );
 };
 
-// Navigation Bar Component (only shown when authenticated)
+// Navigation Bar Component with Collapsible State & Smart Hover
 interface NavigationBarProps {
-  isOpen: boolean;
-  onClose: () => void;
+  isMobileOpen: boolean;
+  isCollapsed: boolean;
+  onToggleCollapse: () => void;
+  onCloseMobile: () => void;
   onLogout: () => void;
 }
 
-const NavigationBar: React.FC<NavigationBarProps> = ({ isOpen, onClose, onLogout }) => {
+const NavigationBar: React.FC<NavigationBarProps> = ({
+  isMobileOpen,
+  isCollapsed,
+  onToggleCollapse,
+  onCloseMobile,
+  onLogout
+}) => {
   const location = useLocation();
   const p = location.pathname;
 
-  // Active route matching for accordion groups
+  // Active route matching for parent and sub-groups
   const isMasterActive = [
     '/patient-history', '/medicine-master', '/standard-prescription-master',
     '/advice-master', '/bed-master', '/operation-group-master',
@@ -256,46 +367,162 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ isOpen, onClose, onLogout
     '/contact-list', '/intercomm-display'
   ].includes(p);
 
-  const [masterExpanded, setMasterExpanded] = useState<boolean | null>(null);
-  const [ipdExpanded, setIpdExpanded] = useState<boolean | null>(null);
-  const [opdExpanded, setOpdExpanded] = useState<boolean | null>(null);
-  const [diagExpanded, setDiagExpanded] = useState<boolean | null>(null);
-  const [certExpanded, setCertExpanded] = useState<boolean | null>(null);
-  const [utilExpanded, setUtilExpanded] = useState<boolean | null>(null);
+  // Smart hover state management (Only hovered parent opens; unrelated remain closed)
+  const [hoveredGroupId, setHoveredGroupId] = useState<string | null>(null);
+  const [hoveredSubGroupId, setHoveredSubGroupId] = useState<string | null>(null);
+  const [tappedGroupId, setTappedGroupId] = useState<string | null>(null);
+  const [tappedSubGroupId, setTappedSubGroupId] = useState<string | null>(null);
 
-  const isMasterOpen = masterExpanded ?? isMasterActive;
-  const isMasterIpdOpen = ipdExpanded ?? isMasterIpdActive;
-  const isMasterOpdOpen = opdExpanded ?? isMasterOpdActive;
-  const isDiagnosticsReportOpen = diagExpanded ?? isDiagActive;
-  const isCertificateOpen = certExpanded ?? isCertActive;
-  const isUtilityOpen = utilExpanded ?? isUtilActive;
+  const [flyoutTop, setFlyoutTop] = useState<number>(0);
+  const [activeTooltip, setActiveTooltip] = useState<{ text: string; top: number } | null>(null);
+
+  const leaveTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const subLeaveTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Close flyouts and tooltips on route change or Escape
+  useEffect(() => {
+    setHoveredGroupId(null);
+    setHoveredSubGroupId(null);
+    setActiveTooltip(null);
+  }, [p]);
+
+  const handleGroupMouseEnter = (groupId: string, e: React.MouseEvent<HTMLDivElement>) => {
+    if (window.innerWidth <= 1024) return;
+    if (leaveTimerRef.current) {
+      clearTimeout(leaveTimerRef.current);
+      leaveTimerRef.current = null;
+    }
+    setHoveredGroupId(groupId);
+    if (isCollapsed) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      setFlyoutTop(rect.top);
+      setActiveTooltip(null);
+    }
+  };
+
+  const handleGroupMouseLeave = () => {
+    if (window.innerWidth <= 1024) return;
+    leaveTimerRef.current = setTimeout(() => {
+      setHoveredGroupId(null);
+      setHoveredSubGroupId(null);
+    }, 180); // 180ms safe delay prevents flicker when moving pointer into submenu
+  };
+
+  const handleSubGroupMouseEnter = (subGroupId: string) => {
+    if (window.innerWidth <= 1024) return;
+    if (subLeaveTimerRef.current) {
+      clearTimeout(subLeaveTimerRef.current);
+      subLeaveTimerRef.current = null;
+    }
+    setHoveredSubGroupId(subGroupId);
+  };
+
+  const handleSubGroupMouseLeave = () => {
+    if (window.innerWidth <= 1024) return;
+    subLeaveTimerRef.current = setTimeout(() => {
+      setHoveredSubGroupId(null);
+    }, 180);
+  };
+
+  const handleGroupToggle = (groupId: string) => {
+    setTappedGroupId(prev => (prev === groupId ? null : groupId));
+  };
+
+  const handleSubGroupToggle = (subGroupId: string) => {
+    setTappedSubGroupId(prev => (prev === subGroupId ? null : subGroupId));
+  };
+
+  const handleHoverTooltip = (e: React.MouseEvent, text: string) => {
+    if (!isCollapsed || window.innerWidth <= 1024) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    setActiveTooltip({ text, top: rect.top + 4 });
+  };
+
+  const handleLeaveTooltip = () => {
+    setActiveTooltip(null);
+  };
 
   if (p === '/login') return null;
+
+  // Decide if group is open based on hover (desktop) or tap (mobile/click)
+  const isMasterOpen = hoveredGroupId === 'master' || tappedGroupId === 'master';
+  const isMasterIpdOpen = hoveredSubGroupId === 'ipd' || tappedSubGroupId === 'ipd';
+  const isMasterOpdOpen = hoveredSubGroupId === 'opd' || tappedSubGroupId === 'opd';
+  const isDiagnosticsReportOpen = hoveredGroupId === 'diag' || tappedGroupId === 'diag';
+  const isCertificateOpen = hoveredGroupId === 'cert' || tappedGroupId === 'cert';
+  const isUtilityOpen = hoveredGroupId === 'util' || tappedGroupId === 'util';
 
   return (
     <aside
       id="main-sidebar-nav"
-      className={`sidebarNav ${isOpen ? 'drawerOpen' : ''}`}
+      className={`sidebarNav ${isCollapsed ? 'collapsed' : ''} ${isMobileOpen ? 'drawerOpen' : ''}`}
       aria-label="Main Navigation"
     >
-      <div className="sidebarHeader">
-        <div className="sidebarTitle">
-          <span style={{ 
-            display: 'inline-flex', 
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            width: '28px', 
-            height: '28px', 
-            borderRadius: '6px', 
-            backgroundColor: 'var(--primary)', 
-            color: '#FFFFFF',
-            fontWeight: 800,
-            fontSize: '15px'
-          }}>+</span>
-          Hospital System
+      {/* Floating Tooltip in Collapsed Mode */}
+      {isCollapsed && activeTooltip && (
+        <div className="sidebarTooltip" style={{ top: activeTooltip.top }}>
+          {activeTooltip.text}
         </div>
-        <button 
-          onClick={onClose} 
+      )}
+
+      {/* Sidebar Header with Mixu Infosystem Emblem & Toggle Button */}
+      <div className="sidebarHeader">
+        {!isCollapsed ? (
+          <>
+            <div className="sidebarTitle">
+              <img
+                src={mixuLogo}
+                alt="Mixu Infosystem Logo"
+                style={{
+                  width: '28px',
+                  height: '28px',
+                  objectFit: 'contain',
+                  flexShrink: 0,
+                  borderRadius: '4px'
+                }}
+              />
+              <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>
+                <span style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-main)' }}>Hospital System</span>
+                <span style={{ fontSize: '10.5px', fontWeight: 500, color: 'var(--text-muted)', letterSpacing: '0.02em' }}>Mixu Infosystem</span>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={onToggleCollapse}
+              className="sidebarToggleBtn"
+              title="Collapse sidebar"
+              aria-label="Collapse sidebar"
+            >
+              <PanelLeftClose size={18} aria-hidden="true" />
+            </button>
+          </>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', gap: '8px' }}>
+            <img
+              src={mixuLogo}
+              alt="Mixu Infosystem Logo"
+              style={{
+                width: '30px',
+                height: '30px',
+                objectFit: 'contain',
+                borderRadius: '4px'
+              }}
+            />
+            <button
+              type="button"
+              onClick={onToggleCollapse}
+              className="sidebarToggleBtn"
+              title="Expand sidebar"
+              aria-label="Expand sidebar"
+              style={{ width: '100%' }}
+            >
+              <PanelLeftOpen size={18} aria-hidden="true" />
+            </button>
+          </div>
+        )}
+
+        <button
+          onClick={onCloseMobile}
           className="sidebarCloseBtn"
           aria-label="Close navigation"
         >
@@ -303,117 +530,154 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ isOpen, onClose, onLogout
         </button>
       </div>
 
+      {/* Sidebar Links Scroll Area */}
       <div className="sidebarLinks">
         {/* 17 Primary Menu Items with Specific Healthcare Icons */}
-        <SidebarLink to="/patient-registration" icon={UserPlus} label="Patient Registration" onClick={onClose} />
-        <SidebarLink to="/patient-past-info" icon={History} label="Patient Past Info" onClick={onClose} />
-        <SidebarLink to="/part-payment" icon={CreditCard} label="Part Payment" onClick={onClose} />
-        <SidebarLink to="/room-charges" icon={BedDouble} label="Room Charges" onClick={onClose} />
-        <SidebarLink to="/room-status" icon={DoorOpen} label="Room Status" onClick={onClose} />
-        <SidebarLink to="/ot-entry" icon={HeartPulse} label="OT Entry" onClick={onClose} />
-        <SidebarLink to="/operation-charges" icon={BadgeDollarSign} label="Operation Charges" onClick={onClose} />
-        <SidebarLink to="/indoor-summary" icon={FileSpreadsheet} label="Indoor Summary" onClick={onClose} />
-        <SidebarLink to="/indoor-option" icon={Layers} label="Indoor Option" onClick={onClose} />
-        <SidebarLink to="/inpatient-receipt" icon={Receipt} label="Inpatient Receipt" onClick={onClose} />
-        <SidebarLink to="/inpatient-bill" icon={FileText} label="Inpatient Bill" onClick={onClose} />
-        <SidebarLink to="/discharge-card" icon={LogOut} label="Discharge Card" onClick={onClose} />
-        <SidebarLink to="/deposit-entry" icon={Wallet} label="Deposit Entry" onClick={onClose} />
-        <SidebarLink to="/billing" icon={Calculator} label="Billing" onClick={onClose} />
-        <SidebarLink to="/dr-visit-procedure" icon={Stethoscope} label="Dr. Visit & Procedure" onClick={onClose} />
-        <SidebarLink to="/investigation-ordered" icon={Microscope} label="Investigation Ordered" onClick={onClose} />
-        <SidebarLink to="/indoor-register" icon={Hospital} label="Indoor Register" onClick={onClose} />
+        <SidebarLink to="/patient-registration" icon={UserPlus} label="Patient Registration" onClick={onCloseMobile} isCollapsed={isCollapsed} onHoverTooltip={handleHoverTooltip} onLeaveTooltip={handleLeaveTooltip} />
+        <SidebarLink to="/patient-past-info" icon={History} label="Patient Past Info" onClick={onCloseMobile} isCollapsed={isCollapsed} onHoverTooltip={handleHoverTooltip} onLeaveTooltip={handleLeaveTooltip} />
+        <SidebarLink to="/part-payment" icon={CreditCard} label="Part Payment" onClick={onCloseMobile} isCollapsed={isCollapsed} onHoverTooltip={handleHoverTooltip} onLeaveTooltip={handleLeaveTooltip} />
+        <SidebarLink to="/room-charges" icon={BedDouble} label="Room Charges" onClick={onCloseMobile} isCollapsed={isCollapsed} onHoverTooltip={handleHoverTooltip} onLeaveTooltip={handleLeaveTooltip} />
+        <SidebarLink to="/room-status" icon={DoorOpen} label="Room Status" onClick={onCloseMobile} isCollapsed={isCollapsed} onHoverTooltip={handleHoverTooltip} onLeaveTooltip={handleLeaveTooltip} />
+        <SidebarLink to="/ot-entry" icon={HeartPulse} label="OT Entry" onClick={onCloseMobile} isCollapsed={isCollapsed} onHoverTooltip={handleHoverTooltip} onLeaveTooltip={handleLeaveTooltip} />
+        <SidebarLink to="/operation-charges" icon={BadgeDollarSign} label="Operation Charges" onClick={onCloseMobile} isCollapsed={isCollapsed} onHoverTooltip={handleHoverTooltip} onLeaveTooltip={handleLeaveTooltip} />
+        <SidebarLink to="/indoor-summary" icon={FileSpreadsheet} label="Indoor Summary" onClick={onCloseMobile} isCollapsed={isCollapsed} onHoverTooltip={handleHoverTooltip} onLeaveTooltip={handleLeaveTooltip} />
+        <SidebarLink to="/indoor-option" icon={Layers} label="Indoor Option" onClick={onCloseMobile} isCollapsed={isCollapsed} onHoverTooltip={handleHoverTooltip} onLeaveTooltip={handleLeaveTooltip} />
+        <SidebarLink to="/inpatient-receipt" icon={Receipt} label="Inpatient Receipt" onClick={onCloseMobile} isCollapsed={isCollapsed} onHoverTooltip={handleHoverTooltip} onLeaveTooltip={handleLeaveTooltip} />
+        <SidebarLink to="/inpatient-bill" icon={FileText} label="Inpatient Bill" onClick={onCloseMobile} isCollapsed={isCollapsed} onHoverTooltip={handleHoverTooltip} onLeaveTooltip={handleLeaveTooltip} />
+        <SidebarLink to="/discharge-card" icon={LogOut} label="Discharge Card" onClick={onCloseMobile} isCollapsed={isCollapsed} onHoverTooltip={handleHoverTooltip} onLeaveTooltip={handleLeaveTooltip} />
+        <SidebarLink to="/deposit-entry" icon={Wallet} label="Deposit Entry" onClick={onCloseMobile} isCollapsed={isCollapsed} onHoverTooltip={handleHoverTooltip} onLeaveTooltip={handleLeaveTooltip} />
+        <SidebarLink to="/billing" icon={Calculator} label="Billing" onClick={onCloseMobile} isCollapsed={isCollapsed} onHoverTooltip={handleHoverTooltip} onLeaveTooltip={handleLeaveTooltip} />
+        <SidebarLink to="/dr-visit-procedure" icon={Stethoscope} label="Dr. Visit & Procedure" onClick={onCloseMobile} isCollapsed={isCollapsed} onHoverTooltip={handleHoverTooltip} onLeaveTooltip={handleLeaveTooltip} />
+        <SidebarLink to="/investigation-ordered" icon={Microscope} label="Investigation Ordered" onClick={onCloseMobile} isCollapsed={isCollapsed} onHoverTooltip={handleHoverTooltip} onLeaveTooltip={handleLeaveTooltip} />
+        <SidebarLink to="/indoor-register" icon={Hospital} label="Indoor Register" onClick={onCloseMobile} isCollapsed={isCollapsed} onHoverTooltip={handleHoverTooltip} onLeaveTooltip={handleLeaveTooltip} />
 
-        {/* Master Accordion */}
+        {/* Master Accordion / Flyout */}
         <NavGroup
+          id="master"
           title="Master"
           icon={FolderPlus}
           isOpen={isMasterOpen}
-          onToggle={() => setMasterExpanded(!isMasterOpen)}
+          isChildActive={isMasterActive}
+          isCollapsed={isCollapsed}
+          flyoutTop={flyoutTop}
+          onMouseEnter={(e) => handleGroupMouseEnter('master', e)}
+          onMouseLeave={handleGroupMouseLeave}
+          onToggle={() => handleGroupToggle('master')}
         >
-          <SidebarLink to="/patient-history" icon={History} label="Clinical / Patient History" onClick={onClose} nestedLevel={1} />
-          <SidebarLink to="/medicine-master" icon={Pill} label="Medicine Master" onClick={onClose} nestedLevel={1} />
-          <SidebarLink to="/standard-prescription-master" icon={FileSignature} label="Standard Prescription Master" onClick={onClose} nestedLevel={1} />
+          <SidebarLink to="/patient-history" icon={History} label="Clinical / Patient History" onClick={onCloseMobile} nestedLevel={isCollapsed ? 0 : 1} />
+          <SidebarLink to="/medicine-master" icon={Pill} label="Medicine Master" onClick={onCloseMobile} nestedLevel={isCollapsed ? 0 : 1} />
+          <SidebarLink to="/standard-prescription-master" icon={FileSignature} label="Standard Prescription Master" onClick={onCloseMobile} nestedLevel={isCollapsed ? 0 : 1} />
 
           {/* IPD Master Sub-group */}
           <NavGroup
+            id="ipd"
             title="IPD Master"
             icon={Bed}
             isOpen={isMasterIpdOpen}
-            onToggle={() => setIpdExpanded(!isMasterIpdOpen)}
-            nestedLevel={1}
+            isChildActive={isMasterIpdActive}
+            isCollapsed={false}
+            nestedLevel={isCollapsed ? 0 : 1}
+            onMouseEnter={() => handleSubGroupMouseEnter('ipd')}
+            onMouseLeave={handleSubGroupMouseLeave}
+            onToggle={() => handleSubGroupToggle('ipd')}
           >
-            <SidebarLink to="/advice-master" icon={MessageSquareCheck} label="Advice Master" onClick={onClose} nestedLevel={2} />
-            <SidebarLink to="/bed-master" icon={Bed} label="Bed Master" onClick={onClose} nestedLevel={2} />
-            <SidebarLink to="/operation-group-master" icon={Boxes} label="Operation Group Master" onClick={onClose} nestedLevel={2} />
-            <SidebarLink to="/room-type-master" icon={Building} label="Room Type Master" onClick={onClose} nestedLevel={2} />
-            <SidebarLink to="/visiting-type-master" icon={Clock} label="Visiting Type Master" onClick={onClose} nestedLevel={2} />
-            <SidebarLink to="/visit-procedure-header-master" icon={ListPlus} label="Visit Procedure Header Master" onClick={onClose} nestedLevel={2} />
+            <SidebarLink to="/advice-master" icon={MessageSquareCheck} label="Advice Master" onClick={onCloseMobile} nestedLevel={isCollapsed ? 1 : 2} />
+            <SidebarLink to="/bed-master" icon={Bed} label="Bed Master" onClick={onCloseMobile} nestedLevel={isCollapsed ? 1 : 2} />
+            <SidebarLink to="/operation-group-master" icon={Boxes} label="Operation Group Master" onClick={onCloseMobile} nestedLevel={isCollapsed ? 1 : 2} />
+            <SidebarLink to="/room-type-master" icon={Building} label="Room Type Master" onClick={onCloseMobile} nestedLevel={isCollapsed ? 1 : 2} />
+            <SidebarLink to="/visiting-type-master" icon={Clock} label="Visiting Type Master" onClick={onCloseMobile} nestedLevel={isCollapsed ? 1 : 2} />
+            <SidebarLink to="/visit-procedure-header-master" icon={ListPlus} label="Visit Procedure Header Master" onClick={onCloseMobile} nestedLevel={isCollapsed ? 1 : 2} />
           </NavGroup>
 
           {/* OPD Master Sub-group */}
           <NavGroup
+            id="opd"
             title="OPD Master"
             icon={ClipboardList}
             isOpen={isMasterOpdOpen}
-            onToggle={() => setOpdExpanded(!isMasterOpdOpen)}
-            nestedLevel={1}
+            isChildActive={isMasterOpdActive}
+            isCollapsed={false}
+            nestedLevel={isCollapsed ? 0 : 1}
+            onMouseEnter={() => handleSubGroupMouseEnter('opd')}
+            onMouseLeave={handleSubGroupMouseLeave}
+            onToggle={() => handleSubGroupToggle('opd')}
           >
-            <SidebarLink to="/opd-patient-category" icon={Users} label="OPD Patient Category" onClick={onClose} nestedLevel={2} />
-            <SidebarLink to="/opd-charges-master" icon={BadgeDollarSign} label="OPD Charges Master" onClick={onClose} nestedLevel={2} />
-            <SidebarLink to="/department-master" icon={Building2} label="Department Master" onClick={onClose} nestedLevel={2} />
-            <SidebarLink to="/doctor-master" icon={UserCheck} label="Doctor Master" onClick={onClose} nestedLevel={2} />
-            <SidebarLink to="/insurance-company-master" icon={ShieldCheck} label="Insurance Company Master" onClick={onClose} nestedLevel={2} />
-            <SidebarLink to="/opd-charges-profile" icon={UserCog} label="OPD Charges Profile" onClick={onClose} nestedLevel={2} />
+            <SidebarLink to="/opd-patient-category" icon={Users} label="OPD Patient Category" onClick={onCloseMobile} nestedLevel={isCollapsed ? 1 : 2} />
+            <SidebarLink to="/opd-charges-master" icon={BadgeDollarSign} label="OPD Charges Master" onClick={onCloseMobile} nestedLevel={isCollapsed ? 1 : 2} />
+            <SidebarLink to="/department-master" icon={Building2} label="Department Master" onClick={onCloseMobile} nestedLevel={isCollapsed ? 1 : 2} />
+            <SidebarLink to="/doctor-master" icon={UserCheck} label="Doctor Master" onClick={onCloseMobile} nestedLevel={isCollapsed ? 1 : 2} />
+            <SidebarLink to="/insurance-company-master" icon={ShieldCheck} label="Insurance Company Master" onClick={onCloseMobile} nestedLevel={isCollapsed ? 1 : 2} />
+            <SidebarLink to="/opd-charges-profile" icon={UserCog} label="OPD Charges Profile" onClick={onCloseMobile} nestedLevel={isCollapsed ? 1 : 2} />
           </NavGroup>
         </NavGroup>
 
-        {/* Diagnostics Report Accordion */}
+        {/* Diagnostics Report Accordion / Flyout */}
         <NavGroup
+          id="diag"
           title="Diagnostics Report"
           icon={BarChart3}
           isOpen={isDiagnosticsReportOpen}
-          onToggle={() => setDiagExpanded(!isDiagnosticsReportOpen)}
+          isChildActive={isDiagActive}
+          isCollapsed={isCollapsed}
+          flyoutTop={flyoutTop}
+          onMouseEnter={(e) => handleGroupMouseEnter('diag', e)}
+          onMouseLeave={handleGroupMouseLeave}
+          onToggle={() => handleGroupToggle('diag')}
         >
-          <SidebarLink to="/echo-report" icon={HeartPulse} label="Echo Report" onClick={onClose} nestedLevel={1} />
-          <SidebarLink to="/short-form-master" icon={FileCode} label="Short Form Master" onClick={onClose} nestedLevel={1} />
-          <SidebarLink to="/report-template" icon={LayoutTemplate} label="Report Template" onClick={onClose} nestedLevel={1} />
-          <SidebarLink to="/today-report-dashboard" icon={LayoutDashboard} label="Today Report Dashboard" onClick={onClose} nestedLevel={1} />
+          <SidebarLink to="/echo-report" icon={HeartPulse} label="Echo Report" onClick={onCloseMobile} nestedLevel={isCollapsed ? 0 : 1} />
+          <SidebarLink to="/short-form-master" icon={FileCode} label="Short Form Master" onClick={onCloseMobile} nestedLevel={isCollapsed ? 0 : 1} />
+          <SidebarLink to="/report-template" icon={LayoutTemplate} label="Report Template" onClick={onCloseMobile} nestedLevel={isCollapsed ? 0 : 1} />
+          <SidebarLink to="/today-report-dashboard" icon={LayoutDashboard} label="Today Report Dashboard" onClick={onCloseMobile} nestedLevel={isCollapsed ? 0 : 1} />
         </NavGroup>
 
-        {/* Certificate Accordion */}
+        {/* Certificate Accordion / Flyout */}
         <NavGroup
+          id="cert"
           title="Certificate"
           icon={Award}
           isOpen={isCertificateOpen}
-          onToggle={() => setCertExpanded(!isCertificateOpen)}
+          isChildActive={isCertActive}
+          isCollapsed={isCollapsed}
+          flyoutTop={flyoutTop}
+          onMouseEnter={(e) => handleGroupMouseEnter('cert', e)}
+          onMouseLeave={handleGroupMouseLeave}
+          onToggle={() => handleGroupToggle('cert')}
         >
-          <SidebarLink to="/death-certificate" icon={FileX} label="Death Certificate" onClick={onClose} nestedLevel={1} />
-          <SidebarLink to="/medical-certificate" icon={FileCheck2} label="Medical Certificate" onClick={onClose} nestedLevel={1} />
-          <SidebarLink to="/mlc-certificate" icon={Scale} label="MLC Certificate" onClick={onClose} nestedLevel={1} />
-          <SidebarLink to="/certificate-template" icon={FileBadge} label="Certificate Template" onClick={onClose} nestedLevel={1} />
+          <SidebarLink to="/death-certificate" icon={FileX} label="Death Certificate" onClick={onCloseMobile} nestedLevel={isCollapsed ? 0 : 1} />
+          <SidebarLink to="/medical-certificate" icon={FileCheck2} label="Medical Certificate" onClick={onCloseMobile} nestedLevel={isCollapsed ? 0 : 1} />
+          <SidebarLink to="/mlc-certificate" icon={Scale} label="MLC Certificate" onClick={onCloseMobile} nestedLevel={isCollapsed ? 0 : 1} />
+          <SidebarLink to="/certificate-template" icon={FileBadge} label="Certificate Template" onClick={onCloseMobile} nestedLevel={isCollapsed ? 0 : 1} />
         </NavGroup>
 
-        {/* Utility Accordion */}
+        {/* Utility Accordion / Flyout */}
         <NavGroup
+          id="util"
           title="Utility"
           icon={Contact}
           isOpen={isUtilityOpen}
-          onToggle={() => setUtilExpanded(!isUtilityOpen)}
+          isChildActive={isUtilActive}
+          isCollapsed={isCollapsed}
+          flyoutTop={flyoutTop}
+          onMouseEnter={(e) => handleGroupMouseEnter('util', e)}
+          onMouseLeave={handleGroupMouseLeave}
+          onToggle={() => handleGroupToggle('util')}
         >
-          <SidebarLink to="/contact-list" icon={Contact} label="Contact List" onClick={onClose} nestedLevel={1} />
-          <SidebarLink to="/intercomm-display" icon={Radio} label="Intercomm Display" onClick={onClose} nestedLevel={1} />
+          <SidebarLink to="/contact-list" icon={Contact} label="Contact List" onClick={onCloseMobile} nestedLevel={isCollapsed ? 0 : 1} />
+          <SidebarLink to="/intercomm-display" icon={Radio} label="Intercomm Display" onClick={onCloseMobile} nestedLevel={isCollapsed ? 0 : 1} />
         </NavGroup>
       </div>
 
+      {/* Sidebar Footer with Sign Out */}
       <div className="sidebarFooter">
         <button 
           onClick={onLogout}
           style={{
             display: 'flex',
             alignItems: 'center',
+            justifyContent: isCollapsed ? 'center' : 'flex-start',
             gap: '8px',
             width: '100%',
-            padding: '10px 14px',
+            padding: isCollapsed ? '10px 0' : '10px 14px',
             backgroundColor: 'var(--danger-soft)',
             color: 'var(--danger)',
             border: '1px solid var(--danger-soft)',
@@ -423,10 +687,11 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ isOpen, onClose, onLogout
             cursor: 'pointer',
             transition: 'all 0.2s'
           }}
+          title={isCollapsed ? "Sign Out" : undefined}
           aria-label="Sign out of hospital management system"
         >
           <LogOut size={16} aria-hidden="true" />
-          Sign Out
+          {!isCollapsed && <span>Sign Out</span>}
         </button>
       </div>
     </aside>
@@ -438,6 +703,17 @@ function App() {
     return localStorage.getItem('auth') === 'true';
   });
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
+    return localStorage.getItem('mixu_sidebar_collapsed') === 'true';
+  });
+
+  const toggleSidebarCollapse = () => {
+    setIsSidebarCollapsed(prev => {
+      const next = !prev;
+      localStorage.setItem('mixu_sidebar_collapsed', String(next));
+      return next;
+    });
+  };
 
   // Close mobile drawer on Escape key
   useEffect(() => {
@@ -447,6 +723,18 @@ function App() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  // Lock background body scroll when mobile drawer is open
+  useEffect(() => {
+    if (isMobileNavOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileNavOpen]);
 
   const handleLogin = () => {
     setIsAuthenticated(true);
@@ -461,8 +749,13 @@ function App() {
 
   return (
     <HashRouter>
-      <div className="appLayout">
-        
+      <div
+        className="appLayout"
+        style={{
+          '--sidebar-actual-width': !isAuthenticated ? '0px' : isSidebarCollapsed ? '72px' : '270px',
+          '--watermark-url': `url(${mixuLogo})`
+        } as React.CSSProperties}
+      >
         {/* Mobile Top Header */}
         {isAuthenticated && (
           <header className="mobileTopBar" role="banner">
@@ -476,7 +769,16 @@ function App() {
               {isMobileNavOpen ? <X size={22} aria-hidden="true" /> : <Menu size={22} aria-hidden="true" />}
             </button>
             <div className="mobileTopBrand">
-              <span className="mobileTopBrandCross" aria-hidden="true">+</span>
+              <img
+                src={mixuLogo}
+                alt="Mixu Infosystem Emblem"
+                style={{
+                  width: '24px',
+                  height: '24px',
+                  objectFit: 'contain',
+                  flexShrink: 0
+                }}
+              />
               Hospital System
             </div>
             <button 
@@ -502,8 +804,10 @@ function App() {
         {/* Sidebar / Slide-in Drawer */}
         {isAuthenticated && (
           <NavigationBar 
-            isOpen={isMobileNavOpen} 
-            onClose={() => setIsMobileNavOpen(false)} 
+            isMobileOpen={isMobileNavOpen}
+            isCollapsed={isSidebarCollapsed}
+            onToggleCollapse={toggleSidebarCollapse}
+            onCloseMobile={() => setIsMobileNavOpen(false)} 
             onLogout={handleLogout}
           />
         )}

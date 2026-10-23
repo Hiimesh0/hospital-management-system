@@ -36,7 +36,10 @@
   
   --transition: all 0.2s ease-in-out;
   --sidebar-width: 270px;
+  --sidebar-collapsed-width: 72px;
+  --sidebar-actual-width: 270px;
   --mobile-header-height: 56px;
+  --watermark-url: url('/assets/mixu-infosystem-logo.png');
 }
 
 /* ==========================================================================
@@ -201,9 +204,9 @@ button {
 
 /* Sidebar navigation */
 .sidebarNav {
-  width: var(--sidebar-width);
-  min-width: var(--sidebar-width);
-  max-width: var(--sidebar-width);
+  width: var(--sidebar-actual-width, 270px);
+  min-width: var(--sidebar-actual-width, 270px);
+  max-width: var(--sidebar-actual-width, 270px);
   height: 100vh;
   background-color: var(--surface);
   border-right: 1px solid var(--border);
@@ -212,24 +215,60 @@ button {
   box-sizing: border-box;
   z-index: 200;
   flex-shrink: 0;
+  transition: width 0.24s cubic-bezier(0.4, 0, 0.2, 1), min-width 0.24s cubic-bezier(0.4, 0, 0.2, 1), max-width 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.sidebarNav.collapsed {
+  width: var(--sidebar-collapsed-width, 72px);
+  min-width: var(--sidebar-collapsed-width, 72px);
+  max-width: var(--sidebar-collapsed-width, 72px);
 }
 
 .sidebarHeader {
-  padding: 20px 20px 16px;
+  padding: 16px 14px;
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-shrink: 0;
+  min-height: 64px;
+  box-sizing: border-box;
+  gap: 8px;
 }
 
 .sidebarTitle {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--text-main);
   display: flex;
   align-items: center;
   gap: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebarToggleBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background-color: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  transition: var(--transition);
+}
+
+.sidebarToggleBtn:hover {
+  background-color: var(--primary-soft);
+  color: var(--primary);
+  border-color: var(--primary);
 }
 
 .sidebarCloseBtn {
@@ -248,15 +287,16 @@ button {
 .sidebarLinks {
   flex: 1;
   overflow-y: auto;
-  padding: 16px 12px;
+  overflow-x: hidden;
+  padding: 14px 10px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
   -webkit-overflow-scrolling: touch;
 }
 
 .sidebarFooter {
-  padding: 12px 16px;
+  padding: 12px 14px;
   border-top: 1px solid var(--border);
   display: flex;
   align-items: center;
@@ -275,8 +315,76 @@ button {
   transition: opacity 0.2s ease-in-out;
 }
 
-/* Main content area */
+/* Floating Tooltip for Icon-only items in Collapsed Sidebar */
+.sidebarTooltip {
+  position: fixed;
+  left: calc(var(--sidebar-collapsed-width, 72px) + 8px);
+  background-color: #1e293b;
+  color: #ffffff;
+  font-size: 12.5px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 999;
+  box-shadow: var(--shadow-md);
+  animation: tooltipFadeIn 0.15s ease-out;
+}
+
+@keyframes tooltipFadeIn {
+  from { opacity: 0; transform: translateX(-4px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Floating Flyout Submenu for Parent Groups in Collapsed Sidebar */
+.sidebarFlyout {
+  position: fixed;
+  left: calc(var(--sidebar-collapsed-width, 72px) + 6px);
+  width: 250px;
+  max-height: 85vh;
+  overflow-y: auto;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.08);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  z-index: 999;
+  animation: flyoutSlideIn 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes flyoutSlideIn {
+  from { opacity: 0; transform: translateX(-8px) scale(0.98); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+.flyoutHeader {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.navGroupActiveDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--primary);
+  flex-shrink: 0;
+}
+
+/* Main content area with subtle brand watermark */
 .appMainContent {
+  position: relative;
+  isolation: isolate;
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
@@ -287,6 +395,27 @@ button {
   min-width: 0;
   box-sizing: border-box;
   -webkit-overflow-scrolling: touch;
+}
+
+.appMainContent::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  left: var(--sidebar-actual-width, 270px);
+  background-image: var(--watermark-url, url('/assets/mixu-infosystem-logo.png'));
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: min(55vw, 650px);
+  opacity: 0.045;
+  pointer-events: none;
+  z-index: 1;
+  user-select: none;
+  transition: left 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Transparent page containers allow watermark to shine through */
+[class*="pageContainer"] {
+  background-color: transparent !important;
 }
 
 /* Responsive Table scroll container utility */
@@ -320,13 +449,14 @@ button {
     display: flex;
   }
 
-  .sidebarNav {
+  .sidebarNav, .sidebarNav.collapsed {
     position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
-    width: 280px;
-    max-width: 85vw;
+    width: 280px !important;
+    min-width: 280px !important;
+    max-width: 85vw !important;
     height: 100%;
     transform: translateX(-100%);
     transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
@@ -334,8 +464,16 @@ button {
     z-index: 200;
   }
 
-  .sidebarNav.drawerOpen {
-    transform: translateX(0);
+  .sidebarNav.drawerOpen, .sidebarNav.collapsed.drawerOpen {
+    transform: translateX(0) !important;
+  }
+
+  .sidebarToggleBtn {
+    display: none !important;
+  }
+
+  .sidebarFlyout, .sidebarTooltip {
+    display: none !important;
   }
 
   .sidebarCloseBtn {
@@ -352,6 +490,13 @@ button {
     width: 100%;
     max-width: 100vw;
     overflow-x: hidden;
+  }
+
+  .appMainContent::before {
+    left: 0 !important;
+    top: var(--mobile-header-height, 56px) !important;
+    background-size: min(75vw, 400px);
+    opacity: 0.04;
   }
 }
 
@@ -492,9 +637,14 @@ button {
 
 /* Small mobile (<= 480px, including iPhone 16 / iPhone SE / 320px) */
 @media (max-width: 480px) {
-  .sidebarNav {
-    width: 88vw;
-    max-width: 320px;
+  .sidebarNav, .sidebarNav.collapsed {
+    width: 88vw !important;
+    max-width: 320px !important;
+  }
+
+  .appMainContent::before {
+    background-size: min(85vw, 320px) !important;
+    opacity: 0.038 !important;
   }
 
   .mobileTopBrand {
