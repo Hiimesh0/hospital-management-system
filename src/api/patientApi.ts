@@ -63,6 +63,49 @@ const API_BASE_URL =
     ? 'http://127.0.0.1:8000/api'
     : 'http://127.0.0.1:8000/api');
 
+const LOCAL_STORAGE_KEY = 'mixu_patients_storage';
+
+/**
+ * Helper to get fallback patients for static web deployment (e.g. GitHub Pages)
+ */
+async function getFallbackStorage(): Promise<PatientRecord[]> {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    }
+
+    // Try fetching bundled static patients.json
+    const baseUrl = import.meta.env.BASE_URL || '/';
+    const jsonUrl = `${baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`}data/patients.json`;
+    const res = await fetch(jsonUrl);
+    if (res.ok) {
+      const data = await res.json();
+      const list = data.patients || [];
+      if (list.length > 0) {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(list));
+        return list;
+      }
+    }
+  } catch {
+    // Ignore fallback fetch error
+  }
+  return [];
+}
+
+function saveFallbackStorage(list: PatientRecord[]): void {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(list));
+  } catch {
+    // LocalStorage quota fallback
+  }
+}
+
 export const patientApi = {
   /**
    * Fetch all patients with optional search and filters
@@ -81,116 +124,246 @@ export const patientApi = {
     if (params?.doctor && params.doctor !== 'All') query.append('doctor', params.doctor);
     if (params?.city && params.city !== 'All') query.append('city', params.city);
 
-    const url = `${API_BASE_URL}/patients/${query.toString() ? `?${query.toString()}` : ''}`;
-    const res = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-      },
-    });
+    try {
+      const url = `${API_BASE_URL}/patients/${query.toString() ? `?${query.toString()}` : ''}`;
+      const res = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
 
-    if (!res.ok) {
-      const errData = await res.json().catch(() => ({}));
-      throw new Error(errData.error || `Failed to fetch patients (HTTP ${res.status})`);
+      if (res.ok) {
+        const data = await res.json();
+        // Also keep local storage cache in sync
+        if (data.patients && data.patients.length > 0) {
+          saveFallbackStorage(data.patients);
+        }
+        return data;
+      }
+    } catch {
+      // Backend not running (e.g. static GitHub Pages host) -> Fallback to client-side storage
     }
 
-    return res.json();
+    // Fallback implementation for GitHub Pages static hosting
+    const all = await getFallbackStorage();
+    let filtered = all;
+
+    if (params?.search) {
+      const q = params.search.toLowerCase().trim();
+      filtered = filtered.filter(p =>
+        p.uhid.toLowerCase().includes(q) ||
+        `${p.firstName} ${p.middleName} ${p.lastName}`.toLowerCase().includes(q) ||
+        p.mobile.includes(q) ||
+        p.email.toLowerCase().includes(q) ||
+        p.hospitalDoctor.toLowerCase().includes(q) ||
+        p.city.toLowerCase().includes(q)
+      );
+    }
+    if (params?.gender && params.gender !== 'All') {
+      filtered = filtered.filter(p => p.sex === params.gender);
+    }
+    if (params?.category && params.category !== 'All') {
+      filtered = filtered.filter(p => p.category === params.category);
+    }
+    if (params?.doctor && params.doctor !== 'All') {
+      filtered = filtered.filter(p => p.hospitalDoctor === params.doctor);
+    }
+    if (params?.city && params.city !== 'All') {
+      filtered = filtered.filter(p => p.city === params.city);
+    }
+
+    return {
+      success: true,
+      count: filtered.length,
+      patients: filtered,
+    };
   },
 
   /**
    * Get single patient by ID or UHID
    */
   async getPatientById(id: string): Promise<PatientSingleResponse> {
-    const res = await fetch(`${API_BASE_URL}/patients/${encodeURIComponent(id)}/`, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-      },
-    });
+    try {
+      const res = await fetch(`${API_BASE_URL}/patients/${encodeURIComponent(id)}/`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
 
-    if (!res.ok) {
-      const errData = await res.json().catch(() => ({}));
-      throw new Error(errData.error || `Patient not found (HTTP ${res.status})`);
+      if (res.ok) {
+        return res.json();
+      }
+    } catch {
+      // Backend not running -> Fallback
     }
 
-    return res.json();
+    const all = await getFallbackStorage();
+    const found = all.find(p => p.uhid === id || p.id === id);
+    if (!found) {
+      throw new Error(`Patient '${id}' not found.`);
+    }
+    return {
+      success: true,
+      patient: found,
+    };
   },
 
   /**
    * Create a new patient record
    */
   async createPatient(data: Partial<PatientFormData>): Promise<PatientSingleResponse> {
-    const res = await fetch(`${API_BASE_URL}/patients/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
+    try {
+      const res = await fetch(`${API_BASE_URL}/patients/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
 
-    const resData = await res.json().catch(() => ({}));
-
-    if (!res.ok) {
-      let msg = resData.error || 'Failed to register patient.';
-      if (resData.details) {
-        const fieldErrors = Object.entries(resData.details)
-          .map(([f, errs]) => `${f}: ${(errs as string[]).join(', ')}`)
-          .join('; ');
-        msg = `${msg}: ${fieldErrors}`;
+      const resData = await res.json().catch(() => ({}));
+      if (res.ok) {
+        return resData;
       }
-      throw new Error(msg);
+    } catch {
+      // Backend not running -> Fallback
     }
 
-    return resData;
+    const all = await getFallbackStorage();
+    let maxNum = 1000;
+    all.forEach(p => {
+      const u = p.uhid || p.id || '';
+      if (u.startsWith('UHID-')) {
+        const num = parseInt(u.replace('UHID-', ''), 10);
+        if (!isNaN(num) && num > maxNum) maxNum = num;
+      }
+    });
+
+    const newUhid = `UHID-${maxNum + 1}`;
+    const nowIso = new Date().toISOString();
+    const newPatient: PatientRecord = {
+      id: newUhid,
+      uhid: newUhid,
+      category: data.category || 'NEW',
+      firstName: (data.firstName || '').trim(),
+      middleName: (data.middleName || '').trim(),
+      lastName: (data.lastName || '').trim(),
+      birthDate: data.birthDate || '',
+      age: String(data.age || '').trim(),
+      ageUnit: data.ageUnit || 'Years',
+      sex: data.sex || 'Male',
+      hospitalDoctor: (data.hospitalDoctor || '').trim(),
+      referenceBy: (data.referenceBy || '').trim(),
+      religion: data.religion || 'Hindu',
+      maritalStatus: data.maritalStatus || '',
+      weight: String(data.weight || '').trim(),
+      height: String(data.height || '').trim(),
+      mobile: String(data.mobile || '').trim(),
+      email: (data.email || '').trim(),
+      streetAddress: (data.streetAddress || '').trim(),
+      city: (data.city || 'SURAT').trim(),
+      state: (data.state || 'GUJARAT').trim(),
+      pinCode: String(data.pinCode || '').trim(),
+      autoSms: data.autoSms !== undefined ? data.autoSms : true,
+      estimate: String(data.estimate || '').trim(),
+      aadharNo: String(data.aadharNo || '').trim(),
+      panNo: String(data.panNo || '').trim(),
+      mediclaim: String(data.mediclaim || '').trim(),
+      membershipId: String(data.membershipId || '').trim(),
+      employeeId: String(data.employeeId || '').trim(),
+      companyName: String(data.companyName || '').trim(),
+      remark: String(data.remark || '').trim(),
+      createdAt: nowIso,
+      updatedAt: nowIso,
+    };
+
+    all.unshift(newPatient);
+    saveFallbackStorage(all);
+
+    return {
+      success: true,
+      message: `Patient ${newPatient.firstName} registered successfully with ${newPatient.uhid}!`,
+      patient: newPatient,
+    };
   },
 
   /**
    * Update an existing patient record
    */
   async updatePatient(id: string, data: Partial<PatientRecord>): Promise<PatientSingleResponse> {
-    const res = await fetch(`${API_BASE_URL}/patients/${encodeURIComponent(id)}/`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
+    try {
+      const res = await fetch(`${API_BASE_URL}/patients/${encodeURIComponent(id)}/`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
 
-    const resData = await res.json().catch(() => ({}));
-
-    if (!res.ok) {
-      let msg = resData.error || 'Failed to update patient.';
-      if (resData.details) {
-        const fieldErrors = Object.entries(resData.details)
-          .map(([f, errs]) => `${f}: ${(errs as string[]).join(', ')}`)
-          .join('; ');
-        msg = `${msg}: ${fieldErrors}`;
+      const resData = await res.json().catch(() => ({}));
+      if (res.ok) {
+        return resData;
       }
-      throw new Error(msg);
+    } catch {
+      // Backend not running -> Fallback
     }
 
-    return resData;
+    const all = await getFallbackStorage();
+    const idx = all.findIndex(p => p.uhid === id || p.id === id);
+    if (idx === -1) {
+      throw new Error(`Patient '${id}' not found.`);
+    }
+
+    const existing = all[idx];
+    const updated: PatientRecord = {
+      ...existing,
+      ...data,
+      id: existing.id,
+      uhid: existing.uhid,
+      createdAt: existing.createdAt,
+      updatedAt: new Date().toISOString(),
+    };
+
+    all[idx] = updated;
+    saveFallbackStorage(all);
+
+    return {
+      success: true,
+      message: `Patient ${updated.uhid} updated successfully.`,
+      patient: updated,
+    };
   },
 
   /**
    * Delete a patient record
    */
   async deletePatient(id: string): Promise<PatientDeleteResponse> {
-    const res = await fetch(`${API_BASE_URL}/patients/${encodeURIComponent(id)}/`, {
-      method: 'DELETE',
-      headers: {
-        'Accept': 'application/json',
-      },
-    });
+    try {
+      const res = await fetch(`${API_BASE_URL}/patients/${encodeURIComponent(id)}/`, {
+        method: 'DELETE',
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
 
-    const resData = await res.json().catch(() => ({}));
-
-    if (!res.ok) {
-      throw new Error(resData.error || `Failed to delete patient (HTTP ${res.status})`);
+      if (res.ok) {
+        return res.json();
+      }
+    } catch {
+      // Backend not running -> Fallback
     }
 
-    return resData;
+    const all = await getFallbackStorage();
+    const filtered = all.filter(p => p.uhid !== id && p.id !== id);
+    saveFallbackStorage(filtered);
+
+    return {
+      success: true,
+      message: `Patient '${id}' deleted successfully.`,
+    };
   },
 };

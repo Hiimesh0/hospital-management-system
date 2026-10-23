@@ -137,6 +137,7 @@ const PatientRegistrationList: React.FC = () => {
   const totalCount = patients.length;
   const maleCount = patients.filter(p => p.sex === 'Male').length;
   const femaleCount = patients.filter(p => p.sex === 'Female').length;
+  const otherCount = patients.filter(p => p.sex !== 'Male' && p.sex !== 'Female').length;
   const todayDateStr = new Date().toISOString().split('T')[0];
   const registeredTodayCount = patients.filter(
     p => p.createdAt && p.createdAt.startsWith(todayDateStr)
@@ -241,6 +242,10 @@ const PatientRegistrationList: React.FC = () => {
         <div className={styles.statCard}>
           <span className={styles.statLabel}>Female Patients</span>
           <span className={styles.statValue} style={{ color: '#DB2777' }}>{femaleCount}</span>
+        </div>
+        <div className={styles.statCard}>
+          <span className={styles.statLabel}>Other / Diverse</span>
+          <span className={styles.statValue} style={{ color: '#8B5CF6' }}>{otherCount}</span>
         </div>
         <div className={styles.statCard}>
           <span className={styles.statLabel}>Today&apos;s Registrations</span>
