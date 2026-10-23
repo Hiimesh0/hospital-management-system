@@ -341,7 +341,7 @@ button {
 .sidebarFlyout {
   position: fixed;
   left: calc(var(--sidebar-collapsed-width, 72px) + 6px);
-  width: 250px;
+  width: 270px;
   max-height: calc(100vh - 24px);
   overflow-y: auto;
   background-color: var(--surface);
@@ -363,8 +363,8 @@ button {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: -12px;
-  width: 12px;
+  left: -16px;
+  width: 16px;
   background: transparent;
 }
 
