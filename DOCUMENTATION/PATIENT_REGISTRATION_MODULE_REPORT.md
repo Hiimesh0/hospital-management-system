@@ -256,3 +256,51 @@ Executed live on port 4173 (`http://localhost:4173/hospital-management-system/`)
 2. **Scalability:** As records grow into tens of thousands, reading the full JSON array on each request will increase I/O latency compared to indexed database engines (PostgreSQL / MySQL).
 3. **Crash Recovery & ACID Transactions:** File system crashes during write operations are mitigated by atomic replacement, but lack write-ahead logging (WAL) and automated point-in-time recovery.
 4. **Migration Path:** When moving to production, `PatientJSONStorage` should be replaced with a standard Django ORM model and PostgreSQL database migration without changing the API contract or frontend components.
+
+---
+
+## 11. Synthetic Patient Dataset (20 Records Added & Verified)
+
+### A. Dataset Overview
+* **Records Added:** Exactly **20 fictional, synthetic patient records** (`UHID-1001` to `UHID-1020`).
+* **Storage Location:** `backend/data/patients.json`.
+* **Script:** `backend/seed_patients.py` (idempotent, safe, preserves existing data).
+* **Demographic Variations:**
+  - **Gender Distribution:** 9 Male, 10 Female, 1 Other (`sex: Other`).
+  - **Age Range:** 11 to 66 years (pediatric, young adults, middle-aged, and senior citizens).
+  - **Categories:** 14 `NEW` registrations, 6 `OLD` follow-up registrations.
+  - **Hospital Doctors:** Dr. NILESH MAHALE, Dr. ASHOK PATEL, Dr. SHARMA, Dr. R. K. DESAI.
+  - **Cities:** SURAT, AHMEDABAD, VADODARA, RAJKOT, MUMBAI, PUNE, NAVSARI.
+* **Fields Populated:**
+  - `id`, `uhid`, `category`, `firstName`, `middleName`, `lastName`, `birthDate`, `age`, `ageUnit`, `sex`
+  - `hospitalDoctor`, `referenceBy`, `religion`, `maritalStatus`, `weight`, `height`
+  - `mobile` (`9876543201` – `9876543220`), `email` (`*@example.com`)
+  - `streetAddress`, `city`, `state`, `pinCode`, `autoSms`
+  - `estimate`, `aadharNo` (`TEST-1001-XXXX` to `TEST-1020-XXXX`), `panNo` (`TESTA1001P` to `TESTD1020B`)
+  - `mediclaim`, `membershipId`, `employeeId`, `companyName`, `remark`
+  - `createdAt`, `updatedAt` (staggered across recent days)
+* **Five Removed Fields Absent:** `Wedding Date`, `Language`, `Education`, `Occupation`, and `Spouse Occupation` remain 100% absent.
+* **Data Safety:** Clearly marked synthetic test values using reserved domain `example.com` and synthetic test identifiers (`TEST-XXXX`).
+
+### B. Duplicate Prevention & Idempotency
+- `seed_patients.py` inspects `backend/data/patients.json` before writing.
+- Maps existing patients by unique telephone / identifier.
+- If run once: adds 20 new records.
+- If rerun: updates existing records in-place without creating duplicate entries or increasing the patient count.
+- Confirmed: initial run added 20 records (total 20); second run added 0 and updated 20 (total stayed at 20).
+
+### C. Live Browser Verification Results
+| Verification Item | Status | Result / Observations |
+| :--- | :---: | :--- |
+| **API Availability** | ✅ PASS | `GET /api/patients/` returned `count: 20` and 20 patient records. |
+| **List Page Rendering** | ✅ PASS | Header badge: `Total Records: 20`. Stats cards: Total Patients: 20, Male: 9, Female: 10, Today's Registrations: 20. |
+| **Instant Search by Name** | ✅ PASS | Typed `'Priya'` $\rightarrow$ filtered immediately to Priya Shah (`UHID-1002`). |
+| **Instant Search by UHID** | ✅ PASS | Typed `'UHID-1004'` $\rightarrow$ filtered immediately to Ananya Iyer (`UHID-1004`). |
+| **Instant Search by Mobile** | ✅ PASS | Typed `'9876543207'` $\rightarrow$ filtered immediately to Arjun Reddy (`UHID-1007`). |
+| **Gender Filter** | ✅ PASS | Selected `Female` $\rightarrow$ table updated to 10 female patient records. |
+| **City Filter** | ✅ PASS | Selected `SURAT` combined with `Female` $\rightarrow$ matched Surat-based female patients. |
+| **Reset Filters** | ✅ PASS | Clicking `Reset Filters` restored the complete 20-record view. |
+| **View Details Modal** | ✅ PASS | Opened modal for Aarav Patel (`UHID-1001`); confirmed all categorized sections rendered accurately; modal closed cleanly. |
+| **Persistence on Refresh** | ✅ PASS | Full browser reload retained all 20 records and stats without data loss. |
+| **Test Failures / Errors** | ✅ NONE | 0 test failures, 0 console errors, 0 lint warnings. |
+
