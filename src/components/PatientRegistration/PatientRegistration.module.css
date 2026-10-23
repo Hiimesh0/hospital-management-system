@@ -1,4 +1,6 @@
-.container {
+.container,
+.pageContainer {
+  width: 100%;
   max-width: 1400px;
   margin: 2rem auto;
   padding: 2.5rem;
@@ -6,6 +8,8 @@
   border-radius: 8px;
   box-shadow: var(--shadow-md);
   border: 1px solid var(--border);
+  box-sizing: border-box;
+  transition: width 0.24s cubic-bezier(0.4, 0, 0.2, 1), max-width 0.24s cubic-bezier(0.4, 0, 0.2, 1), margin 0.24s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .header {

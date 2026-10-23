@@ -711,6 +711,10 @@ function App() {
     setIsSidebarCollapsed(prev => {
       const next = !prev;
       localStorage.setItem('mixu_sidebar_collapsed', String(next));
+      window.dispatchEvent(new Event('resize'));
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+      }, 260);
       return next;
     });
   };
@@ -750,8 +754,10 @@ function App() {
   return (
     <HashRouter>
       <div
-        className="appLayout"
+        className={`appLayout ${!isAuthenticated ? 'unauthenticated' : isSidebarCollapsed ? 'sidebarCollapsed' : 'sidebarExpanded'}`}
         style={{
+          '--sidebar-width': '270px',
+          '--sidebar-collapsed-width': '72px',
           '--sidebar-actual-width': !isAuthenticated ? '0px' : isSidebarCollapsed ? '72px' : '270px',
           '--watermark-url': `url(${mixuLogo})`
         } as React.CSSProperties}
@@ -813,7 +819,7 @@ function App() {
         )}
 
         {/* Main Content Area */}
-        <main className="appMainContent">
+        <main className={`appMainContent ${isSidebarCollapsed ? 'sidebarCollapsed' : 'sidebarExpanded'}`}>
           <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center', fontFamily: 'Inter, sans-serif' }}>Loading...</div>}>
             <Routes>
               {!isAuthenticated ? (

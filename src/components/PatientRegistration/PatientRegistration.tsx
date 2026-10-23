@@ -3,7 +3,7 @@ import styles from './PatientRegistration.module.css';
 
 const PatientRegistration: React.FC = () => {
  return (
- <div className={styles.container}>
+ <div className={`${styles.container} ${styles.pageContainer}`}>
  <header className={styles.header}>
  <div>
  <h1 className={styles.title}>Patient Registration</h1>

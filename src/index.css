@@ -436,6 +436,81 @@ button {
   border-collapse: collapse;
 }
 
+/* Page container default smooth transitions */
+[class*="pageContainer"]:not([class*="modal"]):not([class*="dialog"]):not([class*="login"]),
+[class*="mainContainer"]:not([class*="modal"]),
+[class*="dashboardContainer"]:not([class*="modal"]),
+[class*="PatientRegistration_container"] {
+  transition: max-width 0.24s cubic-bezier(0.4, 0, 0.2, 1), width 0.24s cubic-bezier(0.4, 0, 0.2, 1), margin 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==========================================================================
+   DYNAMIC FULL-WIDTH FORMS & CONTAINERS WHEN DESKTOP SIDEBAR IS COLLAPSED
+   ========================================================================== */
+@media (min-width: 1025px) {
+  /* Expand main content container when sidebar is collapsed */
+  .appLayout.sidebarCollapsed .appMainContent {
+    flex: 1 1 0%;
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Universal page container expansion: removes restrictive max-width and center margin */
+  .appLayout.sidebarCollapsed .appMainContent [class*="pageContainer"]:not([class*="modal"]):not([class*="dialog"]):not([class*="login"]),
+  .appLayout.sidebarCollapsed .appMainContent [class*="mainContainer"]:not([class*="modal"]),
+  .appLayout.sidebarCollapsed .appMainContent [class*="dashboardContainer"]:not([class*="modal"]) {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Patient registration bordered card container expands smoothly into full available width */
+  .appLayout.sidebarCollapsed .appMainContent [class*="PatientRegistration_container"],
+  .appLayout.sidebarCollapsed .appMainContent [class*="PatientRegistration_pageContainer"] {
+    width: calc(100% - 32px) !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin: 16px auto !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Form containers, sections, cards, and tables expand to full width of their page container */
+  .appLayout.sidebarCollapsed .appMainContent [class*="formContainer"]:not([class*="modal"]):not([class*="dialog"]),
+  .appLayout.sidebarCollapsed .appMainContent [class*="formCard"]:not([class*="modal"]),
+  .appLayout.sidebarCollapsed .appMainContent [class*="topSection"]:not([class*="modal"]),
+  .appLayout.sidebarCollapsed .appMainContent [class*="mainSection"]:not([class*="modal"]),
+  .appLayout.sidebarCollapsed .appMainContent [class*="tableSection"],
+  .appLayout.sidebarCollapsed .appMainContent [class*="tableCard"],
+  .appLayout.sidebarCollapsed .appMainContent [class*="tableContainer"],
+  .appLayout.sidebarCollapsed .appMainContent [class*="summaryCard"],
+  .appLayout.sidebarCollapsed .appMainContent [class*="entryCard"],
+  .appLayout.sidebarCollapsed .appMainContent [class*="headerCard"],
+  .appLayout.sidebarCollapsed .appMainContent [class*="tableWrapper"] {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Multi-column form grids expand their columns intelligently */
+  .appLayout.sidebarCollapsed .appMainContent [class*="formGrid"],
+  .appLayout.sidebarCollapsed .appMainContent [class*="mainGrid"],
+  .appLayout.sidebarCollapsed .appMainContent [class*="chargesInputGrid"] {
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  /* Single-column master forms expand their input rows to a comfortable wider max-width */
+  .appLayout.sidebarCollapsed .appMainContent [class*="DepartmentMaster_row"],
+  .appLayout.sidebarCollapsed .appMainContent [class*="VisitingTypeMaster_fieldGroup"],
+  .appLayout.sidebarCollapsed .appMainContent [class*="ShortFormMaster_inputContainer"] {
+    max-width: 900px !important;
+  }
+}
+
 /* ==========================================================================
    BREAKPOINT QUERIES FOR LAYOUT & NAVIGATION
    ========================================================================== */
