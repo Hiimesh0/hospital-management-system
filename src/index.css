@@ -381,7 +381,7 @@ button {
   flex-shrink: 0;
 }
 
-/* Main content area with subtle brand watermark */
+/* Main content area with clearly visible brand watermark */
 .appMainContent {
   position: relative;
   isolation: isolate;
@@ -405,11 +405,12 @@ button {
   background-image: var(--watermark-url, url('/assets/mixu-infosystem-logo.png'));
   background-repeat: no-repeat;
   background-position: center;
-  background-size: min(55vw, 650px);
-  opacity: 0.045;
+  background-size: min(50vw, 560px);
+  opacity: 0.13;
   pointer-events: none;
   z-index: 1;
   user-select: none;
+  mix-blend-mode: multiply;
   transition: left 0.24s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -495,8 +496,8 @@ button {
   .appMainContent::before {
     left: 0 !important;
     top: var(--mobile-header-height, 56px) !important;
-    background-size: min(75vw, 400px);
-    opacity: 0.04;
+    background-size: min(72vw, 320px) !important;
+    opacity: 0.12 !important;
   }
 }
 
@@ -643,8 +644,8 @@ button {
   }
 
   .appMainContent::before {
-    background-size: min(85vw, 320px) !important;
-    opacity: 0.038 !important;
+    background-size: min(82vw, 260px) !important;
+    opacity: 0.11 !important;
   }
 
   .mobileTopBrand {
