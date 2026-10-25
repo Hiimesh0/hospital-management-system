@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { patientApi } from '../../api/patientApi';
 import type { PatientRecord, PatientFormData } from '../../api/patientApi';
+import { useAutoDismissNotification } from '../../hooks/useAutoDismissNotification';
 import styles from './PatientRegistration.module.css';
 
 const defaultFormState: PatientFormData = {
@@ -59,7 +60,12 @@ const PatientRegistration: React.FC = () => {
   const [totalRecordsCount, setTotalRecordsCount] = useState<number>(0);
   const [assignedUhidPreview, setAssignedUhidPreview] = useState<string>('UHID-1001');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string; uhid?: string } | null>(null);
+  const { notification, setNotification, dismissNotification } = useAutoDismissNotification<{
+    type: 'success' | 'error';
+    message: string;
+    uhid?: string;
+    persistent?: boolean;
+  }>();
 
   // Search Lookup Modal
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
@@ -157,7 +163,7 @@ const PatientRegistration: React.FC = () => {
       setFormData(defaultFormState);
       setInitialEditData(null);
     }
-  }, [location.search]);
+  }, [location.search, setNotification]);
 
   // Handle Birth Date change to auto-calculate Age
   const handleBirthDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -205,46 +211,46 @@ const PatientRegistration: React.FC = () => {
     if (e) e.preventDefault();
     if (isSubmitting) return;
 
-    // Validate Required Fields
+    // Validate Required Fields (Persistent validation messages remain until resolved)
     const trimmedFirstName = formData.firstName.trim();
     if (!trimmedFirstName) {
-      setNotification({ type: 'error', message: 'First Name is required.' });
+      setNotification({ type: 'error', message: 'First Name is required.', persistent: true });
       return;
     }
     if (trimmedFirstName.length < 2) {
-      setNotification({ type: 'error', message: 'First Name must contain at least 2 characters.' });
+      setNotification({ type: 'error', message: 'First Name must contain at least 2 characters.', persistent: true });
       return;
     }
 
     const trimmedAge = formData.age.trim();
     if (!trimmedAge) {
-      setNotification({ type: 'error', message: 'Age is required.' });
+      setNotification({ type: 'error', message: 'Age is required.', persistent: true });
       return;
     }
     const ageNum = parseInt(trimmedAge, 10);
     if (isNaN(ageNum) || ageNum < 0 || ageNum > 130) {
-      setNotification({ type: 'error', message: 'Please enter a valid age between 0 and 130.' });
+      setNotification({ type: 'error', message: 'Please enter a valid age between 0 and 130.', persistent: true });
       return;
     }
 
     const trimmedMobile = formData.mobile.trim();
     if (!trimmedMobile) {
-      setNotification({ type: 'error', message: 'Mobile Number is required.' });
+      setNotification({ type: 'error', message: 'Mobile Number is required.', persistent: true });
       return;
     }
     const cleanMobile = trimmedMobile.replace(/[-+\s]/g, '');
     if (!cleanMobile.match(/^[0-9]{10,15}$/)) {
-      setNotification({ type: 'error', message: 'Please enter a valid 10-15 digit mobile number.' });
+      setNotification({ type: 'error', message: 'Please enter a valid 10-15 digit mobile number.', persistent: true });
       return;
     }
 
     if (!formData.hospitalDoctor.trim()) {
-      setNotification({ type: 'error', message: 'Hospital Doctor is required.' });
+      setNotification({ type: 'error', message: 'Hospital Doctor is required.', persistent: true });
       return;
     }
 
     setIsSubmitting(true);
-    setNotification(null);
+    dismissNotification();
 
     try {
       if (isEditMode && editId) {
@@ -286,7 +292,7 @@ const PatientRegistration: React.FC = () => {
       setNotification({ type: 'success', message: 'Form values restored to loaded patient record.' });
     } else {
       setFormData(defaultFormState);
-      setNotification(null);
+      dismissNotification();
     }
   };
 
@@ -360,8 +366,9 @@ const PatientRegistration: React.FC = () => {
             )}
             <button
               type="button"
-              onClick={() => setNotification(null)}
+              onClick={dismissNotification}
               style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit' }}
+              aria-label="Dismiss notification"
             >
               <X size={16} />
             </button>

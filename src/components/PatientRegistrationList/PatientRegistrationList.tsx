@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { patientApi } from '../../api/patientApi';
 import type { PatientRecord } from '../../api/patientApi';
+import { useAutoDismissNotification } from '../../hooks/useAutoDismissNotification';
 import styles from './PatientRegistrationList.module.css';
 
 const PatientRegistrationList: React.FC = () => {
@@ -25,7 +26,10 @@ const PatientRegistrationList: React.FC = () => {
   const [patients, setPatients] = useState<PatientRecord[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const { notification, setNotification, dismissNotification } = useAutoDismissNotification<{
+    type: 'success' | 'error';
+    message: string;
+  }>();
 
   // Search & Filter state
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -203,8 +207,9 @@ const PatientRegistrationList: React.FC = () => {
           </div>
           <button
             type="button"
-            onClick={() => setNotification(null)}
+            onClick={dismissNotification}
             style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit' }}
+            aria-label="Dismiss notification"
           >
             <X size={16} />
           </button>
