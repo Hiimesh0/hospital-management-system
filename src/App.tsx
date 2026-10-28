@@ -57,7 +57,9 @@ import mixuLogo from './assets/mixu-infosystem-logo.png';
 const Login = lazy(() => import('./components/Login/Login'));
 const PatientRegistration = lazy(() => import('./components/PatientRegistration/PatientRegistration'));
 const PatientRegistrationList = lazy(() => import('./components/PatientRegistrationList/PatientRegistrationList'));
+const BillPreview = lazy(() => import('./components/BillPreview/BillPreview'));
 const PatientPastInfo = lazy(() => import('./components/PatientPastInfo/PatientPastInfo'));
+
 const PartPayment = lazy(() => import('./components/PartPayment/PartPayment'));
 const RoomCharges = lazy(() => import('./components/RoomCharges/RoomCharges'));
 const RoomStatus = lazy(() => import('./components/RoomStatus/RoomStatus'));
@@ -1143,6 +1145,7 @@ function App() {
                   <Route path="/" element={<Navigate to="/patient-registration" replace />} />
                   <Route path="/patient-registration" element={<PatientRegistration />} />
                   <Route path="/patient-registration-list" element={<PatientRegistrationList />} />
+                  <Route path="/bill-preview" element={<BillPreview />} />
                   <Route path="/patient-past-info" element={<PatientPastInfo />} />
                   <Route path="/part-payment" element={<PartPayment />} />
                   <Route path="/room-charges" element={<RoomCharges />} />

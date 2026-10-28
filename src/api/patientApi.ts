@@ -57,7 +57,49 @@ export interface PatientDeleteResponse {
   error?: string;
 }
 
+export interface BillItem {
+  srNo: number;
+  details: string;
+  rate: number;
+  amount: number;
+}
+
+export interface PatientBillRecord {
+  id: string;
+  patientId: string;
+  uhid: string;
+  invoiceNo: string;
+  billDate: string;
+  patientName: string;
+  age: string;
+  ageUnit: string;
+  sex: string;
+  mobile: string;
+  treatingDoctor: string;
+  referenceDoctor: string;
+  items: BillItem[];
+  totalAmount: number;
+  amountReceived: number;
+  paymentType: string;
+  receiptNo: string;
+  dueAmount: number;
+  entryBy?: string;
+  pcName?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface BillCreatePayload {
+  items?: Array<{ details: string; rate: number; amount?: number }>;
+  paymentType?: string;
+  amountReceived?: number;
+  entryBy?: string;
+  pcName?: string;
+  forceNew?: boolean;
+}
+
 const API_BASE_URL =
+
   import.meta.env.VITE_API_URL ||
   (typeof window !== 'undefined' && window.location.hostname === 'localhost'
     ? 'http://127.0.0.1:8000/api'
@@ -373,5 +415,183 @@ export const patientApi = {
   getStickerPdfUrl(patientId: string): string {
     return `${API_BASE_URL}/patients/${encodeURIComponent(patientId)}/sticker.pdf`;
   },
+
+  /**
+   * Get direct PDF URL for patient bill
+   */
+  getBillPdfUrl(patientId: string): string {
+    return `${API_BASE_URL}/patients/${encodeURIComponent(patientId)}/bill.pdf`;
+  },
+
+  /**
+   * Fetch latest issued bill for a patient (or null if none issued yet)
+   */
+  async getPatientBill(patientId: string): Promise<PatientBillRecord | null> {
+    try {
+      const res = await fetch(`${API_BASE_URL}/patients/${encodeURIComponent(patientId)}/bill/`, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && data.bill) {
+          return data.bill;
+        }
+      }
+    } catch {
+      // Backend not running -> Fallback to client storage
+    }
+
+    // Client fallback
+    const allBills = getFallbackBillsStorage();
+    const cleanId = patientId.trim().toLowerCase();
+    const match = allBills
+      .slice()
+      .reverse()
+      .find(b => (b.uhid || '').toLowerCase() === cleanId || (b.patientId || '').toLowerCase() === cleanId);
+    return match || null;
+  },
+
+  /**
+   * Create or retrieve existing bill for a patient.
+   * If a bill already exists, it is returned without generating duplicate invoice numbers.
+   */
+  async createOrGetPatientBill(
+    patientId: string,
+    payload?: BillCreatePayload
+  ): Promise<PatientBillRecord> {
+    try {
+      const res = await fetch(`${API_BASE_URL}/patients/${encodeURIComponent(patientId)}/bill/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(payload || {}),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && data.bill) {
+          return data.bill;
+        }
+      }
+    } catch {
+      // Backend not running -> Fallback to client storage
+    }
+
+    // Client fallback creation / retrieval
+    const allBills = getFallbackBillsStorage();
+    const cleanId = patientId.trim().toLowerCase();
+
+    if (!payload?.forceNew) {
+      const existing = allBills
+        .slice()
+        .reverse()
+        .find(b => (b.uhid || '').toLowerCase() === cleanId || (b.patientId || '').toLowerCase() === cleanId);
+      if (existing) {
+        return existing;
+      }
+    }
+
+    // Fetch patient record for snapshot
+    const patientRes = await this.getPatientById(patientId);
+    const patient = patientRes.patient;
+    if (!patient) {
+      throw new Error(`Patient '${patientId}' not found for bill generation.`);
+    }
+
+    // Compute sequence
+    let maxSeq = 6145;
+    for (const b of allBills) {
+      const inv = b.invoiceNo || '';
+      if (inv.includes('/')) {
+        const numPart = parseInt(inv.split('/')[1], 10);
+        if (!isNaN(numPart) && numPart > maxSeq) {
+          maxSeq = numPart;
+        }
+      }
+    }
+    const nextSeq = maxSeq + 1;
+    const invoiceNo = `OPD2627/${nextSeq}`;
+    const nowIso = new Date().toISOString();
+
+    const rawItems = payload?.items && payload.items.length > 0 ? payload.items : [
+      { details: 'OPD Consultation / Registration Charge', rate: 500, amount: 500 }
+    ];
+
+    const items: BillItem[] = rawItems.map((it, idx) => {
+      const rate = typeof it.rate === 'number' ? it.rate : parseFloat(String(it.rate || 0)) || 0;
+      return {
+        srNo: idx + 1,
+        details: it.details || `Service #${idx + 1}`,
+        rate: Math.round(rate * 100) / 100,
+        amount: Math.round(rate * 100) / 100,
+      };
+    });
+
+    const totalAmount = Math.round(items.reduce((acc, it) => acc + it.amount, 0) * 100) / 100;
+    const received = payload?.amountReceived !== undefined ? Math.round(Number(payload.amountReceived) * 100) / 100 : totalAmount;
+    const dueAmount = Math.max(0, Math.round((totalAmount - received) * 100) / 100);
+
+    const fullNameParts = [patient.firstName, patient.middleName, patient.lastName].filter(Boolean);
+    const patientName = fullNameParts.join(' ').toUpperCase() || 'UNKNOWN PATIENT';
+
+    const newBill: PatientBillRecord = {
+      id: `BILL-${Math.random().toString(36).substring(2, 10).toUpperCase()}`,
+      patientId: patient.uhid || patient.id,
+      uhid: patient.uhid || patient.id,
+      invoiceNo,
+      billDate: nowIso,
+      patientName,
+      age: patient.age || '',
+      ageUnit: patient.ageUnit || 'Yrs.',
+      sex: patient.sex || 'N/A',
+      mobile: patient.mobile || '',
+      treatingDoctor: (patient.hospitalDoctor || 'Dr. NILESH MAHALE').toUpperCase(),
+      referenceDoctor: (patient.referenceBy || '---').toUpperCase() || '---',
+      items,
+      totalAmount,
+      amountReceived: received,
+      paymentType: payload?.paymentType || 'Cash',
+      receiptNo: invoiceNo,
+      dueAmount,
+      entryBy: payload?.entryBy || 'Jenil Bundela',
+      pcName: payload?.pcName || 'RECEPTION1',
+      createdAt: nowIso,
+      updatedAt: nowIso,
+    };
+
+    allBills.push(newBill);
+    saveFallbackBillsStorage(allBills);
+    return newBill;
+  },
 };
+
+// Fallback bill storage helpers
+const LOCAL_STORAGE_BILLS_KEY = 'mixu_bills_storage';
+
+function getFallbackBillsStorage(): PatientBillRecord[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = localStorage.getItem(LOCAL_STORAGE_BILLS_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) return parsed;
+    }
+  } catch {
+    // Ignore error
+  }
+  return [];
+}
+
+function saveFallbackBillsStorage(bills: PatientBillRecord[]): void {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(LOCAL_STORAGE_BILLS_KEY, JSON.stringify(bills));
+  } catch {
+    // Ignore error
+  }
+}
+
 

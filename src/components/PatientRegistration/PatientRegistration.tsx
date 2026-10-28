@@ -13,15 +13,19 @@ import {
   Printer,
   ScanLine,
   Barcode,
-  Camera
+  Camera,
+  FileText,
+  Receipt
 } from 'lucide-react';
 import { patientApi } from '../../api/patientApi';
-import type { PatientRecord, PatientFormData } from '../../api/patientApi';
+import type { PatientRecord, PatientFormData, PatientBillRecord } from '../../api/patientApi';
 import { useAutoDismissNotification } from '../../hooks/useAutoDismissNotification';
 import { useFormKeyboardNavigation } from '../../hooks/useFormKeyboardNavigation';
 import { openPatientStickerPdf } from '../../utils/patientStickerGenerator';
+import { openPatientBillPdf } from '../../utils/patientBillGenerator';
 import { BarcodeCameraModal } from './BarcodeCameraModal';
 import styles from './PatientRegistration.module.css';
+
 
 
 
@@ -75,6 +79,16 @@ const PatientRegistration: React.FC = () => {
   const [isCameraModalOpen, setIsCameraModalOpen] = useState<boolean>(false);
   const [pendingScannedPatient, setPendingScannedPatient] = useState<PatientRecord | null>(null);
   const [showUnsavedConfirmModal, setShowUnsavedConfirmModal] = useState<boolean>(false);
+
+  // Bill Generation & Preview States
+  const [isGeneratingBill, setIsGeneratingBill] = useState<boolean>(false);
+  const [isBillModalOpen, setIsBillModalOpen] = useState<boolean>(false);
+  const [billServiceDetails, setBillServiceDetails] = useState<string>('OPD Consultation / Registration Charge');
+  const [billRate, setBillRate] = useState<number | string>(500);
+  const [billPaymentType, setBillPaymentType] = useState<string>('Cash');
+  const [billAmountReceived, setBillAmountReceived] = useState<number | string>(500);
+  const [activeBillPatient, setActiveBillPatient] = useState<PatientRecord | null>(null);
+
 
 
   const { notification, setNotification, dismissNotification } = useAutoDismissNotification<{
@@ -297,10 +311,12 @@ const PatientRegistration: React.FC = () => {
           uhid: newUhid
         });
         setLoadedSavedPatient(res.patient);
-
-        // Reset form for next patient registration
-        setFormData(defaultFormState);
+        setIsEditMode(true);
+        setEditId(newUhid);
+        setInitialEditData(formData);
+        navigate(`/patient-registration?id=${encodeURIComponent(newUhid)}`, { replace: true });
         fetchBackendMeta();
+
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Operation failed.';
@@ -381,6 +397,143 @@ const PatientRegistration: React.FC = () => {
       setIsPrintingSticker(false);
     }
   };
+
+  // Handle Bill Cum Receipt button click
+  const handleBillButtonClick = async () => {
+    if (isGeneratingBill) return;
+
+    // 1. Guard: Check if patient has been saved
+    const targetUhid = editId || loadedSavedPatient?.uhid;
+    if (!targetUhid) {
+      setNotification({
+        type: 'error',
+        message: 'Please register and save the patient record first before issuing or printing a bill.'
+      });
+      return;
+    }
+
+    // 2. Guard: Warn if form contains unsaved edits
+    if (isEditMode && initialEditData && JSON.stringify(formData) !== JSON.stringify(initialEditData)) {
+      setNotification({
+        type: 'error',
+        message: 'Notice: Form has unsaved edits. Save changes first to update patient details on the bill, or proceed with saved record.'
+      });
+    }
+
+    setIsGeneratingBill(true);
+    try {
+      // 3. Retrieve authoritative saved record
+      let recordToBill = loadedSavedPatient;
+      if (!recordToBill || recordToBill.uhid !== targetUhid) {
+        const res = await patientApi.getPatientById(targetUhid);
+        recordToBill = res.patient;
+        setLoadedSavedPatient(res.patient);
+      }
+
+      if (!recordToBill) {
+        throw new Error(`Patient record '${targetUhid}' could not be retrieved.`);
+      }
+
+      // 4. Check if bill already exists for this patient
+      const existingBill = await patientApi.getPatientBill(targetUhid);
+      if (existingBill) {
+        // Reopen existing bill without generating duplicate invoice numbers
+        const backendUrl = patientApi.getBillPdfUrl(targetUhid);
+        await openPatientBillPdf(existingBill, backendUrl);
+        setNotification({
+          type: 'success',
+          message: `Bill ${existingBill.invoiceNo} opened in a new browser tab. Ready for printing.`
+        });
+      } else {
+        // First-time billing: open charge confirmation modal so user can confirm service & amount
+        setActiveBillPatient(recordToBill);
+        setBillServiceDetails('OPD Consultation / Registration Charge');
+        setBillRate(500);
+        setBillAmountReceived(500);
+        setBillPaymentType('Cash');
+        setIsBillModalOpen(true);
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Failed to retrieve or generate bill.';
+      setNotification({ type: 'error', message: msg });
+    } finally {
+      setIsGeneratingBill(false);
+    }
+  };
+
+  // Open existing or initial bill from notification banner or lookup list
+  const handleOpenSavedPatientBill = async (uhid: string) => {
+    if (!uhid || isGeneratingBill) return;
+    setIsGeneratingBill(true);
+    try {
+      const pRes = await patientApi.getPatientById(uhid);
+      if (!pRes.patient) throw new Error(`Patient '${uhid}' not found.`);
+      const p = pRes.patient;
+
+      let bill = await patientApi.getPatientBill(uhid);
+      if (!bill) {
+        bill = await patientApi.createOrGetPatientBill(uhid, {
+          items: [{ details: 'OPD Consultation / Registration Charge', rate: 500, amount: 500 }],
+          paymentType: 'Cash',
+          amountReceived: 500
+        });
+      }
+
+      const backendUrl = patientApi.getBillPdfUrl(uhid);
+      await openPatientBillPdf(bill, backendUrl);
+      setNotification({
+        type: 'success',
+        message: `Bill ${bill.invoiceNo} opened for ${p.firstName} ${p.lastName} (${uhid}) in a new browser tab.`
+      });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Failed to open bill.';
+      setNotification({ type: 'error', message: msg });
+    } finally {
+      setIsGeneratingBill(false);
+    }
+  };
+
+  // Confirm issuing a new bill with explicitly entered charges
+  const handleConfirmIssueBill = async () => {
+    if (!activeBillPatient) return;
+    const rateNum = parseFloat(String(billRate));
+    if (isNaN(rateNum) || rateNum <= 0) {
+      alert('Please enter an explicit positive charge amount before issuing a bill.');
+      return;
+    }
+    const recNum = parseFloat(String(billAmountReceived));
+    const received = isNaN(recNum) ? rateNum : recNum;
+
+    setIsGeneratingBill(true);
+    try {
+      const bill = await patientApi.createOrGetPatientBill(activeBillPatient.uhid, {
+        items: [
+          {
+            details: billServiceDetails.trim() || 'OPD Consultation / Registration Charge',
+            rate: rateNum,
+            amount: rateNum
+          }
+        ],
+        paymentType: billPaymentType,
+        amountReceived: received
+      });
+
+      setIsBillModalOpen(false);
+      const backendUrl = patientApi.getBillPdfUrl(activeBillPatient.uhid);
+      await openPatientBillPdf(bill, backendUrl);
+
+      setNotification({
+        type: 'success',
+        message: `Bill ${bill.invoiceNo} issued successfully for ${activeBillPatient.firstName} ${activeBillPatient.lastName}. Opened in a new browser tab for printing.`
+      });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Failed to issue bill.';
+      setNotification({ type: 'error', message: msg });
+    } finally {
+      setIsGeneratingBill(false);
+    }
+  };
+
 
   // Populate form with scanned patient record safely
   const applyScannedPatient = (patient: PatientRecord) => {
@@ -560,23 +713,36 @@ const PatientRegistration: React.FC = () => {
             {notification.type === 'success' && (
               <>
                 {notification.uhid && (
-                  <button
-                    type="button"
-                    className={`${styles.btn} ${styles.btnPrintSticker}`}
-                    style={{ height: '28px', fontSize: '0.75rem', padding: '0 8px' }}
-                    onClick={() => {
-                      const u = notification.uhid;
-                      if (!u) return;
-                      patientApi.getPatientById(u).then(res => {
-                        if (res.patient) {
-                          openPatientStickerPdf(res.patient, patientApi.getStickerPdfUrl(u));
-                        }
-                      });
-                    }}
-                  >
-                    <Printer size={13} style={{ marginRight: '4px' }} /> Print Sticker
-                  </button>
+                  <>
+                    <button
+                      type="button"
+                      className={`${styles.btn} ${styles.btnBill}`}
+                      style={{ height: '28px', fontSize: '0.75rem', padding: '0 8px' }}
+                      onClick={() => handleOpenSavedPatientBill(notification.uhid!)}
+                      title="Open and print Bill Cum Receipt"
+                      disabled={isGeneratingBill}
+                    >
+                      <FileText size={13} style={{ marginRight: '4px' }} /> Bill
+                    </button>
+                    <button
+                      type="button"
+                      className={`${styles.btn} ${styles.btnPrintSticker}`}
+                      style={{ height: '28px', fontSize: '0.75rem', padding: '0 8px' }}
+                      onClick={() => {
+                        const u = notification.uhid;
+                        if (!u) return;
+                        patientApi.getPatientById(u).then(res => {
+                          if (res.patient) {
+                            openPatientStickerPdf(res.patient, patientApi.getStickerPdfUrl(u));
+                          }
+                        });
+                      }}
+                    >
+                      <Printer size={13} style={{ marginRight: '4px' }} /> Print Sticker
+                    </button>
+                  </>
                 )}
+
                 <button
                   type="button"
                   className={`${styles.btn} ${styles.btnSecondary}`}
@@ -1105,13 +1271,29 @@ const PatientRegistration: React.FC = () => {
             onClick={handlePrintSticker}
             disabled={isPrintingSticker || isSubmitting}
             title={
-              isEditMode
+              (isEditMode && editId) || loadedSavedPatient
                 ? 'Generate and print 100mm x 50mm patient sticker PDF with barcode'
                 : 'Save patient first to enable printing sticker'
             }
           >
             <Printer size={15} style={{ marginRight: '6px' }} />
             {isPrintingSticker ? 'Generating Sticker...' : 'Print Patient Sticker'}
+          </button>
+
+          {/* Bill Cum Receipt Button */}
+          <button
+            type="button"
+            className={`${styles.btn} ${styles.btnBill}`}
+            onClick={handleBillButtonClick}
+            disabled={isGeneratingBill || isSubmitting}
+            title={
+              (isEditMode && editId) || loadedSavedPatient
+                ? 'Generate or preview printable Bill Cum Receipt (PDF)'
+                : 'Save patient first to enable bill generation'
+            }
+          >
+            <FileText size={15} style={{ marginRight: '6px' }} />
+            {isGeneratingBill ? 'Generating Bill...' : 'Bill'}
           </button>
 
           <button
@@ -1194,6 +1376,15 @@ const PatientRegistration: React.FC = () => {
                     <div style={{ display: 'flex', gap: '6px' }}>
                       <button
                         type="button"
+                        className={`${styles.btn} ${styles.btnBill}`}
+                        style={{ fontSize: '0.75rem', padding: '4px 8px' }}
+                        onClick={() => handleOpenSavedPatientBill(p.uhid)}
+                        title="View or Print Bill"
+                      >
+                        <FileText size={13} style={{ marginRight: '4px' }} /> Bill
+                      </button>
+                      <button
+                        type="button"
                         className={`${styles.btn} ${styles.btnPrintSticker}`}
                         style={{ fontSize: '0.75rem', padding: '4px 8px' }}
                         onClick={() => openPatientStickerPdf(p, patientApi.getStickerPdfUrl(p.uhid))}
@@ -1210,7 +1401,7 @@ const PatientRegistration: React.FC = () => {
                           setIsSearchOpen(false);
                         }}
                       >
-                        Load for Editing
+                        Load
                       </button>
                     </div>
                   </div>
@@ -1272,6 +1463,130 @@ const PatientRegistration: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Issue Patient Bill Confirmation Modal */}
+      {isBillModalOpen && activeBillPatient && (
+        <div className={styles.modalBackdrop} onClick={() => setIsBillModalOpen(false)}>
+          <div className={styles.modalContent} style={{ maxWidth: '520px' }} onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#1e293b', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 600 }}>
+                <Receipt size={22} style={{ color: '#7c3aed' }} /> Issue Patient Bill (Bill Cum Receipt)
+              </h3>
+              <button
+                type="button"
+                onClick={() => setIsBillModalOpen(false)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className={styles.billSummaryCard}>
+              <div><strong>Patient:</strong> {activeBillPatient.firstName} {activeBillPatient.lastName}</div>
+              <div><strong>UHID:</strong> <span style={{ color: '#2563eb', fontWeight: 600 }}>{activeBillPatient.uhid}</span> • <strong>Doctor:</strong> {activeBillPatient.hospitalDoctor || 'N/A'}</div>
+              <div><strong>Mobile:</strong> {activeBillPatient.mobile || 'N/A'} • <strong>City:</strong> {activeBillPatient.city || 'SURAT'}</div>
+            </div>
+
+            <div className={styles.billModalGrid}>
+              <div className={styles.billModalFull}>
+                <label className={styles.label}>Service / Charge Details *</label>
+                <input
+                  type="text"
+                  className={styles.input}
+                  value={billServiceDetails}
+                  onChange={e => setBillServiceDetails(e.target.value)}
+                  placeholder="e.g. OPD Consultation / Registration Charge"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className={styles.label}>Rate / Charge (₹) *</label>
+                <input
+                  type="number"
+                  min="0"
+                  step="1"
+                  className={styles.input}
+                  value={billRate}
+                  onChange={e => {
+                    setBillRate(e.target.value);
+                    setBillAmountReceived(e.target.value);
+                  }}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className={styles.label}>Payment Type</label>
+                <select
+                  className={styles.select}
+                  value={billPaymentType}
+                  onChange={e => setBillPaymentType(e.target.value)}
+                >
+                  <option value="Cash">Cash</option>
+                  <option value="UPI">UPI / Online</option>
+                  <option value="Card">Debit / Credit Card</option>
+                  <option value="Cheque">Cheque</option>
+                </select>
+              </div>
+
+              <div>
+                <label className={styles.label}>Amount Received (₹)</label>
+                <input
+                  type="number"
+                  min="0"
+                  step="1"
+                  className={styles.input}
+                  value={billAmountReceived}
+                  onChange={e => setBillAmountReceived(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <label className={styles.label}>Due Balance (₹)</label>
+                <input
+                  type="text"
+                  className={styles.input}
+                  disabled
+                  value={Math.max(0, (parseFloat(String(billRate)) || 0) - (parseFloat(String(billAmountReceived)) || 0)).toFixed(2)}
+                  style={{ backgroundColor: '#f1f5f9', fontWeight: 600 }}
+                />
+              </div>
+            </div>
+
+            <div className={styles.billTotalsRow}>
+              <div>
+                Total: <strong>₹{parseFloat(String(billRate)) || 0}</strong> • Received: <strong style={{ color: '#059669' }}>₹{parseFloat(String(billAmountReceived)) || 0}</strong>
+              </div>
+              <div>
+                Due: <strong style={{ color: (parseFloat(String(billRate)) || 0) - (parseFloat(String(billAmountReceived)) || 0) > 0 ? '#b91c1c' : '#059669' }}>
+                  ₹{Math.max(0, (parseFloat(String(billRate)) || 0) - (parseFloat(String(billAmountReceived)) || 0)).toFixed(2)}
+                </strong>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '1.25rem' }}>
+              <button
+                type="button"
+                className={`${styles.btn} ${styles.btnSecondary}`}
+                onClick={() => setIsBillModalOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className={`${styles.btn} ${styles.btnBill}`}
+                onClick={handleConfirmIssueBill}
+                disabled={isGeneratingBill}
+              >
+                <FileText size={15} style={{ marginRight: '6px' }} />
+                {isGeneratingBill ? 'Generating Bill...' : 'Generate & Print Bill'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
 
     </div>
   );
