@@ -14,6 +14,7 @@ import {
 import { patientApi } from '../../api/patientApi';
 import type { PatientRecord, PatientFormData } from '../../api/patientApi';
 import { useAutoDismissNotification } from '../../hooks/useAutoDismissNotification';
+import { useFormKeyboardNavigation } from '../../hooks/useFormKeyboardNavigation';
 import styles from './PatientRegistration.module.css';
 
 const defaultFormState: PatientFormData = {
@@ -66,6 +67,9 @@ const PatientRegistration: React.FC = () => {
     uhid?: string;
     persistent?: boolean;
   }>();
+
+  // Fast keyboard navigation via Shift + Enter
+  const { formRef, handleKeyDown: handleFormKeyDown } = useFormKeyboardNavigation();
 
   // Search Lookup Modal
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
@@ -343,6 +347,9 @@ const PatientRegistration: React.FC = () => {
               Next UHID: {assignedUhidPreview}
             </span>
           )}
+          <span className={styles.badge} title="Press Shift + Enter to quickly jump to the next field">
+            ⌨️ Shift + Enter: Next Field
+          </span>
         </div>
       </header>
 
@@ -377,7 +384,7 @@ const PatientRegistration: React.FC = () => {
       )}
 
       {/* Form Element */}
-      <form onSubmit={handleSubmit} noValidate>
+      <form ref={formRef} onSubmit={handleSubmit} onKeyDown={handleFormKeyDown} noValidate>
         {/* Section 1: Basic Information */}
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Basic Information</h2>
