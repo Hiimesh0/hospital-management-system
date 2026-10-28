@@ -408,15 +408,121 @@
   color: #4285F4;
 }
 
+/* Floating Preview Controls (Mobile Flip Camera & Track Info) */
+.previewHeader {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.activeTrackBadge {
+  background: rgba(0, 0, 0, 0.75);
+  color: #ffffff;
+  padding: 0.25rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  max-width: 70%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.switchCameraBtn {
+  pointer-events: auto;
+  background: rgba(0, 0, 0, 0.75);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: all 0.15s ease;
+}
+
+.switchCameraBtn:hover {
+  background: rgba(66, 133, 244, 0.9);
+  border-color: #4285F4;
+}
+
+/* Insecure Context Banner */
+.insecureBanner {
+  background: #fffbeb;
+  border: 1px solid #fef3c7;
+  border-left: 4px solid #FBBC05;
+  color: #92400e;
+  padding: 0.9rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.insecureBannerTitle {
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+  color: #78350f;
+}
+
+.insecureLink {
+  color: #4285F4;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.insecureLink:hover {
+  color: #1a73e8;
+}
+
+.retryBtn {
+  background: #4285F4;
+  color: #ffffff;
+  border: none;
+  padding: 0.35rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+  transition: background 0.15s ease;
+}
+
+.retryBtn:hover {
+  background: #3367d6;
+}
+
 /* Mobile responsive */
 @media (max-width: 640px) {
   .modal {
     max-width: 100%;
     margin: 0.5rem;
+    border-radius: 8px;
   }
   
   .previewContainer {
-    max-height: 250px;
+    max-height: 280px;
+    min-height: 220px;
   }
 
   .footer {
@@ -428,3 +534,4 @@
     width: 100%;
   }
 }
+
