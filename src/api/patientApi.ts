@@ -89,6 +89,9 @@ export interface PatientBillRecord {
   updatedAt?: string;
 }
 
+import { HOSPITAL_CONFIG, type HospitalConfig } from '../config/hospitalConfig';
+export type { HospitalConfig };
+
 export interface BillCreatePayload {
   items?: Array<{ details: string; rate: number; amount?: number }>;
   paymentType?: string;
@@ -421,6 +424,27 @@ export const patientApi = {
    */
   getBillPdfUrl(patientId: string): string {
     return `${API_BASE_URL}/patients/${encodeURIComponent(patientId)}/bill.pdf`;
+  },
+
+  /**
+   * Fetch centralized hospital configuration
+   */
+  async getHospitalConfig(): Promise<HospitalConfig> {
+    try {
+      const res = await fetch(`${API_BASE_URL}/hospital/config/`, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && data.config) {
+          return data.config;
+        }
+      }
+    } catch {
+      // Offline fallback
+    }
+    return HOSPITAL_CONFIG;
   },
 
   /**

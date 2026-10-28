@@ -1,22 +1,58 @@
 /**
  * Patient Sticker PDF Generator (Client-Side & Utilities)
- * Generates 100mm x 50mm landscape patient identification stickers matching Sticker.jpeg.
+ * Generates an A4 portrait printable PDF (210mm x 297mm) containing the individual
+ * 100mm x 50mm patient identification sticker matching Sticker.jpeg reference.
  * Includes Code 128 barcode encoding the patient's UHID.
+ * The sticker retains its physical dimensions and is not stretched across the page.
  */
 
 import { jsPDF } from 'jspdf';
 import JsBarcode from 'jsbarcode';
 import type { PatientRecord } from '../api/patientApi';
+import { HOSPITAL_CONFIG } from '../config/hospitalConfig';
 
+// ==============================================================================
+// Configurable A4 Page & Sticker Measurements (in millimetres)
+// ==============================================================================
+export const STICKER_A4_CONFIG = {
+  // Page specifications (Standard ISO A4)
+  pageSize: 'a4',
+  pageOrientation: 'portrait' as const,
+  pageWidthMm: 210.0,
+  pageHeightMm: 297.0,
+
+  // Physical sticker label dimensions (from Sticker.jpeg reference)
+  stickerWidthMm: 100.0,
+  stickerHeightMm: 50.0,
+
+  // Top-left placement margins on A4 sheet
+  leftMarginMm: 15.0,
+  topMarginMm: 18.0,
+
+  // Grid / Sheet mode settings
+  columns: 1, // Single-sticker mode (primary)
+  rows: 1,
+  horizontalGapMm: 5.0,
+  verticalGapMm: 5.0,
+
+  // Visual guide settings
+  drawCuttingGuide: true, // Subtle border showing 100x50mm sticker boundary
+  guideColorRgb: [180, 192, 208] as [number, number, number],
+  guideLineWidthMm: 0.15,
+
+  // Sheet header settings
+  showSheetHeader: true,
+};
+
+// Backward compatibility alias
 export const STICKER_CONFIG = {
-  widthMm: 100,
-  heightMm: 50,
-  marginLeftMm: 4,
-  marginTopMm: 4,
-  marginRightMm: 4,
-  barcodeWidthMm: 44,
+  widthMm: STICKER_A4_CONFIG.stickerWidthMm,
+  heightMm: STICKER_A4_CONFIG.stickerHeightMm,
+  marginLeftMm: STICKER_A4_CONFIG.leftMarginMm,
+  marginTopMm: STICKER_A4_CONFIG.topMarginMm,
+  barcodeWidthMm: 44.0,
   barcodeHeightMm: 11.5,
-  barcodeXMm: 51,
+  barcodeXMm: 51.0,
   barcodeYMm: 33.5,
 };
 
@@ -66,15 +102,30 @@ export function generateBarcodeDataUrl(text: string): string {
 }
 
 /**
- * Generate a 100mm x 50mm PDF Blob for the given patient record
+ * Render an individual sticker at origin (x0, y0) on the jsPDF document
  */
-export function generatePatientStickerPdfBlob(patient: PatientRecord): Blob {
-  const doc = new jsPDF({
-    orientation: 'landscape',
-    unit: 'mm',
-    format: [STICKER_CONFIG.widthMm, STICKER_CONFIG.heightMm],
-  });
+function renderSingleStickerToDoc(
+  doc: jsPDF,
+  x0: number,
+  y0: number,
+  patient: PatientRecord,
+  barcodeDataUrl?: string
+): void {
+  const sw = STICKER_A4_CONFIG.stickerWidthMm;
+  const sh = STICKER_A4_CONFIG.stickerHeightMm;
 
+  // 1. Subtle cutting / peel guide outline (0.15 mm line)
+  if (STICKER_A4_CONFIG.drawCuttingGuide) {
+    doc.setDrawColor(
+      STICKER_A4_CONFIG.guideColorRgb[0],
+      STICKER_A4_CONFIG.guideColorRgb[1],
+      STICKER_A4_CONFIG.guideColorRgb[2]
+    );
+    doc.setLineWidth(STICKER_A4_CONFIG.guideLineWidthMm);
+    doc.rect(x0, y0, sw, sh);
+  }
+
+  // Extract patient demographic details
   const fullParts = [patient.firstName, patient.middleName, patient.lastName]
     .map(s => (s || '').trim().toUpperCase())
     .filter(Boolean);
@@ -100,39 +151,41 @@ export function generatePatientStickerPdfBlob(patient: PatientRecord): Blob {
   const regDate = formatStickerDate(patient.createdAt || patient.birthDate);
   const uhid = (patient.uhid || patient.id || 'UNKNOWN').trim();
 
+  // Offsets inside 100mm x 50mm sticker
+  const col1X = x0 + 4.0;
+  const col1LabelW = 17.0;
+  const col1ValX = col1X + col1LabelW + 1.0;
+  const col2X = x0 + 48.0;
+
   // Styling: Bold Helvetica, pure black
   doc.setTextColor(0, 0, 0);
 
-  const col1LabelW = 17;
-  const col1ValX = STICKER_CONFIG.marginLeftMm + col1LabelW + 1;
-  const col2X = 48;
-
-  // Line 1: Name (y = 6mm baseline)
-  let y = 6.8;
+  // Line 1: Name (y = y0 + 6.8mm)
+  let y = y0 + 6.8;
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(8);
-  doc.text('Name      :', STICKER_CONFIG.marginLeftMm, y);
+  doc.text('Name      :', col1X, y);
   doc.setFontSize(8.5);
   doc.text(fullName.substring(0, 42), col1ValX, y);
 
-  // Line 2: Age & Sex (y = 11.4mm)
+  // Line 2: Age & Sex (y = y0 + 11.4mm)
   y += 4.6;
   doc.setFontSize(8);
-  doc.text('Age       :', STICKER_CONFIG.marginLeftMm, y);
+  doc.text('Age       :', col1X, y);
   doc.text(ageDisplay, col1ValX, y);
   doc.text(`Sex :${sex}`, col2X, y);
 
-  // Line 3: Address (y = 16.0mm)
+  // Line 3: Address (y = y0 + 16.0mm)
   y += 4.6;
   doc.setFontSize(8);
-  doc.text('Address   :', STICKER_CONFIG.marginLeftMm, y);
+  doc.text('Address   :', col1X, y);
   doc.setFontSize(7.5);
   doc.text(addressDisplay.substring(0, 50), col1ValX, y);
 
-  // Line 4: Dr.Name (y = 21.8mm - spacing gap matching Sticker.jpeg)
+  // Line 4: Dr.Name (y = y0 + 21.8mm)
   y += 5.8;
   doc.setFontSize(8);
-  doc.text('Dr.Name   :', STICKER_CONFIG.marginLeftMm, y);
+  doc.text('Dr.Name   :', col1X, y);
 
   if (doctor.length > 36) {
     const parts = doctor.split(' / ');
@@ -151,42 +204,105 @@ export function generatePatientStickerPdfBlob(patient: PatientRecord): Blob {
     doc.text(doctor, col1ValX, y);
   }
 
-  // Line 5: MOB & Date (y = 26.4mm)
+  // Line 5: MOB & Date (y = y0 + 26.4mm)
   y += 4.6;
   doc.setFontSize(8);
-  doc.text('MOB       :', STICKER_CONFIG.marginLeftMm, y);
+  doc.text('MOB       :', col1X, y);
   doc.text(mobile, col1ValX, y);
   doc.text(`Date :${regDate}`, col2X, y);
 
-  // Line 6: Ref.Dr. (y = 31.0mm)
+  // Line 6: Ref.Dr. (y = y0 + 31.0mm)
   y += 4.6;
-  doc.text('Ref.Dr.   :', STICKER_CONFIG.marginLeftMm, y);
+  doc.text('Ref.Dr.   :', col1X, y);
   doc.text(refDr.substring(0, 28), col1ValX, y);
 
-  // Line 7: UHID + Barcode (y = 36.2mm)
+  // Line 7: UHID + Barcode (y = y0 + 36.2mm)
   y += 5.2;
   doc.setFontSize(8);
-  doc.text('UHID      :', STICKER_CONFIG.marginLeftMm, y);
+  doc.text('UHID      :', col1X, y);
   doc.setFontSize(9);
   doc.text(uhid, col1ValX, y);
 
-  // Embed Barcode
-  try {
-    const barcodeDataUrl = generateBarcodeDataUrl(uhid);
-    if (barcodeDataUrl) {
-      doc.addImage(
-        barcodeDataUrl,
-        'PNG',
-        STICKER_CONFIG.barcodeXMm,
-        STICKER_CONFIG.barcodeYMm,
-        STICKER_CONFIG.barcodeWidthMm,
-        STICKER_CONFIG.barcodeHeightMm
-      );
+  // Embed Barcode at x = x0 + 51.0mm, y = y0 + 33.5mm
+  const barcodeX = x0 + 51.0;
+  const barcodeY = y0 + 33.5;
+  const barcodeW = 44.0;
+  const barcodeH = 11.5;
+
+  if (barcodeDataUrl) {
+    try {
+      doc.addImage(barcodeDataUrl, 'PNG', barcodeX, barcodeY, barcodeW, barcodeH);
+    } catch {
+      doc.setFontSize(7);
+      doc.text(`[${uhid}]`, barcodeX, y);
     }
-  } catch {
-    // If barcode rendering fails, fallback to boxed human-readable text
+  } else {
     doc.setFontSize(7);
-    doc.text(`[${uhid}]`, STICKER_CONFIG.barcodeXMm, y);
+    doc.text(`[${uhid}]`, barcodeX, y);
+  }
+}
+
+/**
+ * Generate an A4 Portrait PDF Blob (210mm x 297mm) containing the patient sticker
+ */
+export function generatePatientStickerPdfBlob(patient: PatientRecord): Blob {
+  // A4 Portrait: 210mm wide x 297mm high
+  const doc = new jsPDF({
+    orientation: 'portrait',
+    unit: 'mm',
+    format: 'a4',
+  });
+
+  // 1. Top Sheet Header outside sticker
+  if (STICKER_A4_CONFIG.showSheetHeader) {
+    const hName = HOSPITAL_CONFIG.name || 'XYZ';
+    const hAddr = HOSPITAL_CONFIG.address || 'XYZ';
+    const hPhone = HOSPITAL_CONFIG.phone || 'XYZ';
+
+    doc.setTextColor(110, 120, 135);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7.5);
+    doc.text(
+      `${hName}  |  Patient Identification Label  |  Address: ${hAddr}  |  Ph: ${hPhone}`,
+      STICKER_A4_CONFIG.leftMarginMm,
+      9.0
+    );
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(6.5);
+    doc.text(
+      'A4 Sheet | Print at 100% / Actual Size',
+      STICKER_A4_CONFIG.pageWidthMm - 15.0,
+      9.0,
+      { align: 'right' }
+    );
+  }
+
+  // Pre-generate barcode data URL
+  const uhid = (patient.uhid || patient.id || 'UNKNOWN').trim();
+  const barcodeDataUrl = generateBarcodeDataUrl(uhid);
+
+  // 2. Render sticker(s) based on configuration (single-sticker primary)
+  const cols = Math.max(1, STICKER_A4_CONFIG.columns);
+  const rows = Math.max(1, STICKER_A4_CONFIG.rows);
+  const startX = STICKER_A4_CONFIG.leftMarginMm;
+  const startY = STICKER_A4_CONFIG.topMarginMm;
+  const sw = STICKER_A4_CONFIG.stickerWidthMm;
+  const sh = STICKER_A4_CONFIG.stickerHeightMm;
+  const hGap = STICKER_A4_CONFIG.horizontalGapMm;
+  const vGap = STICKER_A4_CONFIG.verticalGapMm;
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const xPos = startX + c * (sw + hGap);
+      const yPos = startY + r * (sh + vGap);
+      if (
+        xPos + sw <= STICKER_A4_CONFIG.pageWidthMm &&
+        yPos + sh <= STICKER_A4_CONFIG.pageHeightMm
+      ) {
+        renderSingleStickerToDoc(doc, xPos, yPos, patient, barcodeDataUrl);
+      }
+    }
   }
 
   return doc.output('blob');
@@ -206,7 +322,7 @@ export async function openPatientStickerPdf(
       <!DOCTYPE html>
       <html>
         <head>
-          <title>Generating Patient Sticker - ${patient.uhid}</title>
+          <title>Patient Sticker - ${patient.uhid} (${HOSPITAL_CONFIG.name})</title>
           <style>
             body {
               font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -236,7 +352,7 @@ export async function openPatientStickerPdf(
         <body>
           <div class="spinner"></div>
           <p style="font-weight: 500;">Generating Patient Sticker (${patient.uhid})...</p>
-          <p style="font-size: 0.85rem; color: #64748b;">Preparing 100mm × 50mm PDF label with barcode</p>
+          <p style="font-size: 0.85rem; color: #64748b;">Preparing A4 PDF with 100mm × 50mm label & barcode</p>
         </body>
       </html>
     `);

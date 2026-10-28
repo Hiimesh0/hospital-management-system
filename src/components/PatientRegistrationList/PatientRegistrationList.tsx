@@ -20,6 +20,7 @@ import { patientApi } from '../../api/patientApi';
 import type { PatientRecord } from '../../api/patientApi';
 import { useAutoDismissNotification } from '../../hooks/useAutoDismissNotification';
 import { openPatientStickerPdf } from '../../utils/patientStickerGenerator';
+import { HOSPITAL_CONFIG } from '../../config/hospitalConfig';
 import styles from './PatientRegistrationList.module.css';
 
 
@@ -180,7 +181,7 @@ const PatientRegistrationList: React.FC = () => {
             Patient Registration List
           </h1>
           <p className={styles.subtitle}>
-            Search, filter, view, edit, and manage registered patients (JSON-backed backend storage)
+            Search, filter, view, edit, and manage registered patients at {HOSPITAL_CONFIG.name} (JSON-backed backend storage)
           </p>
         </div>
         <div className={styles.headerActions}>

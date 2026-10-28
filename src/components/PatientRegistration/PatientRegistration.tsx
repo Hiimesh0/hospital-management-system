@@ -23,6 +23,7 @@ import { useAutoDismissNotification } from '../../hooks/useAutoDismissNotificati
 import { useFormKeyboardNavigation } from '../../hooks/useFormKeyboardNavigation';
 import { openPatientStickerPdf } from '../../utils/patientStickerGenerator';
 import { openPatientBillPdf } from '../../utils/patientBillGenerator';
+import { HOSPITAL_CONFIG } from '../../config/hospitalConfig';
 import { BarcodeCameraModal } from './BarcodeCameraModal';
 import styles from './PatientRegistration.module.css';
 
@@ -670,8 +671,8 @@ const PatientRegistration: React.FC = () => {
             </h1>
             <p className={styles.subtitle}>
               {isEditMode
-                ? 'Update existing patient details in JSON storage'
-                : 'Register new patient and save securely to JSON storage'}
+                ? `Update existing patient details in ${HOSPITAL_CONFIG.name} records`
+                : `Register new patient to ${HOSPITAL_CONFIG.name} and save securely`}
             </p>
           </div>
           <button

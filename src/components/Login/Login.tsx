@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, Activity } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { HOSPITAL_CONFIG } from '../../config/hospitalConfig';
 import styles from './Login.module.css';
 
 interface LoginProps {
@@ -41,8 +42,8 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
  <div className={styles.logoBox}>
  <Activity size={28} />
  </div>
- <h1 className={styles.title}>Hospital Management System</h1>
- <p className={styles.subtitle}>Secure access to your hospital administration portal</p>
+ <h1 className={styles.title}>{HOSPITAL_CONFIG.name}</h1>
+ <p className={styles.subtitle}>Secure access to {HOSPITAL_CONFIG.name} administration portal</p>
  </div>
 
  <form className={styles.form} onSubmit={handleLogin}>

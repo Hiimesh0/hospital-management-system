@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Printer, ArrowLeft, Download, FileText, AlertCircle } from 'lucide-react';
 import { patientApi, type PatientBillRecord, type PatientRecord } from '../../api/patientApi';
 import { openPatientBillPdf, formatBillDate } from '../../utils/patientBillGenerator';
+import { HOSPITAL_CONFIG } from '../../config/hospitalConfig';
 import tulipLogo from '../../assets/unicare_tulip.png';
 import nabhSeal from '../../assets/nabh_seal.png';
 import styles from './BillPreview.module.css';
@@ -137,18 +138,22 @@ export const BillPreview: React.FC = () => {
           {/* 1. Hospital Header */}
           <header className={styles.billHeader}>
             <div className={styles.headerLogoLeft}>
-              <img src={tulipLogo} alt="UNICARE Emblem" className={styles.tulipImg} />
+              <img src={tulipLogo} alt={`${HOSPITAL_CONFIG.name} Emblem`} className={styles.tulipImg} />
             </div>
             <div className={styles.headerCenterText}>
-              <h1 className={styles.hospitalName}>UNICARE</h1>
-              <div className={styles.hospitalSubtitle}>HEART INSTITUTE & RESEARCH CENTER</div>
-              <div className={styles.hospitalManaged}>(Managed By : South Gujarat Cardiac Care Pvt. Ltd.)</div>
-              <div className={styles.hospitalCin}>CIN No. - U85110GJ2013PTC073815</div>
-              <div className={styles.hospitalAddress}>
-                Acme Plaza, B-Wing, Near Sosyo Circle, Behind New Civil Hospital, Canal Road, Surat-395002
-              </div>
+              <h1 className={styles.hospitalName}>{HOSPITAL_CONFIG.name || 'XYZ'}</h1>
+              {HOSPITAL_CONFIG.subTitle && (
+                <div className={styles.hospitalSubtitle}>{HOSPITAL_CONFIG.subTitle}</div>
+              )}
+              {HOSPITAL_CONFIG.managedBy && (
+                <div className={styles.hospitalManaged}>{HOSPITAL_CONFIG.managedBy}</div>
+              )}
+              {HOSPITAL_CONFIG.cinNo && (
+                <div className={styles.hospitalCin}>CIN No. - {HOSPITAL_CONFIG.cinNo}</div>
+              )}
+              <div className={styles.hospitalAddress}>{HOSPITAL_CONFIG.address || 'XYZ'}</div>
               <div className={styles.hospitalContact}>
-                Ph: 0261-2639700/9800 | E-mail: unicareheartinstitute@gmail.com
+                Ph: {HOSPITAL_CONFIG.phone || 'XYZ'} | E-mail: {HOSPITAL_CONFIG.email || 'XYZ'}
               </div>
             </div>
             <div className={styles.headerLogoRight}>

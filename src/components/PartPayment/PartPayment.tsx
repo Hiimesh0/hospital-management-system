@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowDown, X, Printer, Save, FileText, ArrowLeft } from 'lucide-react';
+import { HOSPITAL_CONFIG } from '../../config/hospitalConfig';
 import styles from './PartPayment.module.css';
 
 const PartPayment: React.FC = () => {
@@ -12,7 +13,7 @@ const PartPayment: React.FC = () => {
  {/* Background Page Content */}
  <div className={styles.header}>
  <h1 className={styles.patientName}>--</h1>
- <span className={styles.hospitalName}>Bharat Cancer Hospital [OPD-BCH]</span>
+ <span className={styles.hospitalName}>{HOSPITAL_CONFIG.name}</span>
  </div>
 
  <div className={styles.content}>

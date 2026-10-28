@@ -52,6 +52,7 @@ import {
   Radio
 } from 'lucide-react';
 import mixuLogo from './assets/mixu-infosystem-logo.png';
+import { HOSPITAL_CONFIG } from './config/hospitalConfig';
 
 // Lazy load the components
 const Login = lazy(() => import('./components/Login/Login'));
@@ -910,7 +911,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
                 }}
               />
               <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>
-                <span style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-main)' }}>Hospital System</span>
+                <span style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-main)' }}>{HOSPITAL_CONFIG.name}</span>
                 <span style={{ fontSize: '10.5px', fontWeight: 500, color: 'var(--text-muted)', letterSpacing: '0.02em' }}>Mixu Infosystem</span>
               </div>
             </div>
@@ -1097,7 +1098,7 @@ function App() {
                   flexShrink: 0
                 }}
               />
-              Hospital System
+              {HOSPITAL_CONFIG.name}
             </div>
             <button 
               className="mobileLogoutBtn" 

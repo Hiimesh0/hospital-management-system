@@ -6,6 +6,7 @@
 
 import { jsPDF } from 'jspdf';
 import type { PatientBillRecord } from '../api/patientApi';
+import { HOSPITAL_CONFIG } from '../config/hospitalConfig';
 
 export const BILL_CONFIG = {
   widthMm: 210, // A4 Portrait width
@@ -81,29 +82,36 @@ export function generatePatientBillPdfBlob(bill: PatientBillRecord): Blob {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(16);
   doc.setTextColor(25, 25, 25);
-  doc.text('UNICARE', boxX + boxW / 2, currY, { align: 'center' });
+  doc.text(HOSPITAL_CONFIG.name || 'XYZ', boxX + boxW / 2, currY, { align: 'center' });
 
-  currY += 4.5;
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(8.5);
-  doc.setTextColor(40, 40, 40);
-  doc.text('HEART INSTITUTE & RESEARCH CENTER', boxX + boxW / 2, currY, { align: 'center' });
+  if (HOSPITAL_CONFIG.subTitle) {
+    currY += 4.5;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    doc.setTextColor(40, 40, 40);
+    doc.text(HOSPITAL_CONFIG.subTitle, boxX + boxW / 2, currY, { align: 'center' });
+  }
 
-  currY += 3.8;
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(7.5);
-  doc.setTextColor(60, 60, 60);
-  doc.text('(Managed By : South Gujarat Cardiac Care Pvt. Ltd.)', boxX + boxW / 2, currY, { align: 'center' });
+  if (HOSPITAL_CONFIG.managedBy) {
+    currY += 3.8;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7.5);
+    doc.setTextColor(60, 60, 60);
+    doc.text(HOSPITAL_CONFIG.managedBy, boxX + boxW / 2, currY, { align: 'center' });
+  }
 
-  currY += 3.5;
-  doc.setFontSize(7.0);
-  doc.text('CIN No. - U85110GJ2013PTC073815', boxX + boxW / 2, currY, { align: 'center' });
+  if (HOSPITAL_CONFIG.cinNo) {
+    currY += 3.5;
+    doc.setFontSize(7.0);
+    doc.text(`CIN No. - ${HOSPITAL_CONFIG.cinNo}`, boxX + boxW / 2, currY, { align: 'center' });
+  }
 
   currY += 4.0;
+  doc.setFont('helvetica', 'normal');
   doc.setFontSize(7.2);
   doc.setTextColor(50, 50, 50);
   doc.text(
-    'Acme Plaza, B-Wing, Near Sosyo Circle, Behind New Civil Hospital, Canal Road, Surat-395002',
+    HOSPITAL_CONFIG.address || 'XYZ',
     boxX + boxW / 2,
     currY,
     { align: 'center' }
@@ -111,7 +119,7 @@ export function generatePatientBillPdfBlob(bill: PatientBillRecord): Blob {
 
   currY += 3.2;
   doc.text(
-    'Ph: 0261-2639700/9800  |  E-mail: unicareheartinstitute@gmail.com',
+    `Ph: ${HOSPITAL_CONFIG.phone || 'XYZ'}  |  E-mail: ${HOSPITAL_CONFIG.email || 'XYZ'}`,
     boxX + boxW / 2,
     currY,
     { align: 'center' }
