@@ -308,6 +308,9 @@ export const BarcodeCameraModal: React.FC<BarcodeCameraModalProps> = ({
         throw new Error('Video preview element is not ready.');
       }
 
+      // Set streaming active so the video element becomes visible (display: block)
+      setIsStreaming(true);
+
       // Explicitly set WebKit and iOS inline autoplay attributes
       video.setAttribute('playsinline', 'true');
       video.setAttribute('webkit-playsinline', 'true');
@@ -338,12 +341,11 @@ export const BarcodeCameraModal: React.FC<BarcodeCameraModalProps> = ({
         };
         video.addEventListener('loadeddata', onReady, { once: true });
         video.addEventListener('playing', onReady, { once: true });
-        setTimeout(resolve, 2500); // 2.5s fallback timeout
+        setTimeout(resolve, 1500); // 1.5s fallback timeout
       });
 
       if (!isMountedRef.current) return;
 
-      setIsStreaming(true);
       setIsInitializing(false);
 
       // Re-enumerate devices now that permission is granted to get real camera labels
@@ -583,60 +585,74 @@ export const BarcodeCameraModal: React.FC<BarcodeCameraModalProps> = ({
             </p>
           </div>
 
-          {/* Camera Viewport / Live Stream (ALWAYS mounted in DOM to prevent React ref null issues) */}
-          <div
-            className={styles.previewContainer}
-            style={{ display: isStreaming ? 'flex' : 'none' }}
-          >
-            {/* Live Video Preview */}
+          {/* Unified Camera Viewport with 4:3 Aspect Ratio */}
+          <div className={styles.previewContainer}>
+            {/* Live Video Preview (display: block, 100% width/height, object-fit: cover) */}
             <video
               ref={videoRef}
               className={styles.videoElement}
               playsInline
               muted
               autoPlay
+              style={{
+                display: isStreaming ? 'block' : 'none'
+              }}
             />
 
-            {/* Floating Top Controls (Active Track Name & Flip Camera) */}
-            <div className={styles.previewHeader}>
-              <div className={styles.activeTrackBadge}>
-                <Camera size={12} />
-                <span>{activeCameraLabel || 'Live Camera'}</span>
-              </div>
-              <button
-                type="button"
-                className={styles.switchCameraBtn}
-                onClick={toggleFlipCamera}
-                title="Switch between front and rear cameras"
-              >
-                <RotateCcw size={12} />
-                <span>Flip Lens</span>
-              </button>
-            </div>
+            {/* Live Camera Controls & Viewfinder (when streaming) */}
+            {isStreaming && (
+              <>
+                {/* Floating Top Controls (Active Track Name & Flip Camera) */}
+                <div className={styles.previewHeader}>
+                  <div className={styles.activeTrackBadge}>
+                    <Camera size={12} />
+                    <span>{activeCameraLabel || 'Live Camera'}</span>
+                  </div>
+                  <button
+                    type="button"
+                    className={styles.switchCameraBtn}
+                    onClick={toggleFlipCamera}
+                    title="Switch between front and rear cameras"
+                  >
+                    <RotateCcw size={12} />
+                    <span>Flip Lens</span>
+                  </button>
+                </div>
 
-            {/* Reticle / Viewfinder Overlay */}
-            <div className={styles.reticleOverlay}>
-              <div className={styles.targetFrame}>
-                <div className={styles.laserLine} />
+                {/* Reticle / Viewfinder Overlay with GPU-Safe SVG Mask Cutout */}
+                <div className={styles.reticleOverlay}>
+                  <svg className={styles.maskSvg} preserveAspectRatio="none" viewBox="0 0 100 100">
+                    <defs>
+                      <mask id="scannerCutoutMask">
+                        <rect x="0" y="0" width="100" height="100" fill="#ffffff" />
+                        <rect x="12" y="21" width="76" height="58" rx="3" fill="#000000" />
+                      </mask>
+                    </defs>
+                    <rect x="0" y="0" width="100" height="100" fill="rgba(0, 0, 0, 0.4)" mask="url(#scannerCutoutMask)" />
+                  </svg>
+                  <div className={styles.targetFrame}>
+                    <div className={styles.laserLine} />
+                  </div>
+                  <div className={styles.frameCaption}>
+                    Align patient sticker Code 128 barcode inside frame
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* Idle State Overlay (when camera is not streaming) */}
+            {!isStreaming && (
+              <div className={styles.idleOverlay}>
+                <div className={styles.idleIcon}>
+                  <Camera size={44} strokeWidth={1.5} />
+                </div>
+                <p className={styles.idleTitle}>Camera is currently idle</p>
+                <p className={styles.idleSubtitle}>
+                  Tap <strong>Start Scanning</strong> below. The browser will request camera permission and open the live viewfinder.
+                </p>
               </div>
-              <div className={styles.frameCaption}>
-                Align patient sticker Code 128 barcode inside frame
-              </div>
-            </div>
+            )}
           </div>
-
-          {/* Idle State (when camera is not streaming) */}
-          {!isStreaming && (
-            <div className={styles.idleContainer}>
-              <div className={styles.idleIcon}>
-                <Camera size={44} strokeWidth={1.5} />
-              </div>
-              <p className={styles.idleTitle}>Camera is currently idle</p>
-              <p className={styles.idleSubtitle}>
-                Tap <strong>Start Scanning</strong> below. The browser will request camera permission and open the live viewfinder.
-              </p>
-            </div>
-          )}
 
           {/* Resolving / Loading State */}
           {isResolving && (
