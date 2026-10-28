@@ -12,14 +12,17 @@ import {
   Edit2,
   Printer,
   ScanLine,
-  Barcode
+  Barcode,
+  Camera
 } from 'lucide-react';
 import { patientApi } from '../../api/patientApi';
 import type { PatientRecord, PatientFormData } from '../../api/patientApi';
 import { useAutoDismissNotification } from '../../hooks/useAutoDismissNotification';
 import { useFormKeyboardNavigation } from '../../hooks/useFormKeyboardNavigation';
 import { openPatientStickerPdf } from '../../utils/patientStickerGenerator';
+import { BarcodeCameraModal } from './BarcodeCameraModal';
 import styles from './PatientRegistration.module.css';
+
 
 
 const defaultFormState: PatientFormData = {
@@ -69,6 +72,10 @@ const PatientRegistration: React.FC = () => {
   const [isPrintingSticker, setIsPrintingSticker] = useState<boolean>(false);
   const [scannedBarcode, setScannedBarcode] = useState<string>('');
   const [loadedSavedPatient, setLoadedSavedPatient] = useState<PatientRecord | null>(null);
+  const [isCameraModalOpen, setIsCameraModalOpen] = useState<boolean>(false);
+  const [pendingScannedPatient, setPendingScannedPatient] = useState<PatientRecord | null>(null);
+  const [showUnsavedConfirmModal, setShowUnsavedConfirmModal] = useState<boolean>(false);
+
 
   const { notification, setNotification, dismissNotification } = useAutoDismissNotification<{
     type: 'success' | 'error';
@@ -375,29 +382,116 @@ const PatientRegistration: React.FC = () => {
     }
   };
 
-  // Barcode Scanner / UHID Quick Lookup Handler
-  const handleBarcodeScan = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    const cleanId = scannedBarcode.trim();
+  // Populate form with scanned patient record safely
+  const applyScannedPatient = (patient: PatientRecord) => {
+    const loaded: PatientFormData = {
+      category: patient.category || 'NEW',
+      firstName: patient.firstName || '',
+      middleName: patient.middleName || '',
+      lastName: patient.lastName || '',
+      birthDate: patient.birthDate || '',
+      age: patient.age || '',
+      ageUnit: patient.ageUnit || 'Years',
+      sex: patient.sex || 'Male',
+      hospitalDoctor: patient.hospitalDoctor || 'Dr. NILESH MAHALE',
+      referenceBy: patient.referenceBy || '',
+      religion: patient.religion || 'Hindu',
+      maritalStatus: patient.maritalStatus || '',
+      weight: patient.weight || '',
+      height: patient.height || '',
+      mobile: patient.mobile || '',
+      email: patient.email || '',
+      streetAddress: patient.streetAddress || '',
+      city: patient.city || 'SURAT',
+      state: patient.state || 'GUJARAT',
+      pinCode: patient.pinCode || '',
+      autoSms: patient.autoSms !== undefined ? patient.autoSms : true,
+      estimate: patient.estimate || '',
+      aadharNo: patient.aadharNo || '',
+      panNo: patient.panNo || '',
+      mediclaim: patient.mediclaim || '',
+      membershipId: patient.membershipId || '',
+      employeeId: patient.employeeId || '',
+      companyName: patient.companyName || '',
+      remark: patient.remark || ''
+    };
+
+    setFormData(loaded);
+    setInitialEditData(loaded);
+    setLoadedSavedPatient(patient);
+    setIsEditMode(true);
+    setEditId(patient.uhid);
+    navigate(`/patient-registration?id=${encodeURIComponent(patient.uhid)}`);
+
+    setNotification({
+      type: 'success',
+      message: `Scanned Barcode: Loaded patient ${patient.uhid} (${patient.firstName} ${patient.lastName}) for editing.`
+    });
+    setPendingScannedPatient(null);
+    setShowUnsavedConfirmModal(false);
+  };
+
+  // Unified lookup processor with unsaved data safety
+  const handleProcessBarcodeLookup = async (scannedCode: string, _source: 'Camera' | 'USB Scanner') => {
+    const cleanId = scannedCode.trim();
     if (!cleanId) return;
 
     try {
       const res = await patientApi.getPatientById(cleanId);
-      if (res.patient) {
-        setScannedBarcode('');
-        navigate(`/patient-registration?id=${encodeURIComponent(res.patient.uhid)}`);
+      if (!res.patient) {
         setNotification({
-          type: 'success',
-          message: `Barcode Scanned: Successfully loaded patient ${res.patient.uhid} (${res.patient.firstName} ${res.patient.lastName}) for editing.`
+          type: 'error',
+          message: `Patient Not Found: No registered record matches scanned barcode '${cleanId}'.`
         });
+        return;
+      }
+
+      const patient = res.patient;
+
+      // Check for unsaved changes in current form
+      let hasUnsavedChanges = false;
+      if (isEditMode && initialEditData) {
+        hasUnsavedChanges = JSON.stringify(formData) !== JSON.stringify(initialEditData);
+      } else {
+        hasUnsavedChanges = Boolean(
+          formData.firstName.trim() ||
+          formData.lastName.trim() ||
+          formData.mobile.trim() ||
+          formData.age.trim() ||
+          formData.streetAddress.trim() ||
+          formData.aadharNo.trim()
+        );
+      }
+
+      if (hasUnsavedChanges) {
+        setPendingScannedPatient(patient);
+        setShowUnsavedConfirmModal(true);
+      } else {
+        applyScannedPatient(patient);
       }
     } catch {
       setNotification({
         type: 'error',
-        message: `Patient not found: No registered record matches scanned barcode '${cleanId}'.`
+        message: `Patient Not Found: No registered record matches scanned barcode '${cleanId}'.`
       });
     }
   };
+
+  // Barcode Scanner / UHID Quick Lookup Handler (Keyboard/Wedge)
+  const handleBarcodeScan = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!scannedBarcode.trim()) return;
+    const code = scannedBarcode;
+    setScannedBarcode('');
+    await handleProcessBarcodeLookup(code, 'USB Scanner');
+  };
+
+  // Camera Barcode Scanner success callback
+  const handleCameraScanSuccess = async (scannedCode: string) => {
+    setIsCameraModalOpen(false);
+    await handleProcessBarcodeLookup(scannedCode, 'Camera');
+  };
+
 
 
   // Filter lookup patients in search modal
@@ -416,15 +510,26 @@ const PatientRegistration: React.FC = () => {
     <div className={`${styles.container} ${styles.pageContainer}`}>
       {/* Header */}
       <header className={styles.header}>
-        <div>
-          <h1 className={styles.title}>
-            {isEditMode ? `Edit Patient Record: ${editId}` : 'Patient Registration'}
-          </h1>
-          <p className={styles.subtitle}>
-            {isEditMode
-              ? 'Update existing patient details in JSON storage'
-              : 'Register new patient and save securely to JSON storage'}
-          </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
+          <div>
+            <h1 className={styles.title}>
+              {isEditMode ? `Edit Patient Record: ${editId}` : 'Patient Registration'}
+            </h1>
+            <p className={styles.subtitle}>
+              {isEditMode
+                ? 'Update existing patient details in JSON storage'
+                : 'Register new patient and save securely to JSON storage'}
+            </p>
+          </div>
+          <button
+            type="button"
+            className={`${styles.btn} ${styles.btnScanCamera}`}
+            onClick={() => setIsCameraModalOpen(true)}
+            title="Scan patient sticker barcode using device camera or mobile webcam"
+          >
+            <Camera size={16} style={{ marginRight: '6px' }} />
+            Scan Patient Barcode
+          </button>
         </div>
         <div className={styles.metaInfo}>
           <span className={styles.badge}>
@@ -521,12 +626,23 @@ const PatientRegistration: React.FC = () => {
           >
             Lookup
           </button>
+          <button
+            type="button"
+            className={`${styles.btn} ${styles.btnScanCamera}`}
+            style={{ height: '32px', fontSize: '0.8rem', padding: '0 12px' }}
+            onClick={() => setIsCameraModalOpen(true)}
+            title="Scan patient sticker barcode using device camera"
+          >
+            <Camera size={14} style={{ marginRight: '5px' }} />
+            Scan Patient Barcode
+          </button>
         </div>
         <div className={styles.barcodeBadge}>
           <Barcode size={15} />
-          <span>USB Barcode Scanner Ready (Code 128)</span>
+          <span>USB & Camera Barcode Scanner Ready (Code 128)</span>
         </div>
       </div>
+
 
       {/* Form Element */}
       <form ref={formRef} onSubmit={handleSubmit} onKeyDown={handleFormKeyDown} noValidate>
@@ -1103,8 +1219,61 @@ const PatientRegistration: React.FC = () => {
         </div>
       )}
 
+      {/* Camera Barcode Scanner Modal */}
+      <BarcodeCameraModal
+        isOpen={isCameraModalOpen}
+        onClose={() => setIsCameraModalOpen(false)}
+        onScanSuccess={handleCameraScanSuccess}
+      />
+
+      {/* Unsaved Changes Confirmation Dialog */}
+      {showUnsavedConfirmModal && pendingScannedPatient && (
+        <div className={styles.modalBackdrop} onClick={() => setShowUnsavedConfirmModal(false)}>
+          <div className={styles.modalContent} style={{ maxWidth: '480px' }} onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h3 style={{ margin: 0, fontSize: '1.15rem', color: '#b45309', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <AlertCircle size={20} /> Unsaved Changes Detected
+              </h3>
+              <button
+                type="button"
+                onClick={() => setShowUnsavedConfirmModal(false)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}
+                aria-label="Close dialog"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <p style={{ fontSize: '0.9rem', color: 'var(--text-main)', lineHeight: '1.5', margin: '0 0 1.25rem 0' }}>
+              The registration form currently contains unsaved information. Would you like to discard your unsaved edits and load the scanned patient record{' '}
+              <strong style={{ color: 'var(--primary)' }}>{pendingScannedPatient.uhid} ({pendingScannedPatient.firstName} {pendingScannedPatient.lastName})</strong>?
+            </p>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+              <button
+                type="button"
+                className={`${styles.btn} ${styles.btnSecondary}`}
+                onClick={() => {
+                  setShowUnsavedConfirmModal(false);
+                  setPendingScannedPatient(null);
+                }}
+              >
+                Keep Current Form / Cancel
+              </button>
+              <button
+                type="button"
+                className={`${styles.btn} ${styles.btnPrimary}`}
+                style={{ background: '#EA4335', borderColor: '#d93025' }}
+                onClick={() => applyScannedPatient(pendingScannedPatient)}
+              >
+                Discard & Load Patient
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
+
 
 export default PatientRegistration;

@@ -1,0 +1,430 @@
+/* BarcodeCameraModal.module.css - Camera Barcode Scanner Modal */
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal {
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 10px;
+  width: 100%;
+  max-width: 580px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--text-main, #1e293b);
+  box-sizing: border-box;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(18px) scale(0.98);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.1rem 1.4rem;
+  border-bottom: 1px solid var(--border, #e2e8f0);
+  background: linear-gradient(135deg, rgba(66, 133, 244, 0.06) 0%, rgba(52, 168, 83, 0.06) 100%);
+}
+
+.titleArea {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.titleIcon {
+  color: #4285F4;
+  display: flex;
+  align-items: center;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-main, #0f172a);
+}
+
+.closeButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted, #64748b);
+  padding: 0.35rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.closeButton:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: #EA4335;
+}
+
+/* Body */
+.body {
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  max-height: calc(85vh - 120px);
+  overflow-y: auto;
+}
+
+/* Camera Selection Bar */
+.controlGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-main, #334155);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.select {
+  width: 100%;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid var(--border, #cbd5e1);
+  border-radius: 6px;
+  background: var(--surface, #ffffff);
+  color: var(--text-main, #1e293b);
+  font-size: 0.9rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.select:focus {
+  border-color: #4285F4;
+  box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+}
+
+.helpText {
+  font-size: 0.8rem;
+  color: var(--text-muted, #64748b);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Camera Preview Viewport */
+.previewContainer {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  max-height: 320px;
+  background: #000000;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--border, #cbd5e1);
+}
+
+.videoElement {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #000000;
+}
+
+/* Reticle / Viewfinder Overlay */
+.reticleOverlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.targetFrame {
+  position: relative;
+  width: 78%;
+  height: 60%;
+  max-width: 380px;
+  border: 2px solid rgba(52, 168, 83, 0.85);
+  border-radius: 8px;
+  box-shadow: 0 0 0 4000px rgba(0, 0, 0, 0.45);
+}
+
+/* Corner Bracket Accents */
+.targetFrame::before,
+.targetFrame::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: #34A853;
+  border-style: solid;
+  pointer-events: none;
+}
+
+.targetFrame::before {
+  top: -2px;
+  left: -2px;
+  border-width: 3px 0 0 3px;
+}
+
+.targetFrame::after {
+  bottom: -2px;
+  right: -2px;
+  border-width: 0 3px 3px 0;
+}
+
+/* Laser Scanning Line Animation */
+.laserLine {
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, #EA4335 50%, transparent 100%);
+  box-shadow: 0 0 8px #EA4335;
+  animation: scanLaser 2s linear infinite alternate;
+}
+
+@keyframes scanLaser {
+  0% { top: 6px; }
+  100% { top: calc(100% - 8px); }
+}
+
+.frameCaption {
+  position: absolute;
+  bottom: 12px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #ffffff;
+  padding: 0.35rem 0.85rem;
+  border-radius: 16px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* Idle Placeholder */
+.idleContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 2.2rem 1.5rem;
+  background: var(--bg-color, #f8fafc);
+  border: 2px dashed var(--border, #cbd5e1);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.idleIcon {
+  color: #4285F4;
+}
+
+.idleTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main, #1e293b);
+  margin: 0;
+}
+
+.idleSubtitle {
+  font-size: 0.82rem;
+  color: var(--text-muted, #64748b);
+  max-width: 360px;
+  margin: 0;
+}
+
+/* Status & Alerts */
+.alertError {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  line-height: 1.4;
+}
+
+.alertSuccess {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #15803d;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.alertWarning {
+  background: #fffbeb;
+  border: 1px solid #fef3c7;
+  color: #b45309;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+
+/* Loading Spinner */
+.resolvingState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  color: #4285F4;
+  font-weight: 500;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(66, 133, 244, 0.25);
+  border-top-color: #4285F4;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Footer / Actions */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1rem 1.4rem;
+  border-top: 1px solid var(--border, #e2e8f0);
+  background: var(--bg-color, #f8fafc);
+}
+
+.btn {
+  padding: 0.55rem 1.1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+  font-family: inherit;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btnSecondary {
+  background: var(--surface, #ffffff);
+  border-color: var(--border, #cbd5e1);
+  color: var(--text-main, #334155);
+}
+
+.btnSecondary:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.btnPrimary {
+  background: #4285F4;
+  color: #ffffff;
+}
+
+.btnPrimary:hover:not(:disabled) {
+  background: #3367d6;
+}
+
+.btnStop {
+  background: #EA4335;
+  color: #ffffff;
+}
+
+.btnStop:hover:not(:disabled) {
+  background: #d93025;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+}
+
+.badgeInfo {
+  background: rgba(66, 133, 244, 0.1);
+  color: #4285F4;
+}
+
+/* Mobile responsive */
+@media (max-width: 640px) {
+  .modal {
+    max-width: 100%;
+    margin: 0.5rem;
+  }
+  
+  .previewContainer {
+    max-height: 250px;
+  }
+
+  .footer {
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+  }
+
+  .footer button {
+    width: 100%;
+  }
+}
