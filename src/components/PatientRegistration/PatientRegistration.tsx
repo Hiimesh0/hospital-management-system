@@ -523,7 +523,7 @@ const PatientRegistration: React.FC = () => {
           </div>
           <button
             type="button"
-            className={`${styles.btn} ${styles.btnScanCamera}`}
+            className={`${styles.btn} ${styles.btnScanCamera} ${styles.headerScanBtn}`}
             onClick={() => setIsCameraModalOpen(true)}
             title="Scan patient sticker barcode using device camera or mobile webcam"
           >
@@ -602,40 +602,42 @@ const PatientRegistration: React.FC = () => {
       {/* Barcode Scanner / UHID Quick Lookup Toolbar */}
       <div className={styles.barcodeScanBar}>
         <div className={styles.barcodeScanGroup}>
-          <ScanLine size={18} color="#0f766e" />
-          <input
-            type="text"
-            className={styles.barcodeInput}
-            placeholder="Scan Patient Barcode or Type UHID (e.g. UHID-1001) & press Enter..."
-            value={scannedBarcode}
-            onChange={e => setScannedBarcode(e.target.value)}
-            onKeyDown={e => {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                e.stopPropagation();
-                handleBarcodeScan();
-              }
-            }}
-            aria-label="Scan patient barcode or lookup UHID"
-          />
-          <button
-            type="button"
-            className={`${styles.btn} ${styles.btnSecondary}`}
-            style={{ height: '32px', fontSize: '0.8rem', padding: '0 12px' }}
-            onClick={() => handleBarcodeScan()}
-          >
-            Lookup
-          </button>
-          <button
-            type="button"
-            className={`${styles.btn} ${styles.btnScanCamera}`}
-            style={{ height: '32px', fontSize: '0.8rem', padding: '0 12px' }}
-            onClick={() => setIsCameraModalOpen(true)}
-            title="Scan patient sticker barcode using device camera"
-          >
-            <Camera size={14} style={{ marginRight: '5px' }} />
-            Scan Patient Barcode
-          </button>
+          <div className={styles.barcodeInputWrapper}>
+            <ScanLine size={18} className={styles.barcodeInputIcon} />
+            <input
+              type="text"
+              className={styles.barcodeInput}
+              placeholder="Scan Patient Barcode or Type UHID (e.g. UHID-1001) & press Enter..."
+              value={scannedBarcode}
+              onChange={e => setScannedBarcode(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleBarcodeScan();
+                }
+              }}
+              aria-label="Scan patient barcode or lookup UHID"
+            />
+          </div>
+          <div className={styles.barcodeActionButtons}>
+            <button
+              type="button"
+              className={`${styles.btn} ${styles.btnSecondary} ${styles.barcodeLookupBtn}`}
+              onClick={() => handleBarcodeScan()}
+            >
+              Lookup
+            </button>
+            <button
+              type="button"
+              className={`${styles.btn} ${styles.btnScanCamera} ${styles.barcodeScanBtn}`}
+              onClick={() => setIsCameraModalOpen(true)}
+              title="Scan patient sticker barcode using device camera"
+            >
+              <Camera size={15} />
+              <span>Scan Patient Barcode</span>
+            </button>
+          </div>
         </div>
         <div className={styles.barcodeBadge}>
           <Barcode size={15} />

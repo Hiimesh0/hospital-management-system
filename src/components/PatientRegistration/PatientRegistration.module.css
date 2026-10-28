@@ -251,7 +251,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 0.75rem 1rem;
   padding: 0.75rem 1.25rem;
   margin-bottom: 1.5rem;
   background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(15, 118, 110, 0.05) 100%);
@@ -259,25 +259,45 @@
   border-left: 4px solid #0f766e;
   border-radius: 6px;
   flex-wrap: wrap;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .barcodeScanGroup {
   display: flex;
   align-items: center;
+  gap: 0.625rem;
+  flex: 1 1 540px;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.barcodeInputWrapper {
+  display: flex;
+  align-items: center;
   gap: 0.5rem;
-  flex: 1;
-  min-width: 280px;
-  max-width: 600px;
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
+.barcodeInputIcon {
+  flex-shrink: 0;
+  color: #0f766e;
 }
 
 .barcodeInput {
-  flex: 1;
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 4px;
   padding: 0.45rem 0.75rem;
   color: var(--text-main);
   font-size: 0.85rem;
+  height: 36px;
+  box-sizing: border-box;
   transition: var(--transition);
 }
 
@@ -285,6 +305,41 @@
   outline: none;
   border-color: var(--primary);
   box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+.barcodeActionButtons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.barcodeLookupBtn {
+  height: 36px;
+  font-size: 0.825rem;
+  padding: 0 1rem;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.barcodeScanBtn {
+  height: 36px;
+  font-size: 0.825rem;
+  padding: 0 1rem;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+}
+
+.headerScanBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  white-space: nowrap;
 }
 
 .barcodeBadge {
@@ -295,8 +350,10 @@
   font-weight: 600;
   color: #0f766e;
   background: rgba(15, 118, 110, 0.08);
-  padding: 0.25rem 0.6rem;
+  padding: 0.35rem 0.65rem;
   border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 
@@ -328,8 +385,13 @@
 
   .header {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 1rem;
+  }
+
+  .headerScanBtn {
+    width: 100%;
+    justify-content: center;
   }
   
   .metaInfo {
@@ -353,13 +415,62 @@
   .splitSectionRight {
     padding-left: 0;
   }
+
+  .barcodeScanBar {
+    padding: 0.75rem 1rem;
+  }
+
+  .barcodeScanGroup {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  .barcodeBadge {
+    width: 100%;
+    justify-content: flex-start;
+    white-space: normal;
+  }
 }
 
-/* Mobile Phones */
-@media (max-width: 480px) {
+/* Compact Mobile (max-width: 580px) */
+@media (max-width: 580px) {
+  .barcodeScanGroup {
+    gap: 0.5rem;
+  }
+
+  .barcodeInputWrapper {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  .barcodeActionButtons {
+    width: 100%;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .barcodeLookupBtn {
+    flex: 0 0 auto;
+    min-width: 80px;
+    height: 38px;
+  }
+
+  .barcodeScanBtn {
+    flex: 1 1 auto;
+    height: 38px;
+    justify-content: center;
+  }
+}
+
+/* Mobile Phones & Narrow Screens (max-width: 440px) */
+@media (max-width: 440px) {
   .container {
-    margin: 0.5rem;
-    padding: 1rem;
+    margin: 0.35rem;
+    padding: 0.75rem;
+  }
+
+  .title {
+    font-size: 1.35rem;
   }
 
   .formGrid {
@@ -379,17 +490,73 @@
     flex-direction: column;
     align-items: stretch;
   }
+
+  .barcodeScanBar {
+    padding: 0.65rem 0.75rem;
+    gap: 0.6rem;
+  }
+
+  .barcodeScanGroup {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.6rem;
+    width: 100%;
+  }
+
+  .barcodeInputWrapper {
+    width: 100%;
+  }
+
+  .barcodeInput {
+    height: 40px;
+    font-size: 0.85rem;
+  }
+
+  .barcodeActionButtons {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .barcodeLookupBtn,
+  .barcodeScanBtn {
+    width: 100%;
+    height: 40px;
+    justify-content: center;
+    font-size: 0.875rem;
+  }
+
+  .headerScanBtn {
+    width: 100%;
+    height: 40px;
+    justify-content: center;
+  }
+
+  .barcodeBadge {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.7rem;
+    padding: 0.35rem 0.5rem;
+    line-height: 1.35;
+    white-space: normal;
+  }
 }
 
 /* Small Mobile (320px - 360px) */
 @media (max-width: 360px) {
   .container {
-    margin: 0.25rem;
-    padding: 0.75rem;
+    margin: 0.2rem;
+    padding: 0.5rem;
   }
   
   .title {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
+  }
+
+  .barcodeScanBar {
+    padding: 0.5rem;
   }
 }
 

@@ -9,10 +9,7 @@ import {
   Upload,
   RotateCcw,
   ShieldAlert,
-  Info,
-  Terminal,
-  ChevronDown,
-  ChevronUp
+  Info
 } from 'lucide-react';
 import { BrowserMultiFormatReader, BarcodeFormat, DecodeHintType } from '@zxing/library';
 import styles from './BarcodeCameraModal.module.css';
@@ -53,27 +50,13 @@ export const BarcodeCameraModal: React.FC<BarcodeCameraModalProps> = ({
   const [isResolving, setIsResolving] = useState<boolean>(false);
   const [activeCameraLabel, setActiveCameraLabel] = useState<string | null>(null);
   const [isInsecureContext, setIsInsecureContext] = useState<boolean>(false);
-  const [showDiagnostics, setShowDiagnostics] = useState<boolean>(false);
 
-  // Diagnostics State (Phase 2 Requirement)
-  const [diagnostics, setDiagnostics] = useState({
-    protocol: typeof window !== 'undefined' ? window.location.protocol : '',
-    isSecure: false,
-    hasMediaDevices: false,
-    permissionState: 'unknown',
-    detectedCamerasCount: 0,
-    activeCameraLabel: 'None',
-    cameraStatus: 'Idle',
-    videoPlayback: 'Not Ready',
-    videoDimensions: '0 x 0',
-    clientDimensions: '0 x 0',
-    selectedFormat: 'Code 128 (Primary)',
-    activeEngine: 'Pending...',
-    framesScanned: 0,
-    lastCameraError: 'None',
-    lastDecodeError: 'None',
-    patientLookupStatus: 'Idle'
-  });
+  // Internal development diagnostic logger (replaces UI diagnostic box without re-renders)
+  const logDiagnostic = useCallback((info: Record<string, unknown> | string | unknown) => {
+    if (typeof console !== 'undefined' && console.debug) {
+      console.debug('[ScannerDiagnostic]', info);
+    }
+  }, []);
 
   // References
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -156,12 +139,10 @@ export const BarcodeCameraModal: React.FC<BarcodeCameraModalProps> = ({
       setIsStreaming(false);
       setIsInitializing(false);
       setActiveCameraLabel(null);
-      setDiagnostics(prev => ({
-        ...prev,
-        cameraStatus: 'Idle',
+      logDiagnostic({ cameraStatus: 'Idle',
         videoPlayback: 'Stopped',
         activeCameraLabel: 'None'
-      }));
+      });
     }
   }, []);
 
@@ -180,10 +161,8 @@ export const BarcodeCameraModal: React.FC<BarcodeCameraModalProps> = ({
       const videoInputs = devices.filter(d => d.kind === 'videoinput');
       if (isMountedRef.current) {
         setVideoDevices(videoInputs);
-        setDiagnostics(prev => ({
-          ...prev,
-          detectedCamerasCount: videoInputs.length
-        }));
+        logDiagnostic({ detectedCamerasCount: videoInputs.length
+        });
       }
     } catch (err: unknown) {
       console.warn('Could not enumerate cameras:', err);
@@ -219,15 +198,13 @@ export const BarcodeCameraModal: React.FC<BarcodeCameraModalProps> = ({
           .query({ name: 'camera' as PermissionName })
           .then(status => {
             if (isMountedRef.current) {
-              setDiagnostics(prev => ({ ...prev, permissionState: status.state }));
+              logDiagnostic({ permissionState: status.state });
             }
           })
           .catch(() => {});
       }
 
-      setDiagnostics(prev => ({
-        ...prev,
-        protocol: typeof window !== 'undefined' ? window.location.protocol : '',
+      logDiagnostic({ protocol: typeof window !== 'undefined' ? window.location.protocol : '',
         isSecure: isContextSecure,
         hasMediaDevices: Boolean(
           typeof navigator !== 'undefined' && navigator.mediaDevices?.getUserMedia
@@ -238,7 +215,7 @@ export const BarcodeCameraModal: React.FC<BarcodeCameraModalProps> = ({
         lastDecodeError: 'None',
         patientLookupStatus: 'Idle',
         framesScanned: 0
-      }));
+      });
 
       enumerateCameras();
     } else {
@@ -327,11 +304,9 @@ export const BarcodeCameraModal: React.FC<BarcodeCameraModalProps> = ({
     playScanBeep();
     stopCameraStream();
     setIsResolving(true);
-    setDiagnostics(prev => ({
-      ...prev,
-      cameraStatus: 'Barcode Detected',
+    logDiagnostic({ cameraStatus: 'Barcode Detected',
       patientLookupStatus: `Sending UHID: ${scannedText} to Backend API...`
-    }));
+    });
     onScanSuccess(scannedText);
   };
 
@@ -348,10 +323,8 @@ export const BarcodeCameraModal: React.FC<BarcodeCameraModalProps> = ({
         });
         nativeDetectorRef.current = nativeDetector;
         console.log('[Scanner] Initialized Hardware-Accelerated Native BarcodeDetector (Code 128)');
-        setDiagnostics(prev => ({
-          ...prev,
-          activeEngine: 'Native BarcodeDetector (Hardware GPU)'
-        }));
+        logDiagnostic({ activeEngine: 'Native BarcodeDetector (Hardware GPU)'
+        });
       } catch (err) {
         console.warn('[Scanner] Native BarcodeDetector failed to construct, falling back to ZXing:', err);
         nativeDetector = null;
@@ -373,10 +346,8 @@ export const BarcodeCameraModal: React.FC<BarcodeCameraModalProps> = ({
 
     if (!nativeDetector) {
       console.log('[Scanner] Using Pure JavaScript @zxing/library MultiFormatReader (Code 128)');
-      setDiagnostics(prev => ({
-        ...prev,
-        activeEngine: '@zxing/library MultiFormatReader (Software)'
-      }));
+      logDiagnostic({ activeEngine: '@zxing/library MultiFormatReader (Software)'
+      });
     }
 
     let frameCount = 0;
@@ -401,13 +372,11 @@ export const BarcodeCameraModal: React.FC<BarcodeCameraModalProps> = ({
 
       frameCount++;
       if (frameCount % 8 === 0 && isMountedRef.current) {
-        setDiagnostics(prev => ({
-          ...prev,
-          framesScanned: frameCount,
+        logDiagnostic({ framesScanned: frameCount,
           cameraStatus: 'Scanning',
           videoDimensions: `${vw} x ${vh}`,
           clientDimensions: `${video.clientWidth} x ${video.clientHeight}`
-        }));
+        });
       }
 
       // Engine 1: Native BarcodeDetector (Fastest & Most Accurate on Android Chrome)
@@ -444,10 +413,8 @@ export const BarcodeCameraModal: React.FC<BarcodeCameraModalProps> = ({
           // NotFoundException is normal when no barcode is in the current frame
           if (decodeErr.name !== 'NotFoundException') {
             if (isMountedRef.current) {
-              setDiagnostics(prev => ({
-                ...prev,
-                lastDecodeError: decodeErr.message || String(decodeErr)
-              }));
+              logDiagnostic({ lastDecodeError: decodeErr.message || String(decodeErr)
+              });
             }
           }
         }
@@ -466,12 +433,10 @@ export const BarcodeCameraModal: React.FC<BarcodeCameraModalProps> = ({
     setHasPermissionDenied(false);
     setIsInitializing(true);
     isProcessingRef.current = false;
-    setDiagnostics(prev => ({
-      ...prev,
-      cameraStatus: 'Requesting permission & starting camera...',
+    logDiagnostic({ cameraStatus: 'Requesting permission & starting camera...',
       lastCameraError: 'None',
       lastDecodeError: 'None'
-    }));
+    });
 
     // Check mediaDevices support
     if (
@@ -480,11 +445,9 @@ export const BarcodeCameraModal: React.FC<BarcodeCameraModalProps> = ({
       !navigator.mediaDevices.getUserMedia
     ) {
       setIsInitializing(false);
-      setDiagnostics(prev => ({
-        ...prev,
-        cameraStatus: 'Camera API Unavailable',
+      logDiagnostic({ cameraStatus: 'Camera API Unavailable',
         lastCameraError: 'getUserMedia not supported in this context'
-      }));
+      });
       if (isInsecureContext) {
         setErrorMsg('Camera access is blocked by mobile browsers over unencrypted HTTP (http://192.168.x.x).');
         setErrorTip('Please use the live HTTPS deployment on Vercel or GitHub Pages, or use the Image Upload option below.');
@@ -563,7 +526,7 @@ export const BarcodeCameraModal: React.FC<BarcodeCameraModalProps> = ({
       // Play video with graceful catch
       try {
         await video.play();
-        setDiagnostics(prev => ({ ...prev, videoPlayback: 'Playing' }));
+        logDiagnostic({ videoPlayback: 'Playing' });
       } catch (playErr) {
         console.warn('Initial video.play() waiting on user gesture:', playErr);
       }
@@ -589,13 +552,11 @@ export const BarcodeCameraModal: React.FC<BarcodeCameraModalProps> = ({
       if (!isMountedRef.current) return;
 
       setIsInitializing(false);
-      setDiagnostics(prev => ({
-        ...prev,
-        cameraStatus: 'Active & Scanning',
+      logDiagnostic({ cameraStatus: 'Active & Scanning',
         activeCameraLabel: trackLabel,
         videoDimensions: `${video.videoWidth} x ${video.videoHeight}`,
         clientDimensions: `${video.clientWidth} x ${video.clientHeight}`
-      }));
+      });
 
       // Re-enumerate devices now that permission is granted to get real camera labels
       enumerateCameras();
@@ -607,11 +568,9 @@ export const BarcodeCameraModal: React.FC<BarcodeCameraModalProps> = ({
       setIsInitializing(false);
       const error = err as Error;
 
-      setDiagnostics(prev => ({
-        ...prev,
-        cameraStatus: 'Error',
+      logDiagnostic({ cameraStatus: 'Error',
         lastCameraError: `${error.name}: ${error.message}`
-      }));
+      });
 
       if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
         setHasPermissionDenied(true);
@@ -671,10 +630,8 @@ export const BarcodeCameraModal: React.FC<BarcodeCameraModalProps> = ({
     setErrorMsg(null);
     setErrorTip(null);
     setIsResolving(true);
-    setDiagnostics(prev => ({
-      ...prev,
-      patientLookupStatus: 'Decoding uploaded image...'
-    }));
+    logDiagnostic({ patientLookupStatus: 'Decoding uploaded image...'
+    });
 
     try {
       const reader = new FileReader();
@@ -951,115 +908,6 @@ export const BarcodeCameraModal: React.FC<BarcodeCameraModalProps> = ({
               </div>
             </div>
           )}
-
-          {/* Phase 2: Live Diagnostic Panel (Dev & Mobile Troubleshooting) */}
-          <div className={styles.diagnosticSection}>
-            <div
-              className={styles.diagnosticHeader}
-              onClick={() => setShowDiagnostics(!showDiagnostics)}
-            >
-              <div className={styles.diagnosticTitle}>
-                <Terminal size={14} />
-                <span>Scanner Diagnostics & State Monitor</span>
-              </div>
-              <button
-                type="button"
-                className={styles.diagnosticToggleBtn}
-                onClick={e => {
-                  e.stopPropagation();
-                  setShowDiagnostics(!showDiagnostics);
-                }}
-              >
-                {showDiagnostics ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
-                <span style={{ marginLeft: '4px' }}>{showDiagnostics ? 'Hide' : 'Show'}</span>
-              </button>
-            </div>
-
-            {/* Always visible quick status bar */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '4px', fontSize: '0.72rem' }}>
-              <span>
-                Status:{' '}
-                <strong className={diagnostics.cameraStatus === 'Scanning' ? styles.badgeOk : styles.badgeWarn}>
-                  {diagnostics.cameraStatus}
-                </strong>
-              </span>
-              <span>•</span>
-              <span>
-                Engine: <strong style={{ color: '#38bdf8' }}>{diagnostics.activeEngine}</strong>
-              </span>
-              <span>•</span>
-              <span>
-                Frames: <strong style={{ color: '#a78bfa' }}>{diagnostics.framesScanned}</strong>
-              </span>
-            </div>
-
-            {/* Detailed diagnostic metrics grid when expanded */}
-            {showDiagnostics && (
-              <div className={styles.diagnosticGrid}>
-                <div className={styles.diagnosticItem}>
-                  <span className={styles.diagnosticKey}>Context Security</span>
-                  <span className={styles.diagnosticValue}>
-                    {diagnostics.protocol}{' '}
-                    {diagnostics.isSecure ? (
-                      <span className={styles.badgeOk}>(Secure)</span>
-                    ) : (
-                      <span className={styles.badgeErr}>(Insecure)</span>
-                    )}
-                  </span>
-                </div>
-
-                <div className={styles.diagnosticItem}>
-                  <span className={styles.diagnosticKey}>Camera API</span>
-                  <span className={styles.diagnosticValue}>
-                    {diagnostics.hasMediaDevices ? (
-                      <span className={styles.badgeOk}>Available</span>
-                    ) : (
-                      <span className={styles.badgeErr}>Unavailable</span>
-                    )}
-                  </span>
-                </div>
-
-                <div className={styles.diagnosticItem}>
-                  <span className={styles.diagnosticKey}>Permission</span>
-                  <span className={styles.diagnosticValue}>{diagnostics.permissionState}</span>
-                </div>
-
-                <div className={styles.diagnosticItem}>
-                  <span className={styles.diagnosticKey}>Cameras Detected</span>
-                  <span className={styles.diagnosticValue}>{diagnostics.detectedCamerasCount} devices</span>
-                </div>
-
-                <div className={styles.diagnosticItem}>
-                  <span className={styles.diagnosticKey}>Active Camera</span>
-                  <span className={styles.diagnosticValue}>{diagnostics.activeCameraLabel}</span>
-                </div>
-
-                <div className={styles.diagnosticItem}>
-                  <span className={styles.diagnosticKey}>Video Dimensions</span>
-                  <span className={styles.diagnosticValue}>
-                    {diagnostics.videoDimensions} (Client: {diagnostics.clientDimensions})
-                  </span>
-                </div>
-
-                <div className={styles.diagnosticItem}>
-                  <span className={styles.diagnosticKey}>Barcode Symbology</span>
-                  <span className={styles.diagnosticValue}>{diagnostics.selectedFormat}</span>
-                </div>
-
-                <div className={styles.diagnosticItem}>
-                  <span className={styles.diagnosticKey}>Patient Lookup</span>
-                  <span className={styles.diagnosticValue}>{diagnostics.patientLookupStatus}</span>
-                </div>
-
-                <div className={styles.diagnosticItem} style={{ gridColumn: 'span 2' }}>
-                  <span className={styles.diagnosticKey}>Last Camera Error</span>
-                  <span className={diagnostics.lastCameraError === 'None' ? styles.diagnosticValue : styles.badgeErr}>
-                    {diagnostics.lastCameraError}
-                  </span>
-                </div>
-              </div>
-            )}
-          </div>
 
           {/* Safe Fallback: Upload Barcode Image (Phase 7 Requirement) */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '0.25rem', borderTop: '1px dashed var(--border, #e2e8f0)' }}>
