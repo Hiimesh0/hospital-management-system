@@ -366,4 +366,12 @@ export const patientApi = {
       message: `Patient '${id}' deleted successfully.`,
     };
   },
+
+  /**
+   * Get direct PDF URL for patient sticker
+   */
+  getStickerPdfUrl(patientId: string): string {
+    return `${API_BASE_URL}/patients/${encodeURIComponent(patientId)}/sticker.pdf`;
+  },
 };
+

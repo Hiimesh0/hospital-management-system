@@ -9,13 +9,18 @@ import {
   RotateCcw,
   ArrowLeft,
   Save,
-  Edit2
+  Edit2,
+  Printer,
+  ScanLine,
+  Barcode
 } from 'lucide-react';
 import { patientApi } from '../../api/patientApi';
 import type { PatientRecord, PatientFormData } from '../../api/patientApi';
 import { useAutoDismissNotification } from '../../hooks/useAutoDismissNotification';
 import { useFormKeyboardNavigation } from '../../hooks/useFormKeyboardNavigation';
+import { openPatientStickerPdf } from '../../utils/patientStickerGenerator';
 import styles from './PatientRegistration.module.css';
+
 
 const defaultFormState: PatientFormData = {
   category: 'NEW',
@@ -61,6 +66,10 @@ const PatientRegistration: React.FC = () => {
   const [totalRecordsCount, setTotalRecordsCount] = useState<number>(0);
   const [assignedUhidPreview, setAssignedUhidPreview] = useState<string>('UHID-1001');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isPrintingSticker, setIsPrintingSticker] = useState<boolean>(false);
+  const [scannedBarcode, setScannedBarcode] = useState<string>('');
+  const [loadedSavedPatient, setLoadedSavedPatient] = useState<PatientRecord | null>(null);
+
   const { notification, setNotification, dismissNotification } = useAutoDismissNotification<{
     type: 'success' | 'error';
     message: string;
@@ -149,6 +158,7 @@ const PatientRegistration: React.FC = () => {
             };
             setFormData(loaded);
             setInitialEditData(loaded);
+            setLoadedSavedPatient(p);
             setNotification({
               type: 'success',
               message: `Loaded patient ${p.uhid} (${p.firstName} ${p.lastName}) for editing.`
@@ -166,8 +176,10 @@ const PatientRegistration: React.FC = () => {
       setEditId(null);
       setFormData(defaultFormState);
       setInitialEditData(null);
+      setLoadedSavedPatient(null);
     }
   }, [location.search, setNotification]);
+
 
   // Handle Birth Date change to auto-calculate Age
   const handleBirthDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -266,6 +278,7 @@ const PatientRegistration: React.FC = () => {
           uhid: res.patient.uhid
         });
         setInitialEditData(formData);
+        setLoadedSavedPatient(res.patient);
         fetchBackendMeta();
       } else {
         // CREATE NEW PATIENT
@@ -276,6 +289,7 @@ const PatientRegistration: React.FC = () => {
           message: `Patient ${res.patient.firstName} ${res.patient.lastName} registered successfully with ${newUhid}!`,
           uhid: newUhid
         });
+        setLoadedSavedPatient(res.patient);
 
         // Reset form for next patient registration
         setFormData(defaultFormState);
@@ -306,8 +320,85 @@ const PatientRegistration: React.FC = () => {
     setEditId(null);
     setFormData(defaultFormState);
     setInitialEditData(null);
+    setLoadedSavedPatient(null);
     navigate('/patient-registration');
   };
+
+  // Print Patient Sticker (100mm x 50mm PDF with Code 128 barcode)
+  const handlePrintSticker = async () => {
+    if (isPrintingSticker) return;
+
+    // 1. Validate that the patient record has been saved
+    if (!isEditMode || !editId) {
+      setNotification({
+        type: 'error',
+        message: 'Please register and save the patient record first before generating or printing the patient sticker.'
+      });
+      return;
+    }
+
+    // 2. Warn if there are unsaved edits in the form
+    if (initialEditData && JSON.stringify(formData) !== JSON.stringify(initialEditData)) {
+      setNotification({
+        type: 'error',
+        message: 'Notice: Printing sticker with the last saved record. Save changes to update the sticker details.'
+      });
+    }
+
+    setIsPrintingSticker(true);
+    try {
+      // 3. Retrieve authoritative saved record
+      let recordToPrint = loadedSavedPatient;
+      if (!recordToPrint || recordToPrint.uhid !== editId) {
+        const res = await patientApi.getPatientById(editId);
+        recordToPrint = res.patient;
+        setLoadedSavedPatient(res.patient);
+      }
+
+      if (!recordToPrint) {
+        throw new Error(`Patient record '${editId}' could not be retrieved.`);
+      }
+
+      // 4. Open PDF in a new tab
+      const backendUrl = patientApi.getStickerPdfUrl(editId);
+      await openPatientStickerPdf(recordToPrint, backendUrl);
+
+      setNotification({
+        type: 'success',
+        message: `Patient Sticker PDF for ${recordToPrint.uhid} (${recordToPrint.firstName} ${recordToPrint.lastName}) opened in a new tab. Ready for printing.`
+      });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Failed to generate sticker PDF.';
+      setNotification({ type: 'error', message: msg });
+    } finally {
+      setIsPrintingSticker(false);
+    }
+  };
+
+  // Barcode Scanner / UHID Quick Lookup Handler
+  const handleBarcodeScan = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const cleanId = scannedBarcode.trim();
+    if (!cleanId) return;
+
+    try {
+      const res = await patientApi.getPatientById(cleanId);
+      if (res.patient) {
+        setScannedBarcode('');
+        navigate(`/patient-registration?id=${encodeURIComponent(res.patient.uhid)}`);
+        setNotification({
+          type: 'success',
+          message: `Barcode Scanned: Successfully loaded patient ${res.patient.uhid} (${res.patient.firstName} ${res.patient.lastName}) for editing.`
+        });
+      }
+    } catch {
+      setNotification({
+        type: 'error',
+        message: `Patient not found: No registered record matches scanned barcode '${cleanId}'.`
+      });
+    }
+  };
+
 
   // Filter lookup patients in search modal
   const filteredLookup = lookupPatients.filter(p => {
@@ -362,14 +453,34 @@ const PatientRegistration: React.FC = () => {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             {notification.type === 'success' && (
-              <button
-                type="button"
-                className={`${styles.btn} ${styles.btnSecondary}`}
-                style={{ height: '28px', fontSize: '0.75rem', padding: '0 8px' }}
-                onClick={() => navigate('/patient-registration-list')}
-              >
-                <ListPlus size={13} style={{ marginRight: '4px' }} /> View in Patient List
-              </button>
+              <>
+                {notification.uhid && (
+                  <button
+                    type="button"
+                    className={`${styles.btn} ${styles.btnPrintSticker}`}
+                    style={{ height: '28px', fontSize: '0.75rem', padding: '0 8px' }}
+                    onClick={() => {
+                      const u = notification.uhid;
+                      if (!u) return;
+                      patientApi.getPatientById(u).then(res => {
+                        if (res.patient) {
+                          openPatientStickerPdf(res.patient, patientApi.getStickerPdfUrl(u));
+                        }
+                      });
+                    }}
+                  >
+                    <Printer size={13} style={{ marginRight: '4px' }} /> Print Sticker
+                  </button>
+                )}
+                <button
+                  type="button"
+                  className={`${styles.btn} ${styles.btnSecondary}`}
+                  style={{ height: '28px', fontSize: '0.75rem', padding: '0 8px' }}
+                  onClick={() => navigate('/patient-registration-list')}
+                >
+                  <ListPlus size={13} style={{ marginRight: '4px' }} /> View in Patient List
+                </button>
+              </>
             )}
             <button
               type="button"
@@ -383,8 +494,43 @@ const PatientRegistration: React.FC = () => {
         </div>
       )}
 
+      {/* Barcode Scanner / UHID Quick Lookup Toolbar */}
+      <div className={styles.barcodeScanBar}>
+        <div className={styles.barcodeScanGroup}>
+          <ScanLine size={18} color="#0f766e" />
+          <input
+            type="text"
+            className={styles.barcodeInput}
+            placeholder="Scan Patient Barcode or Type UHID (e.g. UHID-1001) & press Enter..."
+            value={scannedBarcode}
+            onChange={e => setScannedBarcode(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                e.stopPropagation();
+                handleBarcodeScan();
+              }
+            }}
+            aria-label="Scan patient barcode or lookup UHID"
+          />
+          <button
+            type="button"
+            className={`${styles.btn} ${styles.btnSecondary}`}
+            style={{ height: '32px', fontSize: '0.8rem', padding: '0 12px' }}
+            onClick={() => handleBarcodeScan()}
+          >
+            Lookup
+          </button>
+        </div>
+        <div className={styles.barcodeBadge}>
+          <Barcode size={15} />
+          <span>USB Barcode Scanner Ready (Code 128)</span>
+        </div>
+      </div>
+
       {/* Form Element */}
       <form ref={formRef} onSubmit={handleSubmit} onKeyDown={handleFormKeyDown} noValidate>
+
         {/* Section 1: Basic Information */}
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Basic Information</h2>
@@ -834,6 +980,22 @@ const PatientRegistration: React.FC = () => {
             Patient Registration List
           </button>
 
+          {/* Print Patient Sticker Button */}
+          <button
+            type="button"
+            className={`${styles.btn} ${styles.btnPrintSticker}`}
+            onClick={handlePrintSticker}
+            disabled={isPrintingSticker || isSubmitting}
+            title={
+              isEditMode
+                ? 'Generate and print 100mm x 50mm patient sticker PDF with barcode'
+                : 'Save patient first to enable printing sticker'
+            }
+          >
+            <Printer size={15} style={{ marginRight: '6px' }} />
+            {isPrintingSticker ? 'Generating Sticker...' : 'Print Patient Sticker'}
+          </button>
+
           <button
             type="submit"
             className={`${styles.btn} ${styles.btnPrimary}`}
@@ -911,17 +1073,28 @@ const PatientRegistration: React.FC = () => {
                         UHID: <strong style={{ color: 'var(--primary)' }}>{p.uhid}</strong> • Mobile: {p.mobile} • Age: {p.age} {p.ageUnit} • Gender: {p.sex}
                       </div>
                     </div>
-                    <button
-                      type="button"
-                      className={`${styles.btn} ${styles.btnSecondary}`}
-                      style={{ fontSize: '0.75rem', padding: '4px 8px' }}
-                      onClick={() => {
-                        navigate(`/patient-registration?id=${encodeURIComponent(p.uhid)}`);
-                        setIsSearchOpen(false);
-                      }}
-                    >
-                      Load for Editing
-                    </button>
+                    <div style={{ display: 'flex', gap: '6px' }}>
+                      <button
+                        type="button"
+                        className={`${styles.btn} ${styles.btnPrintSticker}`}
+                        style={{ fontSize: '0.75rem', padding: '4px 8px' }}
+                        onClick={() => openPatientStickerPdf(p, patientApi.getStickerPdfUrl(p.uhid))}
+                        title="Print Patient Sticker"
+                      >
+                        <Printer size={13} style={{ marginRight: '4px' }} /> Sticker
+                      </button>
+                      <button
+                        type="button"
+                        className={`${styles.btn} ${styles.btnSecondary}`}
+                        style={{ fontSize: '0.75rem', padding: '4px 8px' }}
+                        onClick={() => {
+                          navigate(`/patient-registration?id=${encodeURIComponent(p.uhid)}`);
+                          setIsSearchOpen(false);
+                        }}
+                      >
+                        Load for Editing
+                      </button>
+                    </div>
                   </div>
                 ))
               )}
@@ -929,6 +1102,7 @@ const PatientRegistration: React.FC = () => {
           </div>
         </div>
       )}
+
     </div>
   );
 };

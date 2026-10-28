@@ -217,6 +217,76 @@
   background: var(--bg-color);
 }
 
+.btnPrintSticker {
+  background: #0f766e;
+  color: #ffffff;
+  border-color: #0d9488;
+  box-shadow: var(--shadow-sm);
+}
+
+.btnPrintSticker:hover {
+  background: #115e59;
+}
+
+.btnPrintSticker:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ===== BARCODE SCANNER TOOLBAR ===== */
+.barcodeScanBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(15, 118, 110, 0.05) 100%);
+  border: 1px solid var(--border);
+  border-left: 4px solid #0f766e;
+  border-radius: 6px;
+  flex-wrap: wrap;
+}
+
+.barcodeScanGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 280px;
+  max-width: 600px;
+}
+
+.barcodeInput {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.45rem 0.75rem;
+  color: var(--text-main);
+  font-size: 0.85rem;
+  transition: var(--transition);
+}
+
+.barcodeInput:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+.barcodeBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #0f766e;
+  background: rgba(15, 118, 110, 0.08);
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+}
+
+
 /* Split layout utilities for Communication & Address */
 .splitSectionLeft {
   padding-right: 1rem;

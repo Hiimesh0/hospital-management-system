@@ -13,12 +13,15 @@ import {
   RotateCcw,
   Calendar,
   Building,
-  UserCheck
+  UserCheck,
+  Printer
 } from 'lucide-react';
 import { patientApi } from '../../api/patientApi';
 import type { PatientRecord } from '../../api/patientApi';
 import { useAutoDismissNotification } from '../../hooks/useAutoDismissNotification';
+import { openPatientStickerPdf } from '../../utils/patientStickerGenerator';
 import styles from './PatientRegistrationList.module.css';
+
 
 const PatientRegistrationList: React.FC = () => {
   const navigate = useNavigate();
@@ -459,6 +462,15 @@ const PatientRegistrationList: React.FC = () => {
                       </button>
                       <button
                         type="button"
+                        className={`${styles.btnAction}`}
+                        style={{ color: '#0f766e' }}
+                        title="Print Patient Sticker (100mm x 50mm PDF)"
+                        onClick={() => openPatientStickerPdf(patient, patientApi.getStickerPdfUrl(patient.uhid))}
+                      >
+                        <Printer size={15} />
+                      </button>
+                      <button
+                        type="button"
                         className={`${styles.btnAction} ${styles.btnActionEdit}`}
                         title="Edit Patient"
                         onClick={() => navigate(`/patient-registration?id=${encodeURIComponent(patient.uhid)}`)}
@@ -475,6 +487,7 @@ const PatientRegistrationList: React.FC = () => {
                       </button>
                     </div>
                   </td>
+
                 </tr>
               ))}
             </tbody>
@@ -639,6 +652,15 @@ const PatientRegistrationList: React.FC = () => {
               </button>
               <button
                 type="button"
+                className={`${styles.btn}`}
+                style={{ background: '#0f766e', color: '#ffffff', borderColor: '#0d9488' }}
+                onClick={() => openPatientStickerPdf(viewingPatient, patientApi.getStickerPdfUrl(viewingPatient.uhid))}
+              >
+                <Printer size={14} style={{ marginRight: '6px' }} />
+                Print Patient Sticker
+              </button>
+              <button
+                type="button"
                 className={`${styles.btn} ${styles.btnPrimary}`}
                 onClick={() => {
                   const id = viewingPatient.uhid;
@@ -650,6 +672,7 @@ const PatientRegistrationList: React.FC = () => {
                 Edit This Patient
               </button>
             </div>
+
           </div>
         </div>
       )}
