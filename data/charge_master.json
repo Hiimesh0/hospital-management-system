@@ -1,0 +1,52 @@
+{
+  "charges": [
+    {
+      "id": "CHG-001",
+      "name": "Consultation Charge",
+      "amount": 500,
+      "active": true
+    },
+    {
+      "id": "CHG-002",
+      "name": "Registration Charge",
+      "amount": 100,
+      "active": true
+    },
+    {
+      "id": "CHG-003",
+      "name": "Follow-up Charge",
+      "amount": 300,
+      "active": true
+    },
+    {
+      "id": "CHG-004",
+      "name": "Emergency / Casualty Charge",
+      "amount": 750,
+      "active": true
+    },
+    {
+      "id": "CHG-005",
+      "name": "ECG / Diagnostic Procedure",
+      "amount": 350,
+      "active": true
+    },
+    {
+      "id": "CHG-006",
+      "name": "Dressing / Nursing Charge",
+      "amount": 200,
+      "active": true
+    },
+    {
+      "id": "CHG-007",
+      "name": "Injection / Administration Charge",
+      "amount": 150,
+      "active": true
+    },
+    {
+      "id": "CHG-008",
+      "name": "Minor Surgical Procedure",
+      "amount": 1200,
+      "active": true
+    }
+  ]
+}
