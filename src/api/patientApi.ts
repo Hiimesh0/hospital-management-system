@@ -92,8 +92,15 @@ export interface PatientBillRecord {
 import { HOSPITAL_CONFIG, type HospitalConfig } from '../config/hospitalConfig';
 export type { HospitalConfig };
 
+export interface ChargeItem {
+  id: string;
+  name: string;
+  amount: number;
+  active: boolean;
+}
+
 export interface BillCreatePayload {
-  items?: Array<{ details: string; rate: number; amount?: number }>;
+  items?: Array<{ details: string; rate: number; amount?: number; chargeId?: string }>;
   paymentType?: string;
   amountReceived?: number;
   entryBy?: string;
@@ -445,6 +452,51 @@ export const patientApi = {
       // Offline fallback
     }
     return HOSPITAL_CONFIG;
+  },
+
+  /**
+   * Fetch active hospital charges from Charge Master API (with offline fallbacks)
+   */
+  async getChargeMaster(): Promise<ChargeItem[]> {
+    try {
+      const res = await fetch(`${API_BASE_URL}/charges/`, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && Array.isArray(data.charges)) {
+          return data.charges;
+        }
+      }
+    } catch {
+      // Backend not running -> try static file
+    }
+
+    try {
+      const baseUrl = import.meta.env.BASE_URL || '/';
+      const staticUrl = `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}data/charge_master.json`;
+      const res = await fetch(staticUrl);
+      if (res.ok) {
+        const data = await res.json();
+        if (data && Array.isArray(data.charges)) {
+          return data.charges.filter((c: ChargeItem) => c.active);
+        }
+      }
+    } catch {
+      // Fallback below
+    }
+
+    return [
+      { id: 'CHG-001', name: 'Consultation Charge', amount: 500, active: true },
+      { id: 'CHG-002', name: 'Registration Charge', amount: 100, active: true },
+      { id: 'CHG-003', name: 'Follow-up Charge', amount: 300, active: true },
+      { id: 'CHG-004', name: 'Emergency / Casualty Charge', amount: 750, active: true },
+      { id: 'CHG-005', name: 'ECG / Diagnostic Procedure', amount: 350, active: true },
+      { id: 'CHG-006', name: 'Dressing / Nursing Charge', amount: 200, active: true },
+      { id: 'CHG-007', name: 'Injection / Administration Charge', amount: 150, active: true },
+      { id: 'CHG-008', name: 'Minor Surgical Procedure', amount: 1200, active: true },
+    ];
   },
 
   /**

@@ -3,10 +3,10 @@ import { useRef, useCallback } from 'react';
 /**
  * Predefined logical sequence of fields for the Patient Registration form.
  * Matches the actual visual structure across all sections:
- * 1. Basic Information
- * 2. Demographics & Clinical
- * 3. Contact & Address
- * 4. Other Details & Identification
+ * 1. Basic Information (Category, First, Middle, Last, DOB, Age, Unit, Sex)
+ * 2. Demographics & Clinical (Doctor, Ref By, Religion, Marital, Weight, Height)
+ * 3. Contact & Address (Mobile, Email, AutoSMS, Street, City, State, PIN)
+ * 4. Other Details & Identification (Estimate, Aadhar, PAN, Mediclaim, Member ID, Emp ID, Company, Remark)
  */
 export const PATIENT_REGISTRATION_FIELD_ORDER = [
   // Section 1: Basic Information
@@ -51,7 +51,7 @@ export type PatientRegistrationFieldName = typeof PATIENT_REGISTRATION_FIELD_ORD
 
 /**
  * Validates whether a DOM element is focusable and ready for keyboard interaction.
- * Skips hidden, disabled, and read-only elements.
+ * Skips hidden, disabled, read-only, and non-editable elements.
  */
 export function isFieldFocusable(element: HTMLElement | null): boolean {
   if (!element) return false;
@@ -90,7 +90,7 @@ export function isFieldFocusable(element: HTMLElement | null): boolean {
 }
 
 /**
- * Focuses an element, scrolls it into the visible viewport, and selects text for quick editing.
+ * Focuses an element, scrolls it into view, and selects text for rapid inspection/editing.
  */
 export function focusField(element: HTMLElement) {
   element.focus({ preventScroll: false });
@@ -122,21 +122,21 @@ export interface UseFormKeyboardNavigationOptions {
 }
 
 /**
- * Custom React hook managing Shift + Enter keyboard navigation within a form.
+ * Custom React hook managing Enter-key navigation within a form.
  * 
- * Features:
- * - Listens for Shift + Enter at the form level.
- * - Moves focus sequentially through the configured field order.
- * - Skips hidden, disabled, and read-only inputs.
- * - At the final field, moves focus to the primary submit button without submitting.
- * - On the submit button, Shift + Enter cycles back to the first field.
- * - Preserves standard browser Tab, Shift + Tab, and regular Enter keys.
- * - Prevents accidental form submission during Shift + Enter.
+ * Rules:
+ * - Enter moves to the next logical field.
+ * - Textareas retain normal multiline Enter behavior.
+ * - Buttons retain normal Enter / Space activation.
+ * - Dropdowns (selects) allow normal option selection.
+ * - Tab / Shift+Tab retain default browser navigation.
+ * - Never submits form accidentally when Enter is pressed in normal inputs.
+ * - At the last field, moves focus to the primary action button without auto-submitting.
  */
 export function useFormKeyboardNavigation(options?: UseFormKeyboardNavigationOptions) {
   const formRef = useRef<HTMLFormElement | null>(null);
   const fieldOrder = options?.fieldOrder ?? PATIENT_REGISTRATION_FIELD_ORDER;
-  const submitButtonSelector = options?.submitButtonSelector ?? 'button[type="submit"]';
+  const submitButtonSelector = options?.submitButtonSelector ?? 'button[type="submit"], .btnPrimaryAction';
 
   const moveToNextField = useCallback(
     (currentElement?: HTMLElement) => {
@@ -162,8 +162,12 @@ export function useFormKeyboardNavigation(options?: UseFormKeyboardNavigationOpt
           }
         }
 
-        // Reached end of fields: focus primary submit button without submitting
-        const submitBtn = container.querySelector<HTMLElement>(submitButtonSelector);
+        // Reached end of fields: move focus to primary action button without submitting!
+        // Also look outside form if the submit button is in sticky action sidebar
+        let submitBtn = container.querySelector<HTMLElement>(submitButtonSelector);
+        if (!submitBtn) {
+          submitBtn = document.querySelector<HTMLElement>(submitButtonSelector);
+        }
         if (submitBtn && isFieldFocusable(submitBtn)) {
           focusField(submitBtn);
           options?.onNavigate?.(currentName, 'submitButton');
@@ -172,7 +176,7 @@ export function useFormKeyboardNavigation(options?: UseFormKeyboardNavigationOpt
       }
 
       // 2. If currently focused on the submit button, cycle back to the first focusable field
-      const submitBtn = container.querySelector<HTMLElement>(submitButtonSelector);
+      const submitBtn = container.querySelector<HTMLElement>(submitButtonSelector) || document.querySelector<HTMLElement>(submitButtonSelector);
       if (active === submitBtn) {
         for (let i = 0; i < fieldOrder.length; i++) {
           const fieldName = fieldOrder[i];
@@ -185,7 +189,7 @@ export function useFormKeyboardNavigation(options?: UseFormKeyboardNavigationOpt
         }
       }
 
-      // 3. Fallback: If focused on any other element inside the form, find first valid field
+      // 3. Fallback: Find first focusable field
       for (let i = 0; i < fieldOrder.length; i++) {
         const fieldName = fieldOrder[i];
         const candidate = container.querySelector<HTMLElement>(`[name="${fieldName}"], #${fieldName}`);
@@ -201,19 +205,36 @@ export function useFormKeyboardNavigation(options?: UseFormKeyboardNavigationOpt
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLFormElement>) => {
-      // Check for Shift + Enter (strictly Shift + Enter, not Ctrl/Alt/Meta)
-      if (e.key === 'Enter' && e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey) {
-        // Crucial: Prevent default form submission or newline insertion
-        e.preventDefault();
-        e.stopPropagation();
-
-        const activeElement = document.activeElement as HTMLElement | null;
-        if (!activeElement || !formRef.current?.contains(activeElement)) {
-          return;
-        }
-
-        moveToNextField(activeElement);
+      // Only process Enter key
+      if (e.key !== 'Enter') {
+        return;
       }
+
+      // Don't intercept if modified by Ctrl, Alt, or Meta
+      if (e.ctrlKey || e.altKey || e.metaKey) {
+        return;
+      }
+
+      const activeElement = document.activeElement as HTMLElement | null;
+      if (!activeElement || !formRef.current?.contains(activeElement)) {
+        return;
+      }
+
+      // 1. Textarea: allow multiline Enter without moving focus
+      if (activeElement.tagName === 'TEXTAREA') {
+        return;
+      }
+
+      // 2. Button: allow default activation (Enter activates button)
+      if (activeElement.tagName === 'BUTTON') {
+        return;
+      }
+
+      // 3. Select element: if Enter is pressed on closed select, advance; do not block option selection
+      // Normal input: prevent form submission & move to next field
+      e.preventDefault();
+      e.stopPropagation();
+      moveToNextField(activeElement);
     },
     [moveToNextField]
   );
