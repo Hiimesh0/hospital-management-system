@@ -37,7 +37,8 @@ const PatientRegistrationList: React.FC = () => {
 
   // Search & Filter state
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [selectedGender, setSelectedGender] = useState<string>('All');
+  const [fromDate, setFromDate] = useState<string>('');
+  const [toDate, setToDate] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [selectedDoctor, setSelectedDoctor] = useState<string>('All');
   const [selectedCity, setSelectedCity] = useState<string>('All');
@@ -101,8 +102,12 @@ const PatientRegistrationList: React.FC = () => {
         if (!matchesQuery) return false;
       }
 
-      // 2. Gender Filter
-      if (selectedGender !== 'All' && patient.sex !== selectedGender) {
+      // 2. Registration Date Range Filter
+      const regDate = patient.createdAt ? patient.createdAt.substring(0, 10) : '';
+      if (fromDate && regDate && regDate < fromDate) {
+        return false;
+      }
+      if (toDate && regDate && regDate > toDate) {
         return false;
       }
 
@@ -123,12 +128,13 @@ const PatientRegistrationList: React.FC = () => {
 
       return true;
     });
-  }, [patients, searchQuery, selectedGender, selectedCategory, selectedDoctor, selectedCity]);
+  }, [patients, searchQuery, fromDate, toDate, selectedCategory, selectedDoctor, selectedCity]);
 
   // Reset all filters and search query
   const handleResetFilters = () => {
     setSearchQuery('');
-    setSelectedGender('All');
+    setFromDate('');
+    setToDate('');
     setSelectedCategory('All');
     setSelectedDoctor('All');
     setSelectedCity('All');
@@ -136,16 +142,16 @@ const PatientRegistrationList: React.FC = () => {
 
   const isFiltered =
     searchQuery.trim() !== '' ||
-    selectedGender !== 'All' ||
+    fromDate !== '' ||
+    toDate !== '' ||
     selectedCategory !== 'All' ||
     selectedDoctor !== 'All' ||
     selectedCity !== 'All';
 
   // Stats calculation
   const totalCount = patients.length;
-  const maleCount = patients.filter(p => p.sex === 'Male').length;
-  const femaleCount = patients.filter(p => p.sex === 'Female').length;
-  const otherCount = patients.filter(p => p.sex !== 'Male' && p.sex !== 'Female').length;
+  const newCount = patients.filter(p => p.category === 'NEW').length;
+  const oldCount = patients.filter(p => p.category === 'OLD').length;
   const todayDateStr = new Date().toISOString().split('T')[0];
   const registeredTodayCount = patients.filter(
     p => p.createdAt && p.createdAt.startsWith(todayDateStr)
@@ -245,16 +251,12 @@ const PatientRegistrationList: React.FC = () => {
           <span className={styles.statValue}>{totalCount}</span>
         </div>
         <div className={styles.statCard}>
-          <span className={styles.statLabel}>Male Patients</span>
-          <span className={styles.statValue} style={{ color: '#2563EB' }}>{maleCount}</span>
+          <span className={styles.statLabel}>New Registrations</span>
+          <span className={styles.statValue} style={{ color: 'var(--primary)' }}>{newCount}</span>
         </div>
         <div className={styles.statCard}>
-          <span className={styles.statLabel}>Female Patients</span>
-          <span className={styles.statValue} style={{ color: '#DB2777' }}>{femaleCount}</span>
-        </div>
-        <div className={styles.statCard}>
-          <span className={styles.statLabel}>Other / Diverse</span>
-          <span className={styles.statValue} style={{ color: '#8B5CF6' }}>{otherCount}</span>
+          <span className={styles.statLabel}>Old / Follow-up</span>
+          <span className={styles.statValue} style={{ color: '#8B5CF6' }}>{oldCount}</span>
         </div>
         <div className={styles.statCard}>
           <span className={styles.statLabel}>Today&apos;s Registrations</span>
@@ -292,17 +294,27 @@ const PatientRegistrationList: React.FC = () => {
         {/* Filter Controls Row */}
         <div className={styles.filterRow}>
           <div className={styles.filterGroup}>
-            <label className={styles.filterLabel}>Gender:</label>
-            <select
-              className={styles.filterSelect}
-              value={selectedGender}
-              onChange={e => setSelectedGender(e.target.value)}
-            >
-              <option value="All">All Genders</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
+            <label className={styles.filterLabel}>From Date:</label>
+            <input
+              type="date"
+              className={styles.filterDateInput}
+              value={fromDate}
+              max={toDate || undefined}
+              onChange={e => setFromDate(e.target.value)}
+              aria-label="From Date"
+            />
+          </div>
+
+          <div className={styles.filterGroup}>
+            <label className={styles.filterLabel}>To Date:</label>
+            <input
+              type="date"
+              className={styles.filterDateInput}
+              value={toDate}
+              min={fromDate || undefined}
+              onChange={e => setToDate(e.target.value)}
+              aria-label="To Date"
+            />
           </div>
 
           <div className={styles.filterGroup}>

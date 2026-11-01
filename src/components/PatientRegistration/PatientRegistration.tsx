@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   CheckCircle2,
@@ -18,7 +18,12 @@ import {
   Receipt,
   Lock,
   Plus,
-  Trash2
+  Trash2,
+  ChevronDown,
+  ChevronUp,
+  UserPlus,
+  UserCheck,
+  Users
 } from 'lucide-react';
 import { patientApi } from '../../api/patientApi';
 import type { PatientRecord, PatientFormData, PatientBillRecord, ChargeItem } from '../../api/patientApi';
@@ -26,7 +31,6 @@ import { useAutoDismissNotification } from '../../hooks/useAutoDismissNotificati
 import { useFormKeyboardNavigation } from '../../hooks/useFormKeyboardNavigation';
 import { openPatientStickerPdf } from '../../utils/patientStickerGenerator';
 import { openPatientBillPdf } from '../../utils/patientBillGenerator';
-import { HOSPITAL_CONFIG } from '../../config/hospitalConfig';
 import { BarcodeCameraModal } from './BarcodeCameraModal';
 import styles from './PatientRegistration.module.css';
 
@@ -45,6 +49,8 @@ const defaultFormState: PatientFormData = {
   birthDate: '',
   age: '',
   ageUnit: 'Years',
+  ageMonths: '',
+  ageDays: '',
   sex: 'Male',
   hospitalDoctor: 'Dr. NILESH MAHALE',
   referenceBy: 'DR. NIKUNJ VITHALANI',
@@ -79,6 +85,36 @@ const AVAILABLE_DOCTORS = [
   'Dr. DEVANG DESAI / JIGAR PATEL'
 ];
 
+/**
+ * Accurately calculates Years, Months, and Days from Birth Date.
+ */
+export const calculateAgeFromBirthDate = (birthDateStr: string) => {
+  if (!birthDateStr) return { years: '', months: '', days: '' };
+  const birth = new Date(birthDateStr);
+  const today = new Date();
+  if (isNaN(birth.getTime()) || birth > today) {
+    return { years: '', months: '', days: '' };
+  }
+  let years = today.getFullYear() - birth.getFullYear();
+  let months = today.getMonth() - birth.getMonth();
+  let days = today.getDate() - birth.getDate();
+
+  if (days < 0) {
+    months -= 1;
+    const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+    days += prevMonth.getDate();
+  }
+  if (months < 0) {
+    years -= 1;
+    months += 12;
+  }
+  return {
+    years: String(Math.max(0, years)),
+    months: String(Math.max(0, months)),
+    days: String(Math.max(0, days))
+  };
+};
+
 const PatientRegistration: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -89,8 +125,6 @@ const PatientRegistration: React.FC = () => {
   const [editId, setEditId] = useState<string | null>(null);
   const [isLocked, setIsLocked] = useState<boolean>(false);
 
-  const [totalRecordsCount, setTotalRecordsCount] = useState<number>(0);
-  const [assignedUhidPreview, setAssignedUhidPreview] = useState<string>('UHID-1001');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isPrintingSticker, setIsPrintingSticker] = useState<boolean>(false);
   const [scannedBarcode, setScannedBarcode] = useState<string>('');
@@ -98,6 +132,20 @@ const PatientRegistration: React.FC = () => {
   const [isCameraModalOpen, setIsCameraModalOpen] = useState<boolean>(false);
   const [pendingScannedPatient, setPendingScannedPatient] = useState<PatientRecord | null>(null);
   const [showUnsavedConfirmModal, setShowUnsavedConfirmModal] = useState<boolean>(false);
+
+  // Collapsible Registration Sections state
+  const [isDemographicsOpen, setIsDemographicsOpen] = useState<boolean>(false);
+  const [isAddressOpen, setIsAddressOpen] = useState<boolean>(false);
+  const [isOtherOpen, setIsOtherOpen] = useState<boolean>(false);
+
+  // Patient History List & Search state
+  const [historySearchQuery, setHistorySearchQuery] = useState<string>('');
+  const [historyFromDate, setHistoryFromDate] = useState<string>('');
+  const [historyToDate, setHistoryToDate] = useState<string>('');
+  const [historyCategory, setHistoryCategory] = useState<string>('All');
+  const [historyDoctor, setHistoryDoctor] = useState<string>('All');
+  const [historyCurrentPage, setHistoryCurrentPage] = useState<number>(1);
+  const HISTORY_PAGE_SIZE = 10;
 
   // Dynamic Billing States
   const [chargeMaster, setChargeMaster] = useState<ChargeItem[]>([]);
@@ -126,7 +174,7 @@ const PatientRegistration: React.FC = () => {
   // Fast keyboard navigation via Enter key
   const { formRef, handleKeyDown: handleFormKeyDown } = useFormKeyboardNavigation();
 
-  // Search Lookup Modal
+  // Search Lookup Modal (Retained for quick access)
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
   const [lookupQuery, setLookupQuery] = useState<string>('');
   const [lookupPatients, setLookupPatients] = useState<PatientRecord[]>([]);
@@ -136,19 +184,7 @@ const PatientRegistration: React.FC = () => {
     try {
       const data = await patientApi.getPatients();
       const list = data.patients || [];
-      setTotalRecordsCount(list.length);
       setLookupPatients(list);
-
-      // Compute next available UHID
-      let maxNum = 1000;
-      list.forEach(p => {
-        const u = p.uhid || p.id || '';
-        if (u.startsWith('UHID-')) {
-          const num = parseInt(u.replace('UHID-', ''), 10);
-          if (!isNaN(num) && num > maxNum) maxNum = num;
-        }
-      });
-      setAssignedUhidPreview(`UHID-${maxNum + 1}`);
     } catch {
       // Backend offline fallback handled gracefully
     }
@@ -186,14 +222,17 @@ const PatientRegistration: React.FC = () => {
         .then(res => {
           if (res.patient) {
             const p = res.patient;
+            const { years, months, days } = calculateAgeFromBirthDate(p.birthDate || '');
             const loaded: PatientFormData = {
               category: p.category || 'NEW',
               firstName: p.firstName || '',
               middleName: p.middleName || '',
               lastName: p.lastName || '',
               birthDate: p.birthDate || '',
-              age: p.age || '',
+              age: p.age || years || '',
               ageUnit: p.ageUnit || 'Years',
+              ageMonths: p.ageMonths || months || '',
+              ageDays: p.ageDays || days || '',
               sex: p.sex || 'Male',
               hospitalDoctor: p.hospitalDoctor || 'Dr. NILESH MAHALE',
               referenceBy: p.referenceBy || '',
@@ -242,35 +281,54 @@ const PatientRegistration: React.FC = () => {
     }
   }, [location.search, setNotification]);
 
-  // Handle Birth Date change to auto-calculate Age
+  // Handle Birth Date change to auto-calculate Age in Years, Months, and Days
   const handleBirthDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const dateVal = e.target.value;
+    const todayStr = new Date().toISOString().split('T')[0];
+    if (dateVal && dateVal > todayStr) {
+      setNotification({ type: 'error', message: 'Birth Date cannot be in the future.' });
+      return;
+    }
+    const { years, months, days } = calculateAgeFromBirthDate(dateVal);
+    setFormData(prev => ({
+      ...prev,
+      birthDate: dateVal,
+      age: years,
+      ageMonths: months,
+      ageDays: days,
+      ageUnit: 'Years'
+    }));
+  };
+
+  // Handle Age Years change to approximate Birth Date consistently
+  const handleYearsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    const parsedYears = parseInt(val, 10);
     setFormData(prev => {
-      const updated = { ...prev, birthDate: dateVal };
-      if (dateVal) {
-        const birthYear = new Date(dateVal).getFullYear();
+      const updated = { ...prev, age: val };
+      if (!isNaN(parsedYears) && parsedYears >= 0 && parsedYears <= 130) {
         const currentYear = new Date().getFullYear();
-        if (birthYear && birthYear <= currentYear) {
-          updated.age = String(Math.max(0, currentYear - birthYear));
-          updated.ageUnit = 'Years';
-        }
+        const birthYear = currentYear - parsedYears;
+        const currentMonth = String(new Date().getMonth() + 1).padStart(2, '0');
+        const currentDay = String(new Date().getDate()).padStart(2, '0');
+        updated.birthDate = `${birthYear}-${currentMonth}-${currentDay}`;
       }
       return updated;
     });
   };
 
-  // Handle Age change to approximate Birth Date
-  const handleAgeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const ageVal = e.target.value;
-    setFormData(prev => {
-      const updated = { ...prev, age: ageVal };
-      const parsedAge = parseInt(ageVal, 10);
-      if (!isNaN(parsedAge) && parsedAge >= 0 && parsedAge <= 125) {
-        const birthYear = new Date().getFullYear() - parsedAge;
-        updated.birthDate = `${birthYear}-01-01`;
-      }
-      return updated;
-    });
+  const handleMonthsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    const parsed = parseInt(val, 10);
+    if (val !== '' && (isNaN(parsed) || parsed < 0 || parsed > 11)) return;
+    setFormData(prev => ({ ...prev, ageMonths: val }));
+  };
+
+  const handleDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    const parsed = parseInt(val, 10);
+    if (val !== '' && (isNaN(parsed) || parsed < 0 || parsed > 30)) return;
+    setFormData(prev => ({ ...prev, ageDays: val }));
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -301,7 +359,7 @@ const PatientRegistration: React.FC = () => {
 
     const trimmedAge = formData.age.trim();
     if (!trimmedAge) {
-      setNotification({ type: 'error', message: 'Age is required.', persistent: true });
+      setNotification({ type: 'error', message: 'Age in years is required.', persistent: true });
       return;
     }
     const ageNum = parseInt(trimmedAge, 10);
@@ -373,7 +431,7 @@ const PatientRegistration: React.FC = () => {
     setIsEditMode(true);
     setNotification({
       type: 'success',
-      message: `Record unlocked for editing (${editId || loadedSavedPatient?.uhid}). Modify fields and click 'Update Record' to save.`
+      message: `Record unlocked for editing (${editId || loadedSavedPatient?.uhid}). Modify fields and click 'Update Patient Record' to save.`
     });
   };
 
@@ -769,16 +827,19 @@ const PatientRegistration: React.FC = () => {
     }
   };
 
-  // Populate form with scanned patient record safely in locked mode
+  // Populate form with scanned or loaded patient record safely in locked mode
   const applyScannedPatient = (patient: PatientRecord) => {
+    const { years, months, days } = calculateAgeFromBirthDate(patient.birthDate || '');
     const loaded: PatientFormData = {
       category: patient.category || 'NEW',
       firstName: patient.firstName || '',
       middleName: patient.middleName || '',
       lastName: patient.lastName || '',
       birthDate: patient.birthDate || '',
-      age: patient.age || '',
+      age: patient.age || years || '',
       ageUnit: patient.ageUnit || 'Years',
+      ageMonths: patient.ageMonths || months || '',
+      ageDays: patient.ageDays || days || '',
       sex: patient.sex || 'Male',
       hospitalDoctor: patient.hospitalDoctor || 'Dr. NILESH MAHALE',
       referenceBy: patient.referenceBy || '',
@@ -819,6 +880,52 @@ const PatientRegistration: React.FC = () => {
     setShowUnsavedConfirmModal(false);
   };
 
+  // Load patient from Patient History table with unsaved data check
+  const handleLoadExistingPatient = (patient: PatientRecord) => {
+    let hasUnsavedChanges = false;
+    if (!isLocked) {
+      if (isEditMode && initialEditData) {
+        hasUnsavedChanges = JSON.stringify(formData) !== JSON.stringify(initialEditData);
+      } else {
+        hasUnsavedChanges = Boolean(
+          formData.firstName.trim() ||
+          formData.lastName.trim() ||
+          formData.mobile.trim() ||
+          formData.age.trim() ||
+          formData.streetAddress.trim() ||
+          formData.aadharNo.trim()
+        );
+      }
+    }
+
+    if (hasUnsavedChanges) {
+      setPendingScannedPatient(patient);
+      setShowUnsavedConfirmModal(true);
+    } else {
+      applyScannedPatient(patient);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  // Switch to new patient registration with preservation of entered search query
+  const handleRegisterNewPatientFromSearch = () => {
+    const searchVal = historySearchQuery.trim();
+    setIsEditMode(false);
+    setIsLocked(false);
+    setEditId(null);
+    setInitialEditData(null);
+    setLoadedSavedPatient(null);
+    setFormData(prev => ({
+      ...defaultFormState,
+      category: 'NEW',
+      firstName: prev.firstName || (searchVal && !searchVal.match(/^[0-9]+$/) && !searchVal.startsWith('UHID-') ? searchVal : prev.firstName),
+      mobile: prev.mobile || (searchVal && searchVal.match(/^[0-9]{10,15}$/) ? searchVal : prev.mobile)
+    }));
+    dismissNotification();
+    navigate('/patient-registration');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   // Unified lookup processor with unsaved data safety
   const handleProcessBarcodeLookup = async (scannedCode: string, _source: 'Camera' | 'USB Scanner') => {
     const cleanId = scannedCode.trim();
@@ -835,8 +942,6 @@ const PatientRegistration: React.FC = () => {
       }
 
       const patient = res.patient;
-
-      // Check for unsaved changes in current form if not locked
       let hasUnsavedChanges = false;
       if (!isLocked) {
         if (isEditMode && initialEditData) {
@@ -882,6 +987,78 @@ const PatientRegistration: React.FC = () => {
     await handleProcessBarcodeLookup(scannedCode, 'Camera');
   };
 
+  // Doctors list for history filter
+  const historyAvailableDoctors = useMemo(() => {
+    const docs = new Set<string>(AVAILABLE_DOCTORS);
+    lookupPatients.forEach(p => {
+      if (p.hospitalDoctor) docs.add(p.hospitalDoctor);
+    });
+    return Array.from(docs).sort();
+  }, [lookupPatients]);
+
+  // Real-time instant search & combined filtering for Patient History
+  const filteredHistoryPatients = useMemo(() => {
+    const query = (historySearchQuery || (!isLocked && !isEditMode ? formData.firstName : '')).toLowerCase().trim();
+
+    return lookupPatients.filter(patient => {
+      // 1. Instant Text Search (First Name, Full Name, UHID, Mobile Number)
+      if (query) {
+        const fullName = `${patient.firstName} ${patient.middleName || ''} ${patient.lastName || ''}`.toLowerCase();
+        const matchesQuery =
+          patient.firstName.toLowerCase().includes(query) ||
+          fullName.includes(query) ||
+          patient.uhid.toLowerCase().includes(query) ||
+          patient.mobile.includes(query);
+
+        if (!matchesQuery) return false;
+      }
+
+      // 2. Registration Date Range Filter
+      const regDate = patient.createdAt ? patient.createdAt.substring(0, 10) : '';
+      if (historyFromDate && regDate && regDate < historyFromDate) {
+        return false;
+      }
+      if (historyToDate && regDate && regDate > historyToDate) {
+        return false;
+      }
+
+      // 3. Category Filter
+      if (historyCategory !== 'All' && patient.category !== historyCategory) {
+        return false;
+      }
+
+      // 4. Doctor Filter
+      if (historyDoctor !== 'All' && patient.hospitalDoctor !== historyDoctor) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [lookupPatients, historySearchQuery, formData.firstName, isLocked, isEditMode, historyFromDate, historyToDate, historyCategory, historyDoctor]);
+
+  const handleResetHistoryFilters = () => {
+    setHistorySearchQuery('');
+    setHistoryFromDate('');
+    setHistoryToDate('');
+    setHistoryCategory('All');
+    setHistoryDoctor('All');
+    setHistoryCurrentPage(1);
+  };
+
+  const isHistoryFiltered =
+    historySearchQuery.trim() !== '' ||
+    historyFromDate !== '' ||
+    historyToDate !== '' ||
+    historyCategory !== 'All' ||
+    historyDoctor !== 'All';
+
+  // History Pagination
+  const historyTotalPages = Math.max(1, Math.ceil(filteredHistoryPatients.length / HISTORY_PAGE_SIZE));
+  const paginatedHistoryPatients = filteredHistoryPatients.slice(
+    (historyCurrentPage - 1) * HISTORY_PAGE_SIZE,
+    historyCurrentPage * HISTORY_PAGE_SIZE
+  );
+
   // Filter lookup patients in search modal
   const filteredLookup = lookupPatients.filter(p => {
     const q = lookupQuery.toLowerCase().trim();
@@ -896,54 +1073,46 @@ const PatientRegistration: React.FC = () => {
 
   return (
     <div className={`${styles.container} ${styles.pageContainer}`}>
-      {/* Header */}
-      <header className={styles.header}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
-          <div>
-            <h1 className={styles.title}>
-              {isLocked
-                ? `Patient Record: ${editId || loadedSavedPatient?.uhid}`
-                : isEditMode
-                ? `Edit Patient Record: ${editId}`
-                : 'Patient Registration'}
-            </h1>
-            <p className={styles.subtitle}>
-              {isLocked
-                ? `Authoritative record in ${HOSPITAL_CONFIG.name} — Protected and Locked`
-                : isEditMode
-                ? `Update existing patient details in ${HOSPITAL_CONFIG.name} records`
-                : `Register new patient to ${HOSPITAL_CONFIG.name} and save securely`}
-            </p>
-          </div>
+      {/* PART 7: Compact Header without bulky status banner */}
+      <header className={styles.compactHeader}>
+        <div className={styles.compactTitleGroup}>
+          <h1 className={styles.compactTitle}>
+            {isLocked
+              ? `Patient: ${loadedSavedPatient?.firstName || ''} ${loadedSavedPatient?.lastName || ''} (${editId || loadedSavedPatient?.uhid})`
+              : isEditMode
+              ? `Edit Patient: ${editId}`
+              : 'Patient Registration & History'}
+          </h1>
+          <span
+            className={`${styles.compactStatusPill} ${
+              isLocked ? styles.pillLocked : isEditMode ? styles.pillEditing : styles.pillNew
+            }`}
+          >
+            {isLocked ? (
+              <>
+                <Lock size={12} /> Locked Record
+              </>
+            ) : isEditMode ? (
+              <>
+                <Edit2 size={12} /> Editing Mode
+              </>
+            ) : (
+              <>
+                <Plus size={12} /> New Registration
+              </>
+            )}
+          </span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
           <button
             type="button"
             className={`${styles.btn} ${styles.btnScanCamera} ${styles.headerScanBtn}`}
             onClick={() => setIsCameraModalOpen(true)}
-            title="Scan patient sticker barcode using device camera or mobile webcam"
+            title="Scan patient sticker barcode using device camera or webcam"
           >
-            <Camera size={16} style={{ marginRight: '6px' }} />
+            <Camera size={15} style={{ marginRight: '6px' }} />
             Scan Patient Barcode
           </button>
-        </div>
-        <div className={styles.metaInfo}>
-          <span
-            className={`${styles.badge} ${
-              isLocked ? styles.badgeLocked : isEditMode ? styles.badgeEditing : styles.badgeNew
-            }`}
-          >
-            {isLocked ? 'MODE: LOCKED' : isEditMode ? 'MODE: EDITING' : 'MODE: CREATE'}
-          </span>
-          <span className={styles.badge}>
-            Total Records: {totalRecordsCount}
-          </span>
-          {!isEditMode && (
-            <span className={styles.badge} style={{ color: 'var(--primary)', fontWeight: 600 }}>
-              Next UHID: {assignedUhidPreview}
-            </span>
-          )}
-          <span className={styles.badge} title="Press Enter to jump to next field">
-            ⌨️ Enter: Next Field
-          </span>
         </div>
       </header>
 
@@ -994,7 +1163,7 @@ const PatientRegistration: React.FC = () => {
                   style={{ height: '28px', fontSize: '0.75rem', padding: '0 8px' }}
                   onClick={() => navigate('/patient-registration-list')}
                 >
-                  <ListPlus size={13} style={{ marginRight: '4px' }} /> View in Patient List
+                  <ListPlus size={13} style={{ marginRight: '4px' }} /> Patient Registration List
                 </button>
               </>
             )}
@@ -1056,7 +1225,7 @@ const PatientRegistration: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Layout: Flex wrapper with Form on Left and Sticky Action Sidebar on Right */}
+      {/* Main Registration Layout (100% Full Width) */}
       <div className={styles.formContainerWrapper}>
         <div className={styles.formMain}>
           {/* Patient Record Locked Banner */}
@@ -1069,7 +1238,7 @@ const PatientRegistration: React.FC = () => {
                     Patient Registered — Record Locked
                   </div>
                   <div className={styles.lockedBannerSubtitle}>
-                    Record is protected from accidental modifications. Click <strong>Edit Record</strong> in the action sidebar to modify details.
+                    Record is protected from accidental modifications. Click <strong>Edit Record</strong> below to modify details.
                   </div>
                 </div>
               </div>
@@ -1110,10 +1279,11 @@ const PatientRegistration: React.FC = () => {
 
           {/* Form Element */}
           <form ref={formRef} onSubmit={handleSubmit} onKeyDown={handleFormKeyDown} noValidate>
-            {/* Section 1: Basic Information */}
-            <section className={styles.section}>
+            {/* PART 1 & 2: Top Section — Basic Information (Visible by Default) */}
+            <section className={styles.section} aria-label="Basic Information">
               <h2 className={styles.sectionTitle}>Basic Information</h2>
               <div className={styles.formGrid}>
+                {/* Category */}
                 <div className={`${styles.formGroup} ${styles.colSpan2}`}>
                   <label className={styles.label}>Category</label>
                   <select
@@ -1128,6 +1298,7 @@ const PatientRegistration: React.FC = () => {
                   </select>
                 </div>
 
+                {/* First Name */}
                 <div className={`${styles.formGroup} ${styles.colSpan3}`}>
                   <label className={styles.label}>
                     First Name <span className={styles.required}>*</span>
@@ -1144,6 +1315,7 @@ const PatientRegistration: React.FC = () => {
                   />
                 </div>
 
+                {/* Middle Name */}
                 <div className={`${styles.formGroup} ${styles.colSpan3}`}>
                   <label className={styles.label}>Middle Name</label>
                   <input
@@ -1157,6 +1329,7 @@ const PatientRegistration: React.FC = () => {
                   />
                 </div>
 
+                {/* Last Name */}
                 <div className={`${styles.formGroup} ${styles.colSpan4}`}>
                   <label className={styles.label}>Last Name</label>
                   <input
@@ -1170,11 +1343,13 @@ const PatientRegistration: React.FC = () => {
                   />
                 </div>
 
+                {/* Birth Date */}
                 <div className={`${styles.formGroup} ${styles.colSpan3}`}>
                   <label className={styles.label}>Birth Date</label>
                   <input
                     type="date"
                     name="birthDate"
+                    max={new Date().toISOString().split('T')[0]}
                     className={styles.input}
                     value={formData.birthDate}
                     onChange={handleBirthDateChange}
@@ -1182,39 +1357,60 @@ const PatientRegistration: React.FC = () => {
                   />
                 </div>
 
-                <div className={`${styles.formGroup} ${styles.colSpan3}`}>
+                {/* Age (Structured: Years, Months, Days) */}
+                <div className={`${styles.formGroup} ${styles.colSpan4}`}>
                   <label className={styles.label}>
-                    Age <span className={styles.required}>*</span>
+                    Age (Y / M / D) <span className={styles.required}>*</span>
                   </label>
-                  <div className={styles.inlineInputs}>
-                    <input
-                      type="number"
-                      name="age"
-                      min="0"
-                      max="130"
-                      required
-                      className={styles.input}
-                      value={formData.age}
-                      onChange={handleAgeChange}
-                      placeholder="35"
-                      disabled={isLocked || isSubmitting}
-                    />
-                    <select
-                      name="ageUnit"
-                      className={styles.select}
-                      value={formData.ageUnit}
-                      onChange={handleInputChange}
-                      style={{ maxWidth: '100px' }}
-                      disabled={isLocked || isSubmitting}
-                    >
-                      <option value="Years">Years</option>
-                      <option value="Months">Months</option>
-                      <option value="Days">Days</option>
-                    </select>
+                  <div className={styles.ageInputRow}>
+                    <div className={styles.ageField}>
+                      <input
+                        type="number"
+                        name="age"
+                        min="0"
+                        max="130"
+                        required
+                        className={styles.input}
+                        value={formData.age}
+                        onChange={handleYearsChange}
+                        placeholder="Years"
+                        disabled={isLocked || isSubmitting}
+                      />
+                      <span className={styles.ageUnitSuffix}>Yrs</span>
+                    </div>
+                    <div className={styles.ageField}>
+                      <input
+                        type="number"
+                        name="ageMonths"
+                        min="0"
+                        max="11"
+                        className={styles.input}
+                        value={formData.ageMonths || ''}
+                        onChange={handleMonthsChange}
+                        placeholder="Months"
+                        disabled={isLocked || isSubmitting}
+                      />
+                      <span className={styles.ageUnitSuffix}>Mos</span>
+                    </div>
+                    <div className={styles.ageField}>
+                      <input
+                        type="number"
+                        name="ageDays"
+                        min="0"
+                        max="30"
+                        className={styles.input}
+                        value={formData.ageDays || ''}
+                        onChange={handleDaysChange}
+                        placeholder="Days"
+                        disabled={isLocked || isSubmitting}
+                      />
+                      <span className={styles.ageUnitSuffix}>Days</span>
+                    </div>
                   </div>
                 </div>
 
-                <div className={`${styles.formGroup} ${styles.colSpan3}`}>
+                {/* Sex */}
+                <div className={`${styles.formGroup} ${styles.colSpan2}`}>
                   <label className={styles.label}>
                     Sex <span className={styles.required}>*</span>
                   </label>
@@ -1230,14 +1426,9 @@ const PatientRegistration: React.FC = () => {
                     <option value="Other">Other</option>
                   </select>
                 </div>
-              </div>
-            </section>
 
-            {/* Section 2: Demographics & Clinical */}
-            <section className={styles.section}>
-              <h2 className={styles.sectionTitle}>Demographics & Clinical</h2>
-              <div className={styles.formGrid}>
-                <div className={`${styles.formGroup} ${styles.colSpan6}`}>
+                {/* Hospital Doctor */}
+                <div className={`${styles.formGroup} ${styles.colSpan3}`}>
                   <label className={styles.label}>
                     Hospital Doctor <span className={styles.required}>*</span>
                   </label>
@@ -1248,149 +1439,180 @@ const PatientRegistration: React.FC = () => {
                     onChange={handleInputChange}
                     disabled={isLocked || isSubmitting}
                   >
-                    <option value="Dr. NILESH MAHALE">Dr. NILESH MAHALE</option>
-                    <option value="Dr. ASHOK PATEL">Dr. ASHOK PATEL</option>
-                    <option value="Dr. SHARMA">Dr. SHARMA</option>
-                    <option value="Dr. R. K. DESAI">Dr. R. K. DESAI</option>
-                  </select>
-                </div>
-                <div className={`${styles.formGroup} ${styles.colSpan6}`}>
-                  <label className={styles.label}>Reference By</label>
-                  <select
-                    name="referenceBy"
-                    className={styles.select}
-                    value={formData.referenceBy}
-                    onChange={handleInputChange}
-                    disabled={isLocked || isSubmitting}
-                  >
-                    <option value="DR. NIKUNJ VITHALANI">DR. NIKUNJ VITHALANI</option>
-                    <option value="DR. ANAND SHAH">DR. ANAND SHAH</option>
-                    <option value="SELF">SELF</option>
+                    {AVAILABLE_DOCTORS.map(doc => (
+                      <option key={doc} value={doc}>{doc}</option>
+                    ))}
                   </select>
                 </div>
 
+                {/* Mobile */}
                 <div className={`${styles.formGroup} ${styles.colSpan3}`}>
-                  <label className={styles.label}>Religion</label>
-                  <select
-                    name="religion"
-                    className={styles.select}
-                    value={formData.religion}
-                    onChange={handleInputChange}
-                    disabled={isLocked || isSubmitting}
-                  >
-                    <option value="Hindu">Hindu</option>
-                    <option value="Muslim">Muslim</option>
-                    <option value="Christian">Christian</option>
-                    <option value="Sikh">Sikh</option>
-                    <option value="Jain">Jain</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-                <div className={`${styles.formGroup} ${styles.colSpan3}`}>
-                  <label className={styles.label}>Marital Status</label>
-                  <select
-                    name="maritalStatus"
-                    className={styles.select}
-                    value={formData.maritalStatus}
-                    onChange={handleInputChange}
-                    disabled={isLocked || isSubmitting}
-                  >
-                    <option value="">Select</option>
-                    <option value="Single">Single</option>
-                    <option value="Married">Married</option>
-                    <option value="Widowed">Widowed</option>
-                    <option value="Divorced">Divorced</option>
-                  </select>
-                </div>
-                <div className={`${styles.formGroup} ${styles.colSpan3}`}>
-                  <label className={styles.label}>Weight (kg)</label>
+                  <label className={styles.label}>
+                    Mobile Number <span className={styles.required}>*</span>
+                  </label>
                   <input
-                    type="number"
-                    name="weight"
-                    step="0.1"
-                    min="0"
-                    max="300"
+                    type="tel"
+                    name="mobile"
+                    required
                     className={styles.input}
-                    value={formData.weight}
+                    value={formData.mobile}
                     onChange={handleInputChange}
-                    placeholder="e.g. 70"
+                    placeholder="e.g. 9876543210"
                     disabled={isLocked || isSubmitting}
                   />
                 </div>
+
+                {/* Email */}
                 <div className={`${styles.formGroup} ${styles.colSpan3}`}>
-                  <label className={styles.label}>Height (cm)</label>
+                  <label className={styles.label}>Email Address</label>
                   <input
-                    type="number"
-                    name="height"
-                    min="0"
-                    max="250"
+                    type="email"
+                    name="email"
                     className={styles.input}
-                    value={formData.height}
+                    value={formData.email}
                     onChange={handleInputChange}
-                    placeholder="e.g. 175"
+                    placeholder="e.g. patient@example.com"
                     disabled={isLocked || isSubmitting}
                   />
                 </div>
               </div>
             </section>
 
-            {/* Section 3: Contact & Address */}
-            <section className={styles.section}>
-              <div className={styles.formGrid}>
-                {/* Communication Details */}
-                <div className={`${styles.colSpan6} ${styles.splitSectionLeft}`}>
-                  <h2 className={styles.sectionTitle}>Communication Details</h2>
+            {/* PART 6: Collapsible Additional Registration Sections */}
+
+            {/* Collapsible Section 1: Demographics & Clinical */}
+            <div className={`${styles.collapsibleCard} ${isDemographicsOpen ? styles.collapsibleCardActive : ''}`}>
+              <button
+                type="button"
+                className={styles.collapsibleHeaderBtn}
+                onClick={() => setIsDemographicsOpen(prev => !prev)}
+                aria-expanded={isDemographicsOpen}
+              >
+                <div className={styles.collapsibleTitle}>
+                  Demographics & Clinical
+                </div>
+                <div className={styles.collapsibleRight}>
+                  <span className={styles.collapsibleBadge}>
+                    {formData.referenceBy ? `${formData.referenceBy} • ` : ''}{formData.religion || 'Demographics'}
+                  </span>
+                  <span className={styles.collapsibleChevron}>
+                    {isDemographicsOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                  </span>
+                </div>
+              </button>
+              {isDemographicsOpen && (
+                <div className={styles.collapsibleBody}>
                   <div className={styles.formGrid}>
                     <div className={`${styles.formGroup} ${styles.colSpan6}`}>
-                      <label className={styles.label}>
-                        Mobile <span className={styles.required}>*</span>
-                      </label>
-                      <input
-                        type="tel"
-                        name="mobile"
-                        required
-                        pattern="[0-9]{10,15}"
-                        className={styles.input}
-                        value={formData.mobile}
+                      <label className={styles.label}>Reference By</label>
+                      <select
+                        name="referenceBy"
+                        className={styles.select}
+                        value={formData.referenceBy}
                         onChange={handleInputChange}
-                        placeholder="9876543210"
+                        disabled={isLocked || isSubmitting}
+                      >
+                        <option value="DR. NIKUNJ VITHALANI">DR. NIKUNJ VITHALANI</option>
+                        <option value="DR. ANAND SHAH">DR. ANAND SHAH</option>
+                        <option value="SELF">SELF</option>
+                        {AVAILABLE_DOCTORS.map(doc => (
+                          <option key={doc} value={doc}>{doc}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className={`${styles.formGroup} ${styles.colSpan3}`}>
+                      <label className={styles.label}>Religion</label>
+                      <select
+                        name="religion"
+                        className={styles.select}
+                        value={formData.religion}
+                        onChange={handleInputChange}
+                        disabled={isLocked || isSubmitting}
+                      >
+                        <option value="Hindu">Hindu</option>
+                        <option value="Muslim">Muslim</option>
+                        <option value="Christian">Christian</option>
+                        <option value="Sikh">Sikh</option>
+                        <option value="Jain">Jain</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+
+                    <div className={`${styles.formGroup} ${styles.colSpan3}`}>
+                      <label className={styles.label}>Marital Status</label>
+                      <select
+                        name="maritalStatus"
+                        className={styles.select}
+                        value={formData.maritalStatus}
+                        onChange={handleInputChange}
+                        disabled={isLocked || isSubmitting}
+                      >
+                        <option value="">Select</option>
+                        <option value="Single">Single</option>
+                        <option value="Married">Married</option>
+                        <option value="Widowed">Widowed</option>
+                        <option value="Divorced">Divorced</option>
+                      </select>
+                    </div>
+
+                    <div className={`${styles.formGroup} ${styles.colSpan3}`}>
+                      <label className={styles.label}>Weight (kg)</label>
+                      <input
+                        type="number"
+                        name="weight"
+                        step="0.1"
+                        min="0"
+                        max="300"
+                        className={styles.input}
+                        value={formData.weight}
+                        onChange={handleInputChange}
+                        placeholder="e.g. 70"
                         disabled={isLocked || isSubmitting}
                       />
                     </div>
-                    <div className={`${styles.formGroup} ${styles.colSpan6}`}>
-                      <label className={styles.label}>Email</label>
+
+                    <div className={`${styles.formGroup} ${styles.colSpan3}`}>
+                      <label className={styles.label}>Height (cm)</label>
                       <input
-                        type="email"
-                        name="email"
+                        type="number"
+                        name="height"
+                        min="0"
+                        max="250"
                         className={styles.input}
-                        value={formData.email}
+                        value={formData.height}
                         onChange={handleInputChange}
-                        placeholder="patient@example.com"
+                        placeholder="e.g. 175"
                         disabled={isLocked || isSubmitting}
                       />
-                    </div>
-                    <div className={`${styles.formGroup} ${styles.colSpan12}`}>
-                      <div className={styles.checkboxGroup}>
-                        <input
-                          type="checkbox"
-                          id="autoSms"
-                          name="autoSms"
-                          className={styles.checkbox}
-                          checked={formData.autoSms}
-                          onChange={handleCheckboxChange}
-                          disabled={isLocked || isSubmitting}
-                        />
-                        <label htmlFor="autoSms" className={styles.checkboxLabel}>
-                          Enable Automated SMS & Notifications
-                        </label>
-                      </div>
                     </div>
                   </div>
                 </div>
+              )}
+            </div>
 
-                {/* Address Details */}
-                <div className={`${styles.colSpan6} ${styles.splitSectionRight}`}>
-                  <h2 className={styles.sectionTitle}>Address Details</h2>
+            {/* Collapsible Section 2: Address Details */}
+            <div className={`${styles.collapsibleCard} ${isAddressOpen ? styles.collapsibleCardActive : ''}`}>
+              <button
+                type="button"
+                className={styles.collapsibleHeaderBtn}
+                onClick={() => setIsAddressOpen(prev => !prev)}
+                aria-expanded={isAddressOpen}
+              >
+                <div className={styles.collapsibleTitle}>
+                  Address Details
+                </div>
+                <div className={styles.collapsibleRight}>
+                  <span className={styles.collapsibleBadge}>
+                    {formData.city ? `${formData.city}, ${formData.state}` : 'Address'}
+                  </span>
+                  <span className={styles.collapsibleChevron}>
+                    {isAddressOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                  </span>
+                </div>
+              </button>
+              {isAddressOpen && (
+                <div className={styles.collapsibleBody}>
                   <div className={styles.formGrid}>
                     <div className={`${styles.formGroup} ${styles.colSpan12}`}>
                       <label className={styles.label}>Street Address</label>
@@ -1440,110 +1662,146 @@ const PatientRegistration: React.FC = () => {
                         disabled={isLocked || isSubmitting}
                       />
                     </div>
+                    <div className={`${styles.formGroup} ${styles.colSpan12}`}>
+                      <div className={styles.checkboxGroup}>
+                        <input
+                          type="checkbox"
+                          id="autoSms"
+                          name="autoSms"
+                          className={styles.checkbox}
+                          checked={formData.autoSms}
+                          onChange={handleCheckboxChange}
+                          disabled={isLocked || isSubmitting}
+                        />
+                        <label htmlFor="autoSms" className={styles.checkboxLabel}>
+                          Enable Automated SMS & Notifications
+                        </label>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </section>
+              )}
+            </div>
 
-            {/* Section 4: Other Details */}
-            <section className={styles.section}>
-              <h2 className={styles.sectionTitle}>Other Details & Identification</h2>
-              <div className={styles.formGrid}>
-                <div className={`${styles.formGroup} ${styles.colSpan3}`}>
-                  <label className={styles.label}>Estimate</label>
-                  <input
-                    type="text"
-                    name="estimate"
-                    className={styles.input}
-                    value={formData.estimate}
-                    onChange={handleInputChange}
-                    disabled={isLocked || isSubmitting}
-                  />
+            {/* Collapsible Section 3: Other Details & Identification */}
+            <div className={`${styles.collapsibleCard} ${isOtherOpen ? styles.collapsibleCardActive : ''}`}>
+              <button
+                type="button"
+                className={styles.collapsibleHeaderBtn}
+                onClick={() => setIsOtherOpen(prev => !prev)}
+                aria-expanded={isOtherOpen}
+              >
+                <div className={styles.collapsibleTitle}>
+                  Other Details & Identification
                 </div>
-                <div className={`${styles.formGroup} ${styles.colSpan3}`}>
-                  <label className={styles.label}>Aadhar No</label>
-                  <input
-                    type="text"
-                    name="aadharNo"
-                    maxLength={14}
-                    className={styles.input}
-                    value={formData.aadharNo}
-                    onChange={handleInputChange}
-                    placeholder="XXXX-XXXX-XXXX"
-                    disabled={isLocked || isSubmitting}
-                  />
+                <div className={styles.collapsibleRight}>
+                  <span className={styles.collapsibleBadge}>
+                    {formData.aadharNo || formData.panNo || formData.mediclaim ? 'ID Info Provided' : 'Optional'}
+                  </span>
+                  <span className={styles.collapsibleChevron}>
+                    {isOtherOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                  </span>
                 </div>
-                <div className={`${styles.formGroup} ${styles.colSpan3}`}>
-                  <label className={styles.label}>Pan No</label>
-                  <input
-                    type="text"
-                    name="panNo"
-                    maxLength={10}
-                    className={styles.input}
-                    value={formData.panNo}
-                    onChange={handleInputChange}
-                    placeholder="ABCDE1234F"
-                    disabled={isLocked || isSubmitting}
-                  />
+              </button>
+              {isOtherOpen && (
+                <div className={styles.collapsibleBody}>
+                  <div className={styles.formGrid}>
+                    <div className={`${styles.formGroup} ${styles.colSpan3}`}>
+                      <label className={styles.label}>Estimate</label>
+                      <input
+                        type="text"
+                        name="estimate"
+                        className={styles.input}
+                        value={formData.estimate}
+                        onChange={handleInputChange}
+                        disabled={isLocked || isSubmitting}
+                      />
+                    </div>
+                    <div className={`${styles.formGroup} ${styles.colSpan3}`}>
+                      <label className={styles.label}>Aadhar No</label>
+                      <input
+                        type="text"
+                        name="aadharNo"
+                        maxLength={14}
+                        className={styles.input}
+                        value={formData.aadharNo}
+                        onChange={handleInputChange}
+                        placeholder="XXXX-XXXX-XXXX"
+                        disabled={isLocked || isSubmitting}
+                      />
+                    </div>
+                    <div className={`${styles.formGroup} ${styles.colSpan3}`}>
+                      <label className={styles.label}>PAN No</label>
+                      <input
+                        type="text"
+                        name="panNo"
+                        maxLength={10}
+                        className={styles.input}
+                        value={formData.panNo}
+                        onChange={handleInputChange}
+                        placeholder="ABCDE1234F"
+                        disabled={isLocked || isSubmitting}
+                      />
+                    </div>
+                    <div className={`${styles.formGroup} ${styles.colSpan3}`}>
+                      <label className={styles.label}>Mediclaim</label>
+                      <input
+                        type="text"
+                        name="mediclaim"
+                        className={styles.input}
+                        value={formData.mediclaim}
+                        onChange={handleInputChange}
+                        disabled={isLocked || isSubmitting}
+                      />
+                    </div>
+                    <div className={`${styles.formGroup} ${styles.colSpan3}`}>
+                      <label className={styles.label}>Membership ID</label>
+                      <input
+                        type="text"
+                        name="membershipId"
+                        className={styles.input}
+                        value={formData.membershipId}
+                        onChange={handleInputChange}
+                        disabled={isLocked || isSubmitting}
+                      />
+                    </div>
+                    <div className={`${styles.formGroup} ${styles.colSpan3}`}>
+                      <label className={styles.label}>Employee ID</label>
+                      <input
+                        type="text"
+                        name="employeeId"
+                        className={styles.input}
+                        value={formData.employeeId}
+                        onChange={handleInputChange}
+                        disabled={isLocked || isSubmitting}
+                      />
+                    </div>
+                    <div className={`${styles.formGroup} ${styles.colSpan3}`}>
+                      <label className={styles.label}>Company Name</label>
+                      <input
+                        type="text"
+                        name="companyName"
+                        className={styles.input}
+                        value={formData.companyName}
+                        onChange={handleInputChange}
+                        disabled={isLocked || isSubmitting}
+                      />
+                    </div>
+                    <div className={`${styles.formGroup} ${styles.colSpan3}`}>
+                      <label className={styles.label}>Remark</label>
+                      <input
+                        type="text"
+                        name="remark"
+                        className={styles.input}
+                        value={formData.remark}
+                        onChange={handleInputChange}
+                        disabled={isLocked || isSubmitting}
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div className={`${styles.formGroup} ${styles.colSpan3}`}>
-                  <label className={styles.label}>Mediclaim</label>
-                  <input
-                    type="text"
-                    name="mediclaim"
-                    className={styles.input}
-                    value={formData.mediclaim}
-                    onChange={handleInputChange}
-                    disabled={isLocked || isSubmitting}
-                  />
-                </div>
-
-                <div className={`${styles.formGroup} ${styles.colSpan3}`}>
-                  <label className={styles.label}>Membership ID</label>
-                  <input
-                    type="text"
-                    name="membershipId"
-                    className={styles.input}
-                    value={formData.membershipId}
-                    onChange={handleInputChange}
-                    disabled={isLocked || isSubmitting}
-                  />
-                </div>
-                <div className={`${styles.formGroup} ${styles.colSpan3}`}>
-                  <label className={styles.label}>Employee ID</label>
-                  <input
-                    type="text"
-                    name="employeeId"
-                    className={styles.input}
-                    value={formData.employeeId}
-                    onChange={handleInputChange}
-                    disabled={isLocked || isSubmitting}
-                  />
-                </div>
-                <div className={`${styles.formGroup} ${styles.colSpan3}`}>
-                  <label className={styles.label}>Company Name</label>
-                  <input
-                    type="text"
-                    name="companyName"
-                    className={styles.input}
-                    value={formData.companyName}
-                    onChange={handleInputChange}
-                    disabled={isLocked || isSubmitting}
-                  />
-                </div>
-                <div className={`${styles.formGroup} ${styles.colSpan3}`}>
-                  <label className={styles.label}>Remark</label>
-                  <input
-                    type="text"
-                    name="remark"
-                    className={styles.input}
-                    value={formData.remark}
-                    onChange={handleInputChange}
-                    disabled={isLocked || isSubmitting}
-                  />
-                </div>
-              </div>
-            </section>
+              )}
+            </div>
 
             {/* Authoritative Sticky Action Bar (Single Source of Actions for Desktop & Mobile) */}
             <div className={styles.actions}>
@@ -1587,23 +1845,22 @@ const PatientRegistration: React.FC = () => {
                     <Plus size={16} style={{ marginRight: '6px' }} />
                     New Registration
                   </button>
-                  <button
-                    type="button"
+                  <a
+                    href="#patient-history-section"
                     className={`${styles.btn} ${styles.btnSecondary}`}
-                    onClick={() => setIsSearchOpen(true)}
-                    title="Quick search registered patients"
+                    title="Scroll down to Patient History List"
                   >
-                    <Search size={15} style={{ marginRight: '6px' }} />
-                    Quick Search Patient ({lookupPatients.length})
-                  </button>
+                    <Users size={15} style={{ marginRight: '6px' }} />
+                    Patient History ({lookupPatients.length})
+                  </a>
                   <button
                     type="button"
                     className={`${styles.btn} ${styles.btnSecondary}`}
                     onClick={() => navigate('/patient-registration-list')}
-                    title="View patient registration list"
+                    title="View full patient registration list"
                   >
                     <ListPlus size={15} style={{ marginRight: '6px' }} />
-                    Patient Registration List
+                    List View
                   </button>
                 </>
               ) : isEditMode ? (
@@ -1676,15 +1933,14 @@ const PatientRegistration: React.FC = () => {
                     <RotateCcw size={15} style={{ marginRight: '6px' }} />
                     Clear Form
                   </button>
-                  <button
-                    type="button"
+                  <a
+                    href="#patient-history-section"
                     className={`${styles.btn} ${styles.btnSecondary}`}
-                    onClick={() => setIsSearchOpen(true)}
-                    title="Quick search registered patients"
+                    title="Scroll down to search patient history"
                   >
                     <Search size={15} style={{ marginRight: '6px' }} />
-                    Quick Search Patient ({lookupPatients.length})
-                  </button>
+                    Search History ({lookupPatients.length})
+                  </a>
                   <button
                     type="button"
                     className={`${styles.btn} ${styles.btnSecondary}`}
@@ -1692,7 +1948,7 @@ const PatientRegistration: React.FC = () => {
                     title="View patient registration list"
                   >
                     <ListPlus size={15} style={{ marginRight: '6px' }} />
-                    Patient Registration List
+                    List View
                   </button>
                   <button
                     type="submit"
@@ -1716,7 +1972,295 @@ const PatientRegistration: React.FC = () => {
         </div>
       </div>
 
-      {/* Quick Search Patient Lookup Modal */}
+      {/* PART 3: Patient History List & Search Section (Bottom Section) */}
+      <section id="patient-history-section" className={styles.patientHistorySection} aria-label="Patient History List">
+        <div className={styles.historyHeader}>
+          <div>
+            <h2 className={styles.historyTitle}>
+              <Users size={22} color="var(--primary)" />
+              Patient History & Records
+            </h2>
+            <p className={styles.historySubtitle}>
+              Instant search across registered patients by Name, UHID, or Mobile. Click <strong>Load Patient</strong> to view or edit full record.
+            </p>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span className={styles.badge} style={{ color: 'var(--primary)', fontWeight: 600 }}>
+              {lookupPatients.length} Total Patients
+            </span>
+          </div>
+        </div>
+
+        {/* Instant Search & Filter Toolbar */}
+        <div className={styles.historyToolbar}>
+          {/* Real-time Search Box */}
+          <div className={styles.historySearchBox}>
+            <Search size={18} className={styles.historySearchIcon} />
+            <input
+              type="text"
+              className={styles.historySearchInput}
+              placeholder="Type Patient First Name, Full Name, UHID (e.g. UHID-1001), or Mobile Number..."
+              value={historySearchQuery}
+              onChange={e => {
+                setHistorySearchQuery(e.target.value);
+                setHistoryCurrentPage(1);
+              }}
+              aria-label="Search patient history"
+            />
+            {historySearchQuery && (
+              <button
+                type="button"
+                className={styles.historyClearSearchBtn}
+                onClick={() => {
+                  setHistorySearchQuery('');
+                  setHistoryCurrentPage(1);
+                }}
+                title="Clear search"
+              >
+                <X size={16} />
+              </button>
+            )}
+          </div>
+
+          {/* Filter Controls Row (Gender removed, Date Range added as per Part 8) */}
+          <div className={styles.historyFilterRow}>
+            {/* Date Range: From Date & To Date */}
+            <div className={styles.historyFilterGroup}>
+              <span className={styles.historyFilterLabel}>From Date:</span>
+              <input
+                type="date"
+                className={styles.historyFilterInput}
+                value={historyFromDate}
+                onChange={e => {
+                  setHistoryFromDate(e.target.value);
+                  setHistoryCurrentPage(1);
+                }}
+                aria-label="Filter from registration date"
+              />
+            </div>
+
+            <div className={styles.historyFilterGroup}>
+              <span className={styles.historyFilterLabel}>To Date:</span>
+              <input
+                type="date"
+                className={styles.historyFilterInput}
+                value={historyToDate}
+                onChange={e => {
+                  setHistoryToDate(e.target.value);
+                  setHistoryCurrentPage(1);
+                }}
+                aria-label="Filter to registration date"
+              />
+            </div>
+
+            {/* Category Filter */}
+            <div className={styles.historyFilterGroup}>
+              <span className={styles.historyFilterLabel}>Category:</span>
+              <select
+                className={styles.historyFilterSelect}
+                value={historyCategory}
+                onChange={e => {
+                  setHistoryCategory(e.target.value);
+                  setHistoryCurrentPage(1);
+                }}
+                aria-label="Filter by patient category"
+              >
+                <option value="All">All Categories</option>
+                <option value="NEW">NEW</option>
+                <option value="OLD">OLD</option>
+              </select>
+            </div>
+
+            {/* Doctor Filter */}
+            <div className={styles.historyFilterGroup}>
+              <span className={styles.historyFilterLabel}>Doctor:</span>
+              <select
+                className={styles.historyFilterSelect}
+                value={historyDoctor}
+                onChange={e => {
+                  setHistoryDoctor(e.target.value);
+                  setHistoryCurrentPage(1);
+                }}
+                aria-label="Filter by doctor"
+              >
+                <option value="All">All Doctors</option>
+                {historyAvailableDoctors.map(doc => (
+                  <option key={doc} value={doc}>{doc}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Clear Filters Button */}
+            {isHistoryFiltered && (
+              <button
+                type="button"
+                className={styles.historyResetBtn}
+                onClick={handleResetHistoryFilters}
+                title="Clear all search filters"
+              >
+                <RotateCcw size={13} />
+                Clear Filters
+              </button>
+            )}
+
+            <div className={styles.historyResultsCount}>
+              Showing <strong>{filteredHistoryPatients.length}</strong> of <strong>{lookupPatients.length}</strong> patients
+            </div>
+          </div>
+
+          {/* Date Range Validation Warning */}
+          {historyFromDate && historyToDate && historyFromDate > historyToDate && (
+            <div style={{ color: '#dc2626', fontSize: '0.8rem', fontWeight: 600 }}>
+              ⚠️ From Date cannot be later than To Date. Please adjust the registration date range.
+            </div>
+          )}
+        </div>
+
+        {/* Results Table or No-Match Card */}
+        {filteredHistoryPatients.length === 0 ? (
+          /* PART 5: No Matching Patient Found */
+          <div className={styles.historyNoMatchCard}>
+            <Search size={36} color="var(--text-muted)" style={{ opacity: 0.6 }} />
+            <h3 className={styles.historyNoMatchTitle}>
+              No existing patient found. You can register this patient as new.
+            </h3>
+            <p className={styles.historyNoMatchSubtitle}>
+              No registered patient matches &quot;{historySearchQuery || formData.firstName}&quot;. Click below to proceed with registering this patient.
+            </p>
+            <button
+              type="button"
+              className={styles.btnRegisterNewPatient}
+              onClick={handleRegisterNewPatientFromSearch}
+            >
+              <UserPlus size={16} />
+              Register New Patient
+            </button>
+          </div>
+        ) : (
+          <>
+            <div className={styles.historyTableWrapper}>
+              <table className={styles.historyTable}>
+                <thead>
+                  <tr>
+                    <th style={{ width: '110px' }}>UHID</th>
+                    <th>Patient Name</th>
+                    <th style={{ width: '130px' }}>Age / Sex</th>
+                    <th style={{ width: '120px' }}>Mobile</th>
+                    <th>Hospital Doctor</th>
+                    <th style={{ width: '110px' }}>Reg Date</th>
+                    <th style={{ textAlign: 'center', width: '170px' }}>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {paginatedHistoryPatients.map(p => (
+                    <tr key={p.uhid}>
+                      <td className={styles.historyUhidCell}>{p.uhid}</td>
+                      <td>
+                        <div className={styles.historyNameCell}>
+                          <span>{p.firstName} {p.middleName ? `${p.middleName} ` : ''}{p.lastName}</span>
+                          <span className={styles.historyCategoryBadge}>{p.category}</span>
+                        </div>
+                      </td>
+                      <td>
+                        {p.age} {p.ageUnit || 'Years'} • {p.sex}
+                      </td>
+                      <td>
+                        <a
+                          href={`tel:${p.mobile}`}
+                          style={{ color: 'var(--text-main)', textDecoration: 'none', fontWeight: 500 }}
+                        >
+                          {p.mobile}
+                        </a>
+                      </td>
+                      <td style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+                        {p.hospitalDoctor}
+                      </td>
+                      <td style={{ fontSize: '0.8rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
+                        {p.createdAt
+                          ? new Date(p.createdAt).toLocaleDateString('en-GB')
+                          : 'Recently'}
+                      </td>
+                      <td>
+                        <div className={styles.historyTableActions}>
+                          <button
+                            type="button"
+                            className={styles.btnLoadPatient}
+                            onClick={() => handleLoadExistingPatient(p)}
+                            title="Load this patient into registration form"
+                          >
+                            <UserCheck size={14} />
+                            Load Patient
+                          </button>
+                          <button
+                            type="button"
+                            className={styles.historyActionIconBtn}
+                            onClick={() => openPatientStickerPdf(p, patientApi.getStickerPdfUrl(p.uhid))}
+                            title="Print Patient Sticker"
+                          >
+                            <Printer size={14} />
+                          </button>
+                          <button
+                            type="button"
+                            className={styles.historyActionIconBtn}
+                            onClick={() => handleOpenSavedPatientBill(p.uhid)}
+                            title="Open Patient Bill"
+                          >
+                            <Receipt size={14} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Pagination Controls */}
+            {historyTotalPages > 1 && (
+              <div className={styles.paginationRow}>
+                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                  Showing page {historyCurrentPage} of {historyTotalPages}
+                </div>
+                <div className={styles.paginationControls}>
+                  <button
+                    type="button"
+                    className={styles.paginationBtn}
+                    disabled={historyCurrentPage === 1}
+                    onClick={() => setHistoryCurrentPage(prev => Math.max(1, prev - 1))}
+                  >
+                    Previous
+                  </button>
+                  {Array.from({ length: historyTotalPages }, (_, i) => i + 1).map(pageNum => (
+                    <button
+                      key={pageNum}
+                      type="button"
+                      className={styles.paginationBtn}
+                      style={{
+                        backgroundColor: pageNum === historyCurrentPage ? 'var(--primary)' : 'var(--surface)',
+                        color: pageNum === historyCurrentPage ? '#fff' : 'var(--text-main)',
+                        borderColor: pageNum === historyCurrentPage ? 'var(--primary)' : 'var(--border)'
+                      }}
+                      onClick={() => setHistoryCurrentPage(pageNum)}
+                    >
+                      {pageNum}
+                    </button>
+                  ))}
+                  <button
+                    type="button"
+                    className={styles.paginationBtn}
+                    disabled={historyCurrentPage === historyTotalPages}
+                    onClick={() => setHistoryCurrentPage(prev => Math.min(historyTotalPages, prev + 1))}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      </section>
+
+      {/* Quick Search Patient Lookup Modal (Modal Search Fallback) */}
       {isSearchOpen && (
         <div className={styles.modalBackdrop} onClick={() => setIsSearchOpen(false)}>
           <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
@@ -1798,7 +2342,7 @@ const PatientRegistration: React.FC = () => {
                         className={`${styles.btn} ${styles.btnSecondary}`}
                         style={{ fontSize: '0.75rem', padding: '4px 8px' }}
                         onClick={() => {
-                          applyScannedPatient(p);
+                          handleLoadExistingPatient(p);
                           setIsSearchOpen(false);
                         }}
                       >

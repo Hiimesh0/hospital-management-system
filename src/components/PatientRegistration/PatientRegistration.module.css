@@ -1068,3 +1068,565 @@
   padding: 0.4rem 0.6rem;
   border-radius: 4px;
 }
+
+
+/* ===== COMPACT PAGE HEADER ===== */
+.compactHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-bottom: 0.875rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1.5px solid var(--border);
+}
+
+.compactTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.compactTitle {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.compactStatusPill {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pillNew {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+}
+
+.pillLocked {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+.pillEditing {
+  background: #fffbeb;
+  color: #b45309;
+  border: 1px solid #fde68a;
+}
+
+/* ===== AGE 3-COLUMN STRUCTURED INPUTS ===== */
+.ageInputRow {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.ageField {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.ageField input {
+  padding-right: 2.2rem !important;
+  text-align: right;
+  font-weight: 600;
+}
+
+.ageUnitSuffix {
+  position: absolute;
+  right: 8px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  pointer-events: none;
+  text-transform: uppercase;
+}
+
+/* ===== COLLAPSIBLE REGISTRATION SECTIONS ===== */
+.collapsibleCard {
+  margin-bottom: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.collapsibleCard:hover {
+  border-color: #cbd5e1;
+}
+
+.collapsibleCardActive {
+  border-color: #93c5fd;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.collapsibleHeaderBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.25rem;
+  background: #f8fafc;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease;
+}
+
+.collapsibleHeaderBtn:hover {
+  background: #f1f5f9;
+}
+
+.collapsibleTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.collapsibleTitle::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 14px;
+  background: var(--primary);
+  border-radius: 2px;
+}
+
+.collapsibleRight {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.collapsibleBadge {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.collapsibleChevron {
+  display: flex;
+  align-items: center;
+  color: var(--text-muted);
+  transition: transform 0.2s ease;
+}
+
+.collapsibleBody {
+  padding: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+/* ===== PATIENT HISTORY LIST SECTION ===== */
+.patientHistorySection {
+  margin-top: 2.25rem;
+  padding-top: 2rem;
+  border-top: 2px solid var(--border);
+}
+
+.historyHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.historyTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.historySubtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0.25rem 0 0 0;
+}
+
+.historyToolbar {
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.historySearchBox {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.historySearchInput {
+  width: 100%;
+  height: 42px;
+  padding: 0 2.5rem 0 2.5rem;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background: var(--surface);
+  color: var(--text-main);
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.historySearchInput:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.15);
+}
+
+.historySearchIcon {
+  position: absolute;
+  left: 12px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.historyClearSearchBtn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+}
+
+.historyFilterRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+}
+
+.historyFilterGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.historyFilterLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.historyFilterInput {
+  height: 34px;
+  padding: 0 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 0.8rem;
+  background: var(--surface);
+  color: var(--text-main);
+}
+
+.historyFilterSelect {
+  height: 34px;
+  padding: 0 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 0.8rem;
+  background: var(--surface);
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+.historyResetBtn {
+  height: 34px;
+  padding: 0 0.75rem;
+  border: 1px dashed var(--border);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.2s;
+}
+
+.historyResetBtn:hover {
+  background: var(--surface);
+  color: #dc2626;
+  border-color: #dc2626;
+}
+
+.historyResultsCount {
+  margin-left: auto;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.historyTableWrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  margin-bottom: 1rem;
+}
+
+.historyTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.historyTable th {
+  background: #f8fafc;
+  color: var(--text-main);
+  font-weight: 600;
+  padding: 0.75rem 0.875rem;
+  border-bottom: 2px solid var(--border);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.historyTable td {
+  padding: 0.75rem 0.875rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-main);
+  vertical-align: middle;
+}
+
+.historyTable tr:last-child td {
+  border-bottom: none;
+}
+
+.historyTable tr:hover td {
+  background-color: rgba(66, 133, 244, 0.03);
+}
+
+.historyUhidCell {
+  font-family: monospace;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.historyNameCell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+
+.historyCategoryBadge {
+  font-size: 0.68rem;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.btnLoadPatient {
+  height: 30px;
+  padding: 0 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: 4px;
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: background 0.15s ease;
+  white-space: nowrap;
+}
+
+.btnLoadPatient:hover {
+  background: #1d4ed8;
+}
+
+.historyTableActions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  justify-content: flex-end;
+}
+
+.historyActionIconBtn {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.historyActionIconBtn:hover {
+  background: #f1f5f9;
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.historyNoMatchCard {
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  border: 2px dashed #cbd5e1;
+  border-radius: 8px;
+  background: #f8fafc;
+  margin-bottom: 1.25rem;
+}
+
+.historyNoMatchTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0.75rem 0 0.35rem 0;
+}
+
+.historyNoMatchSubtitle {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0 0 1.25rem 0;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.btnRegisterNewPatient {
+  height: 38px;
+  padding: 0 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 6px;
+  background: var(--primary);
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.15s ease;
+}
+
+.btnRegisterNewPatient:hover {
+  background: var(--primary-hover);
+}
+
+.paginationRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+}
+
+.paginationControls {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.paginationBtn {
+  height: 30px;
+  padding: 0 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--text-main);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.paginationBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.paginationBtn:not(:disabled):hover {
+  background: #f1f5f9;
+}
+
+/* Responsive updates for compact header & history section */
+@media (max-width: 768px) {
+  .compactHeader {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  .historyFilterRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .historyFilterGroup {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .historyFilterGroup input,
+  .historyFilterGroup select {
+    flex: 1;
+  }
+  .historyResultsCount {
+    margin-left: 0;
+    text-align: right;
+  }
+}
+
+@media (max-width: 440px) {
+  .ageInputRow {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+  .compactTitleGroup {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

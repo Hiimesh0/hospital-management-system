@@ -8,6 +8,8 @@ export interface PatientRecord {
   birthDate: string;
   age: string;
   ageUnit: string;
+  ageMonths?: string;
+  ageDays?: string;
   sex: string;
   hospitalDoctor: string;
   referenceBy: string;
@@ -73,6 +75,8 @@ export interface PatientBillRecord {
   patientName: string;
   age: string;
   ageUnit: string;
+  ageMonths?: string;
+  ageDays?: string;
   sex: string;
   mobile: string;
   treatingDoctor: string;

@@ -16,27 +16,28 @@ export const PATIENT_REGISTRATION_FIELD_ORDER = [
   'lastName',
   'birthDate',
   'age',
-  'ageUnit',
+  'ageMonths',
+  'ageDays',
   'sex',
-
-  // Section 2: Demographics & Clinical
   'hospitalDoctor',
+  'mobile',
+  'email',
+
+  // Section 2: Demographics & Clinical (Collapsible)
   'referenceBy',
   'religion',
   'maritalStatus',
   'weight',
   'height',
 
-  // Section 3: Contact & Address
-  'mobile',
-  'email',
-  'autoSms',
+  // Section 3: Contact & Address (Collapsible)
   'streetAddress',
   'city',
   'state',
   'pinCode',
+  'autoSms',
 
-  // Section 4: Other Details & Identification
+  // Section 4: Other Details & Identification (Collapsible)
   'estimate',
   'aadharNo',
   'panNo',
