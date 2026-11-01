@@ -1,0 +1,67 @@
+{
+  "bills": [
+    {
+      "id": "BILL-3C3CFE32",
+      "patientId": "UHID-1001",
+      "uhid": "UHID-1001",
+      "invoiceNo": "OPD2627/6146",
+      "billDate": "2026-10-28T21:42:55.800947+00:00",
+      "patientName": "AARAV KISHORE PATEL",
+      "age": "32",
+      "ageUnit": "Years",
+      "sex": "Male",
+      "mobile": "9876543201",
+      "treatingDoctor": "DR. NILESH MAHALE",
+      "referenceDoctor": "DR. NIKUNJ VITHALANI",
+      "items": [
+        {
+          "srNo": 1,
+          "details": "OPD Consultation / Registration Charge",
+          "rate": 500.0,
+          "amount": 500.0
+        }
+      ],
+      "totalAmount": 500.0,
+      "amountReceived": 500.0,
+      "paymentType": "Cash",
+      "receiptNo": "OPD2627/6146",
+      "dueAmount": 0.0,
+      "entryBy": "Jenil Bundela",
+      "pcName": "RECEPTION1",
+      "createdAt": "2026-10-28T21:42:55.800947+00:00",
+      "updatedAt": "2026-10-28T21:42:55.800947+00:00"
+    },
+    {
+      "id": "BILL-7016EF81",
+      "patientId": "UHID-1023",
+      "uhid": "UHID-1023",
+      "invoiceNo": "OPD2627/6147",
+      "billDate": "2026-10-28T22:10:26.213228+00:00",
+      "patientName": "TESTBILLPATIENT",
+      "age": "33",
+      "ageUnit": "Years",
+      "sex": "Male",
+      "mobile": "9988776655",
+      "treatingDoctor": "DR. NILESH MAHALE",
+      "referenceDoctor": "DR. NIKUNJ VITHALANI",
+      "items": [
+        {
+          "srNo": 1,
+          "details": "OPD Consultation / Registration Charge",
+          "rate": 500.0,
+          "amount": 500.0
+        }
+      ],
+      "totalAmount": 500.0,
+      "amountReceived": 500.0,
+      "paymentType": "Cash",
+      "receiptNo": "OPD2627/6147",
+      "dueAmount": 0.0,
+      "entryBy": "Jenil Bundela",
+      "pcName": "RECEPTION1",
+      "createdAt": "2026-10-28T22:10:26.213228+00:00",
+      "updatedAt": "2026-10-28T22:10:26.213228+00:00"
+    }
+  ],
+  "last_invoice_seq": 6147
+}

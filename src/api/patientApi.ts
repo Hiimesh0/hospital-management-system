@@ -78,6 +78,13 @@ export interface PatientBillRecord {
   treatingDoctor: string;
   referenceDoctor: string;
   items: BillItem[];
+  subtotal?: number;
+  discountType?: 'percentage' | 'fixed';
+  discountValue?: number;
+  discountAmount?: number;
+  discountDoctor?: string;
+  discountRemark?: string;
+  netPayable?: number;
   totalAmount: number;
   amountReceived: number;
   paymentType: string;
@@ -103,17 +110,30 @@ export interface BillCreatePayload {
   items?: Array<{ details: string; rate: number; amount?: number; chargeId?: string }>;
   paymentType?: string;
   amountReceived?: number;
+  discountType?: 'percentage' | 'fixed';
+  discountValue?: number;
+  discountDoctor?: string;
+  discountRemark?: string;
   entryBy?: string;
   pcName?: string;
   forceNew?: boolean;
+  updateExisting?: boolean;
 }
 
-const API_BASE_URL =
-
-  import.meta.env.VITE_API_URL ||
-  (typeof window !== 'undefined' && window.location.hostname === 'localhost'
-    ? 'http://127.0.0.1:8000/api'
-    : 'http://127.0.0.1:8000/api');
+const API_BASE_URL = (() => {
+  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1') {
+      return 'http://127.0.0.1:8000/api';
+    }
+    // If accessing via local area network IP (e.g. 192.168.x.x)
+    if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(host)) {
+      return `http://${host}:8000/api`;
+    }
+  }
+  return 'http://127.0.0.1:8000/api';
+})();
 
 const LOCAL_STORAGE_KEY = 'mixu_patients_storage';
 
@@ -566,6 +586,47 @@ export const patientApi = {
         .reverse()
         .find(b => (b.uhid || '').toLowerCase() === cleanId || (b.patientId || '').toLowerCase() === cleanId);
       if (existing) {
+        if (payload?.updateExisting) {
+          // Update existing bill with new items/discounts under same invoice
+          const rawItems = payload?.items && payload.items.length > 0 ? payload.items : existing.items;
+          const items: BillItem[] = rawItems.map((it, idx) => {
+            const rate = typeof it.rate === 'number' ? it.rate : parseFloat(String(it.rate || 0)) || 0;
+            return {
+              srNo: idx + 1,
+              details: it.details || `Service #${idx + 1}`,
+              rate: Math.round(rate * 100) / 100,
+              amount: Math.round(rate * 100) / 100,
+            };
+          });
+          const subtotal = Math.round(items.reduce((acc, it) => acc + it.amount, 0) * 100) / 100;
+          const discType = payload.discountType || existing.discountType || 'percentage';
+          const discVal = Number(payload.discountValue !== undefined ? payload.discountValue : existing.discountValue || 0);
+          let discAmt = 0;
+          if (discType === 'percentage') {
+            discAmt = Math.round(((subtotal * Math.min(100, Math.max(0, discVal))) / 100) * 100) / 100;
+          } else {
+            discAmt = Math.round(Math.min(subtotal, Math.max(0, discVal)) * 100) / 100;
+          }
+          const netPayable = Math.max(0, Math.round((subtotal - discAmt) * 100) / 100);
+          const received = payload?.amountReceived !== undefined ? Math.round(Number(payload.amountReceived) * 100) / 100 : netPayable;
+          const dueAmount = Math.max(0, Math.round((netPayable - received) * 100) / 100);
+
+          existing.items = items;
+          existing.subtotal = subtotal;
+          existing.discountType = discType;
+          existing.discountValue = discVal;
+          existing.discountAmount = discAmt;
+          existing.discountDoctor = payload.discountDoctor || existing.discountDoctor || '';
+          existing.discountRemark = payload.discountRemark || existing.discountRemark || '';
+          existing.netPayable = netPayable;
+          existing.totalAmount = netPayable;
+          existing.amountReceived = received;
+          existing.dueAmount = dueAmount;
+          existing.paymentType = payload.paymentType || existing.paymentType || 'Cash';
+          existing.updatedAt = new Date().toISOString();
+          saveFallbackBillsStorage(allBills);
+          return existing;
+        }
         return existing;
       }
     }
@@ -577,18 +638,33 @@ export const patientApi = {
       throw new Error(`Patient '${patientId}' not found for bill generation.`);
     }
 
-    // Compute sequence
-    let maxSeq = 6145;
+    // Compute sequence using persistent counter
+    let storedSeq = 6145;
+    try {
+      const stored = localStorage.getItem('mixu_last_invoice_seq');
+      if (stored) storedSeq = parseInt(stored, 10) || 6145;
+    } catch {
+      // Ignore
+    }
+
+    let maxSeq = storedSeq;
     for (const b of allBills) {
       const inv = b.invoiceNo || '';
-      if (inv.includes('/')) {
-        const numPart = parseInt(inv.split('/')[1], 10);
+      const match = inv.match(/[/_-](\d+)$/);
+      if (match) {
+        const numPart = parseInt(match[1], 10);
         if (!isNaN(numPart) && numPart > maxSeq) {
           maxSeq = numPart;
         }
       }
     }
     const nextSeq = maxSeq + 1;
+    try {
+      localStorage.setItem('mixu_last_invoice_seq', String(nextSeq));
+    } catch {
+      // Ignore
+    }
+
     const invoiceNo = `OPD2627/${nextSeq}`;
     const nowIso = new Date().toISOString();
 
@@ -606,7 +682,17 @@ export const patientApi = {
       };
     });
 
-    const totalAmount = Math.round(items.reduce((acc, it) => acc + it.amount, 0) * 100) / 100;
+    const subtotal = Math.round(items.reduce((acc, it) => acc + it.amount, 0) * 100) / 100;
+    const discType = payload?.discountType || 'percentage';
+    const discVal = Number(payload?.discountValue || 0);
+    let discAmt = 0;
+    if (discType === 'percentage') {
+      discAmt = Math.round(((subtotal * Math.min(100, Math.max(0, discVal))) / 100) * 100) / 100;
+    } else {
+      discAmt = Math.round(Math.min(subtotal, Math.max(0, discVal)) * 100) / 100;
+    }
+    const netPayable = Math.max(0, Math.round((subtotal - discAmt) * 100) / 100);
+    const totalAmount = netPayable;
     const received = payload?.amountReceived !== undefined ? Math.round(Number(payload.amountReceived) * 100) / 100 : totalAmount;
     const dueAmount = Math.max(0, Math.round((totalAmount - received) * 100) / 100);
 
@@ -627,6 +713,13 @@ export const patientApi = {
       treatingDoctor: (patient.hospitalDoctor || 'Dr. NILESH MAHALE').toUpperCase(),
       referenceDoctor: (patient.referenceBy || '---').toUpperCase() || '---',
       items,
+      subtotal,
+      discountType: discType,
+      discountValue: discVal,
+      discountAmount: discAmt,
+      discountDoctor: payload?.discountDoctor || '',
+      discountRemark: payload?.discountRemark || '',
+      netPayable,
       totalAmount,
       amountReceived: received,
       paymentType: payload?.paymentType || 'Cash',

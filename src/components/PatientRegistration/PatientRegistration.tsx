@@ -69,6 +69,16 @@ const defaultFormState: PatientFormData = {
   remark: ''
 };
 
+const AVAILABLE_DOCTORS = [
+  'Dr. NILESH MAHALE',
+  'Dr. ASHOK PATEL',
+  'Dr. SHARMA',
+  'Dr. R. K. DESAI',
+  'DR. NIKUNJ VITHALANI',
+  'DR. ANAND SHAH',
+  'Dr. DEVANG DESAI / JIGAR PATEL'
+];
+
 const PatientRegistration: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -95,6 +105,11 @@ const PatientRegistration: React.FC = () => {
   const [isBillCardOpen, setIsBillCardOpen] = useState<boolean>(false);
   const [billPaymentType, setBillPaymentType] = useState<string>('Cash');
   const [billAmountReceived, setBillAmountReceived] = useState<number | string>(500);
+  const [billDiscountType, setBillDiscountType] = useState<'percentage' | 'fixed'>('percentage');
+  const [billDiscountValue, setBillDiscountValue] = useState<number | string>(0);
+  const [billDiscountDoctor, setBillDiscountDoctor] = useState<string>('Dr. NILESH MAHALE');
+  const [billDiscountRemark, setBillDiscountRemark] = useState<string>('');
+  const [discountError, setDiscountError] = useState<string>('');
   const [activeBillPatient, setActiveBillPatient] = useState<PatientRecord | null>(null);
   const [existingPatientBill, setExistingPatientBill] = useState<PatientBillRecord | null>(null);
   const [billRows, setBillRows] = useState<DynamicBillRow[]>([
@@ -486,7 +501,15 @@ const PatientRegistration: React.FC = () => {
           }))
         );
         setBillPaymentType(existing.paymentType || 'Cash');
-        setBillAmountReceived(existing.amountReceived !== undefined ? existing.amountReceived : existing.totalAmount);
+        setBillDiscountType(existing.discountType || 'percentage');
+        setBillDiscountValue(existing.discountValue !== undefined ? existing.discountValue : 0);
+        setBillDiscountDoctor(existing.discountDoctor || recordToBill.hospitalDoctor || AVAILABLE_DOCTORS[0]);
+        setBillDiscountRemark(existing.discountRemark || '');
+        setBillAmountReceived(
+          existing.amountReceived !== undefined
+            ? existing.amountReceived
+            : (existing.netPayable !== undefined ? existing.netPayable : existing.totalAmount)
+        );
       } else {
         const defaultCharge = chargeMaster.find(c => c.name.toLowerCase().includes('consultation')) || chargeMaster[0] || {
           name: 'Consultation Charge',
@@ -500,9 +523,14 @@ const PatientRegistration: React.FC = () => {
           }
         ]);
         setBillPaymentType('Cash');
+        setBillDiscountType('percentage');
+        setBillDiscountValue(0);
+        setBillDiscountDoctor(recordToBill.hospitalDoctor || AVAILABLE_DOCTORS[0]);
+        setBillDiscountRemark('');
         setBillAmountReceived(defaultCharge.amount);
       }
 
+      setDiscountError('');
       setIsBillCardOpen(true);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Failed to retrieve or generate bill.';
@@ -534,7 +562,15 @@ const PatientRegistration: React.FC = () => {
           }))
         );
         setBillPaymentType(existing.paymentType || 'Cash');
-        setBillAmountReceived(existing.amountReceived !== undefined ? existing.amountReceived : existing.totalAmount);
+        setBillDiscountType(existing.discountType || 'percentage');
+        setBillDiscountValue(existing.discountValue !== undefined ? existing.discountValue : 0);
+        setBillDiscountDoctor(existing.discountDoctor || p.hospitalDoctor || AVAILABLE_DOCTORS[0]);
+        setBillDiscountRemark(existing.discountRemark || '');
+        setBillAmountReceived(
+          existing.amountReceived !== undefined
+            ? existing.amountReceived
+            : (existing.netPayable !== undefined ? existing.netPayable : existing.totalAmount)
+        );
       } else {
         const defaultCharge = chargeMaster.find(c => c.name.toLowerCase().includes('consultation')) || chargeMaster[0] || {
           name: 'Consultation Charge',
@@ -548,9 +584,14 @@ const PatientRegistration: React.FC = () => {
           }
         ]);
         setBillPaymentType('Cash');
+        setBillDiscountType('percentage');
+        setBillDiscountValue(0);
+        setBillDiscountDoctor(p.hospitalDoctor || AVAILABLE_DOCTORS[0]);
+        setBillDiscountRemark('');
         setBillAmountReceived(defaultCharge.amount);
       }
 
+      setDiscountError('');
       setIsBillCardOpen(true);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Failed to open bill card.';
@@ -602,7 +643,18 @@ const PatientRegistration: React.FC = () => {
     setBillRows(prev => prev.filter(r => r.id !== rowId));
   };
 
-  const totalBillAmount = billRows.reduce((sum, r) => sum + (parseFloat(String(r.amount)) || 0), 0);
+  const subtotalAmount = billRows.reduce((sum, r) => sum + (parseFloat(String(r.amount)) || 0), 0);
+  const numericDiscountValue = Math.max(0, parseFloat(String(billDiscountValue)) || 0);
+  let calculatedDiscountAmount = 0;
+  if (billDiscountType === 'percentage') {
+    calculatedDiscountAmount = Math.round(((subtotalAmount * numericDiscountValue) / 100) * 100) / 100;
+  } else {
+    calculatedDiscountAmount = Math.round(numericDiscountValue * 100) / 100;
+  }
+  calculatedDiscountAmount = Math.min(subtotalAmount, Math.max(0, calculatedDiscountAmount));
+  const netPayable = Math.max(0, Math.round((subtotalAmount - calculatedDiscountAmount) * 100) / 100);
+  const numericReceived = parseFloat(String(billAmountReceived)) || 0;
+  const dueAmount = Math.max(0, Math.round((netPayable - numericReceived) * 100) / 100);
 
   // Print Existing Bill without re-issuing
   const handlePrintExistingBill = async () => {
@@ -639,6 +691,44 @@ const PatientRegistration: React.FC = () => {
       }
     }
 
+    const subtotal = billRows.reduce((sum, r) => sum + (parseFloat(String(r.amount)) || 0), 0);
+    const numDiscVal = Math.max(0, parseFloat(String(billDiscountValue)) || 0);
+
+    // Validate discount
+    if (billDiscountType === 'percentage') {
+      if (numDiscVal < 0 || numDiscVal > 100) {
+        setDiscountError('Discount percentage must be between 0% and 100%.');
+        return;
+      }
+    } else {
+      if (numDiscVal < 0) {
+        setDiscountError('Fixed discount amount cannot be negative.');
+        return;
+      }
+      if (numDiscVal > subtotal) {
+        setDiscountError(`Fixed discount (₹${numDiscVal}) cannot exceed subtotal amount (₹${subtotal}).`);
+        return;
+      }
+    }
+
+    const calculatedDiscount = billDiscountType === 'percentage'
+      ? Math.round(((subtotal * numDiscVal) / 100) * 100) / 100
+      : Math.round(numDiscVal * 100) / 100;
+
+    if (calculatedDiscount > 0) {
+      if (!billDiscountDoctor.trim()) {
+        setDiscountError('Please select the doctor who authorized this discount.');
+        return;
+      }
+      if (!billDiscountRemark.trim()) {
+        setDiscountError('Please enter a remark or reason for authorizing this discount.');
+        return;
+      }
+    }
+    setDiscountError('');
+
+    const netPayableCalc = Math.max(0, Math.round((subtotal - calculatedDiscount) * 100) / 100);
+
     setIsGeneratingBill(true);
     try {
       const itemsPayload = billRows.map((r, idx) => ({
@@ -648,13 +738,18 @@ const PatientRegistration: React.FC = () => {
         amount: parseFloat(String(r.amount))
       }));
       const rec = parseFloat(String(billAmountReceived));
-      const received = isNaN(rec) ? totalBillAmount : rec;
+      const received = isNaN(rec) ? netPayableCalc : rec;
 
       const bill = await patientApi.createOrGetPatientBill(activeBillPatient.uhid, {
         items: itemsPayload,
         paymentType: billPaymentType,
         amountReceived: received,
-        forceNew: true
+        discountType: billDiscountType,
+        discountValue: numDiscVal,
+        discountDoctor: calculatedDiscount > 0 ? billDiscountDoctor.trim() : undefined,
+        discountRemark: calculatedDiscount > 0 ? billDiscountRemark.trim() : undefined,
+        updateExisting: Boolean(existingPatientBill),
+        forceNew: !existingPatientBill
       });
 
       setIsBillCardOpen(false);
@@ -1450,23 +1545,16 @@ const PatientRegistration: React.FC = () => {
               </div>
             </section>
 
-            {/* In-Form Action Buttons (Synchronized with Sticky Sidebar) */}
+            {/* Authoritative Sticky Action Bar (Single Source of Actions for Desktop & Mobile) */}
             <div className={styles.actions}>
               {isLocked ? (
                 <>
                   <button
                     type="button"
-                    className={`${styles.btn} ${styles.btnLockedEdit}`}
-                    onClick={handleUnlockForEdit}
-                  >
-                    <Edit2 size={16} style={{ marginRight: '6px' }} />
-                    Edit Record
-                  </button>
-                  <button
-                    type="button"
                     className={`${styles.btn} ${styles.btnBill}`}
                     onClick={handleBillButtonClick}
                     disabled={isGeneratingBill}
+                    title="Open Dynamic Bill Card"
                   >
                     <Receipt size={16} style={{ marginRight: '6px' }} />
                     Bill
@@ -1476,17 +1564,46 @@ const PatientRegistration: React.FC = () => {
                     className={`${styles.btn} ${styles.btnPrintSticker}`}
                     onClick={handlePrintSticker}
                     disabled={isPrintingSticker}
+                    title="Print Patient Sticker"
                   >
                     <Printer size={16} style={{ marginRight: '6px' }} />
-                    Print Sticker
+                    Sticker
+                  </button>
+                  <button
+                    type="button"
+                    className={`${styles.btn} ${styles.btnLockedEdit}`}
+                    onClick={handleUnlockForEdit}
+                    title="Unlock to edit patient details"
+                  >
+                    <Edit2 size={16} style={{ marginRight: '6px' }} />
+                    Edit Record
                   </button>
                   <button
                     type="button"
                     className={`${styles.btn} ${styles.btnNewRegistration}`}
                     onClick={handleSwitchToCreateMode}
+                    title="Start a new patient registration"
                   >
                     <Plus size={16} style={{ marginRight: '6px' }} />
                     New Registration
+                  </button>
+                  <button
+                    type="button"
+                    className={`${styles.btn} ${styles.btnSecondary}`}
+                    onClick={() => setIsSearchOpen(true)}
+                    title="Quick search registered patients"
+                  >
+                    <Search size={15} style={{ marginRight: '6px' }} />
+                    Quick Search Patient ({lookupPatients.length})
+                  </button>
+                  <button
+                    type="button"
+                    className={`${styles.btn} ${styles.btnSecondary}`}
+                    onClick={() => navigate('/patient-registration-list')}
+                    title="View patient registration list"
+                  >
+                    <ListPlus size={15} style={{ marginRight: '6px' }} />
+                    Patient Registration List
                   </button>
                 </>
               ) : isEditMode ? (
@@ -1496,6 +1613,7 @@ const PatientRegistration: React.FC = () => {
                     className={`${styles.btn} ${styles.btnSecondary}`}
                     onClick={handleResetForm}
                     disabled={isSubmitting}
+                    title="Reset values to loaded record"
                   >
                     <RotateCcw size={15} style={{ marginRight: '6px' }} />
                     Reset Values
@@ -1505,14 +1623,36 @@ const PatientRegistration: React.FC = () => {
                     className={`${styles.btn} ${styles.btnSecondary}`}
                     onClick={handleCancelEdit}
                     disabled={isSubmitting}
+                    title="Cancel edit and lock record"
                   >
                     <ArrowLeft size={15} style={{ marginRight: '6px' }} />
                     Cancel Edit
                   </button>
                   <button
+                    type="button"
+                    className={`${styles.btn} ${styles.btnBill}`}
+                    onClick={handleBillButtonClick}
+                    disabled={isGeneratingBill}
+                    title="Open Dynamic Bill Card"
+                  >
+                    <Receipt size={16} style={{ marginRight: '6px' }} />
+                    Bill
+                  </button>
+                  <button
+                    type="button"
+                    className={`${styles.btn} ${styles.btnPrintSticker}`}
+                    onClick={handlePrintSticker}
+                    disabled={isPrintingSticker}
+                    title="Print Patient Sticker"
+                  >
+                    <Printer size={16} style={{ marginRight: '6px' }} />
+                    Sticker
+                  </button>
+                  <button
                     type="submit"
                     className={`${styles.btn} ${styles.btnPrimary}`}
                     disabled={isSubmitting}
+                    title="Update patient record in system"
                   >
                     {isSubmitting ? (
                       <span>Updating...</span>
@@ -1531,6 +1671,7 @@ const PatientRegistration: React.FC = () => {
                     className={`${styles.btn} ${styles.btnSecondary}`}
                     onClick={handleResetForm}
                     disabled={isSubmitting}
+                    title="Clear all fields"
                   >
                     <RotateCcw size={15} style={{ marginRight: '6px' }} />
                     Clear Form
@@ -1539,6 +1680,7 @@ const PatientRegistration: React.FC = () => {
                     type="button"
                     className={`${styles.btn} ${styles.btnSecondary}`}
                     onClick={() => setIsSearchOpen(true)}
+                    title="Quick search registered patients"
                   >
                     <Search size={15} style={{ marginRight: '6px' }} />
                     Quick Search Patient ({lookupPatients.length})
@@ -1547,6 +1689,7 @@ const PatientRegistration: React.FC = () => {
                     type="button"
                     className={`${styles.btn} ${styles.btnSecondary}`}
                     onClick={() => navigate('/patient-registration-list')}
+                    title="View patient registration list"
                   >
                     <ListPlus size={15} style={{ marginRight: '6px' }} />
                     Patient Registration List
@@ -1555,6 +1698,7 @@ const PatientRegistration: React.FC = () => {
                     type="submit"
                     className={`${styles.btn} ${styles.btnPrimary}`}
                     disabled={isSubmitting}
+                    title="Register and save patient to JSON"
                   >
                     {isSubmitting ? (
                       <span>Saving to JSON...</span>
@@ -1570,354 +1714,6 @@ const PatientRegistration: React.FC = () => {
             </div>
           </form>
         </div>
-
-        {/* Desktop Sticky Action Sidebar */}
-        <aside className={styles.actionSidebar} aria-label="Patient Registration Actions">
-          <div className={styles.stickyActionCard}>
-            <div className={styles.actionCardHeader}>
-              <div className={styles.actionCardTitle}>
-                Actions
-              </div>
-              <span
-                className={`${styles.actionCardBadge} ${
-                  isLocked ? styles.badgeLocked : isEditMode ? styles.badgeEditing : styles.badgeNew
-                }`}
-              >
-                {isLocked ? (
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
-                    <Lock size={11} /> Locked
-                  </span>
-                ) : isEditMode ? (
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
-                    <Edit2 size={11} /> Editing
-                  </span>
-                ) : (
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
-                    <Plus size={11} /> New
-                  </span>
-                )}
-              </span>
-            </div>
-
-            {/* UHID Display Box */}
-            <div className={styles.sidebarUhidBox}>
-              <div className={styles.sidebarUhidLabel}>
-                {isLocked || isEditMode ? 'Patient UHID' : 'Assigned After Save'}
-              </div>
-              <div className={styles.sidebarUhidVal}>
-                {isLocked || isEditMode
-                  ? loadedSavedPatient?.uhid || editId || assignedUhidPreview
-                  : assignedUhidPreview}
-              </div>
-              {(isLocked || isEditMode) && (formData.firstName || formData.lastName) && (
-                <div className={styles.sidebarPatientName} title={`${formData.firstName} ${formData.lastName}`}>
-                  {formData.firstName} {formData.lastName}
-                </div>
-              )}
-            </div>
-
-            {/* Action Buttons list */}
-            <div className={styles.actionButtonList}>
-              {isLocked ? (
-                <>
-                  <button
-                    type="button"
-                    className={`${styles.btn} ${styles.btnBill} ${styles.sidebarBtn}`}
-                    onClick={handleBillButtonClick}
-                    disabled={isGeneratingBill}
-                    title="Open Dynamic Bill Card to configure charges and print bill"
-                  >
-                    <Receipt size={16} style={{ marginRight: '6px' }} />
-                    Bill (Bill Cum Receipt)
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`${styles.btn} ${styles.btnPrintSticker} ${styles.sidebarBtn}`}
-                    onClick={handlePrintSticker}
-                    disabled={isPrintingSticker}
-                    title="Generate and print 100mm x 50mm patient sticker PDF with barcode"
-                  >
-                    <Printer size={16} style={{ marginRight: '6px' }} />
-                    Print Patient Sticker
-                  </button>
-
-                  <div className={styles.sidebarDivider} />
-
-                  <button
-                    type="button"
-                    className={`${styles.btn} ${styles.btnLockedEdit} ${styles.sidebarBtn}`}
-                    onClick={handleUnlockForEdit}
-                    title="Unlock form to modify patient record"
-                  >
-                    <Edit2 size={15} style={{ marginRight: '6px' }} />
-                    Edit Record
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`${styles.btn} ${styles.btnNewRegistration} ${styles.sidebarBtn}`}
-                    onClick={handleSwitchToCreateMode}
-                    title="Start a new patient registration"
-                  >
-                    <Plus size={15} style={{ marginRight: '6px' }} />
-                    New Registration
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`${styles.btn} ${styles.btnSecondary} ${styles.sidebarBtn}`}
-                    onClick={() => setIsSearchOpen(true)}
-                    title="Search registered patients"
-                  >
-                    <Search size={15} style={{ marginRight: '6px' }} />
-                    Search Patient
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`${styles.btn} ${styles.btnSecondary} ${styles.sidebarBtn}`}
-                    onClick={() => navigate('/patient-registration-list')}
-                    title="Open patient list view"
-                  >
-                    <ListPlus size={15} style={{ marginRight: '6px' }} />
-                    Patient List
-                  </button>
-                </>
-              ) : isEditMode ? (
-                <>
-                  <button
-                    type="button"
-                    className={`${styles.btn} ${styles.btnPrimary} ${styles.sidebarBtn}`}
-                    onClick={() => handleSubmit()}
-                    disabled={isSubmitting}
-                    title="Save changes to this patient record"
-                  >
-                    {isSubmitting ? (
-                      <span>Saving...</span>
-                    ) : (
-                      <>
-                        <Save size={16} style={{ marginRight: '6px' }} />
-                        Update Record
-                      </>
-                    )}
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`${styles.btn} ${styles.btnSecondary} ${styles.sidebarBtn}`}
-                    onClick={handleCancelEdit}
-                    disabled={isSubmitting}
-                    title="Cancel edits and revert to locked view"
-                  >
-                    <ArrowLeft size={15} style={{ marginRight: '6px' }} />
-                    Cancel Edit
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`${styles.btn} ${styles.btnSecondary} ${styles.sidebarBtn}`}
-                    onClick={handleResetForm}
-                    disabled={isSubmitting}
-                    title="Restore initial values"
-                  >
-                    <RotateCcw size={15} style={{ marginRight: '6px' }} />
-                    Reset Values
-                  </button>
-
-                  <div className={styles.sidebarDivider} />
-
-                  <button
-                    type="button"
-                    className={`${styles.btn} ${styles.btnBill} ${styles.sidebarBtn}`}
-                    onClick={handleBillButtonClick}
-                    disabled={isGeneratingBill}
-                    title="Open Dynamic Bill Card"
-                  >
-                    <Receipt size={15} style={{ marginRight: '6px' }} />
-                    Bill
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`${styles.btn} ${styles.btnPrintSticker} ${styles.sidebarBtn}`}
-                    onClick={handlePrintSticker}
-                    disabled={isPrintingSticker}
-                    title="Print patient sticker"
-                  >
-                    <Printer size={15} style={{ marginRight: '6px' }} />
-                    Print Sticker
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button
-                    type="button"
-                    className={`${styles.btn} ${styles.btnPrimary} ${styles.sidebarBtn}`}
-                    onClick={() => handleSubmit()}
-                    disabled={isSubmitting}
-                    title="Register new patient to system"
-                  >
-                    {isSubmitting ? (
-                      <span>Saving to JSON...</span>
-                    ) : (
-                      <>
-                        <Save size={16} style={{ marginRight: '6px' }} />
-                        Register / Save Patient
-                      </>
-                    )}
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`${styles.btn} ${styles.btnSecondary} ${styles.sidebarBtn}`}
-                    onClick={handleResetForm}
-                    disabled={isSubmitting}
-                    title="Clear all fields"
-                  >
-                    <RotateCcw size={15} style={{ marginRight: '6px' }} />
-                    Clear Form
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`${styles.btn} ${styles.btnSecondary} ${styles.sidebarBtn}`}
-                    onClick={() => setIsSearchOpen(true)}
-                    title="Quick search existing patients"
-                  >
-                    <Search size={15} style={{ marginRight: '6px' }} />
-                    Search Patient
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`${styles.btn} ${styles.btnSecondary} ${styles.sidebarBtn}`}
-                    onClick={() => navigate('/patient-registration-list')}
-                    title="View patient list"
-                  >
-                    <ListPlus size={15} style={{ marginRight: '6px' }} />
-                    Patient List
-                  </button>
-
-                  <div className={styles.sidebarDivider} />
-
-                  <button
-                    type="button"
-                    className={`${styles.btn} ${styles.btnBill} ${styles.sidebarBtn}`}
-                    disabled
-                    style={{ opacity: 0.5, cursor: 'not-allowed' }}
-                    title="Save patient first to issue bill"
-                  >
-                    <Receipt size={15} style={{ marginRight: '6px' }} />
-                    Bill (Save First)
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`${styles.btn} ${styles.btnPrintSticker} ${styles.sidebarBtn}`}
-                    disabled
-                    style={{ opacity: 0.5, cursor: 'not-allowed' }}
-                    title="Save patient first to print sticker"
-                  >
-                    <Printer size={15} style={{ marginRight: '6px' }} />
-                    Sticker (Save First)
-                  </button>
-                </>
-              )}
-            </div>
-          </div>
-        </aside>
-      </div>
-
-      {/* Mobile Sticky Bottom Action Bar */}
-      <div className={styles.mobileStickyBottomBar}>
-        {isLocked ? (
-          <>
-            <button
-              type="button"
-              className={`${styles.btn} ${styles.btnBill} ${styles.mobileActionBtn}`}
-              onClick={handleBillButtonClick}
-              disabled={isGeneratingBill}
-            >
-              <Receipt size={15} style={{ marginRight: '4px' }} /> Bill
-            </button>
-            <button
-              type="button"
-              className={`${styles.btn} ${styles.btnPrintSticker} ${styles.mobileActionBtn}`}
-              onClick={handlePrintSticker}
-              disabled={isPrintingSticker}
-            >
-              <Printer size={15} style={{ marginRight: '4px' }} /> Sticker
-            </button>
-            <button
-              type="button"
-              className={`${styles.btn} ${styles.btnLockedEdit} ${styles.mobileActionBtn}`}
-              onClick={handleUnlockForEdit}
-            >
-              <Edit2 size={15} style={{ marginRight: '4px' }} /> Edit
-            </button>
-            <button
-              type="button"
-              className={`${styles.btn} ${styles.btnNewRegistration} ${styles.mobileActionBtn}`}
-              onClick={handleSwitchToCreateMode}
-            >
-              <Plus size={15} style={{ marginRight: '4px' }} /> New
-            </button>
-          </>
-        ) : isEditMode ? (
-          <>
-            <button
-              type="button"
-              className={`${styles.btn} ${styles.btnPrimary} ${styles.mobileActionBtn}`}
-              onClick={() => handleSubmit()}
-              disabled={isSubmitting}
-            >
-              <Save size={15} style={{ marginRight: '4px' }} /> Update
-            </button>
-            <button
-              type="button"
-              className={`${styles.btn} ${styles.btnSecondary} ${styles.mobileActionBtn}`}
-              onClick={handleCancelEdit}
-              disabled={isSubmitting}
-            >
-              <ArrowLeft size={15} style={{ marginRight: '4px' }} /> Cancel
-            </button>
-            <button
-              type="button"
-              className={`${styles.btn} ${styles.btnSecondary} ${styles.mobileActionBtn}`}
-              onClick={handleResetForm}
-              disabled={isSubmitting}
-            >
-              <RotateCcw size={15} style={{ marginRight: '4px' }} /> Reset
-            </button>
-          </>
-        ) : (
-          <>
-            <button
-              type="button"
-              className={`${styles.btn} ${styles.btnPrimary} ${styles.mobileActionBtn}`}
-              onClick={() => handleSubmit()}
-              disabled={isSubmitting}
-            >
-              <Save size={15} style={{ marginRight: '4px' }} /> Save Patient
-            </button>
-            <button
-              type="button"
-              className={`${styles.btn} ${styles.btnSecondary} ${styles.mobileActionBtn}`}
-              onClick={() => setIsSearchOpen(true)}
-            >
-              <Search size={15} style={{ marginRight: '4px' }} /> Search
-            </button>
-            <button
-              type="button"
-              className={`${styles.btn} ${styles.btnSecondary} ${styles.mobileActionBtn}`}
-              onClick={handleResetForm}
-              disabled={isSubmitting}
-            >
-              <RotateCcw size={15} style={{ marginRight: '4px' }} /> Clear
-            </button>
-          </>
-        )}
       </div>
 
       {/* Quick Search Patient Lookup Modal */}
@@ -2207,13 +2003,13 @@ const PatientRegistration: React.FC = () => {
               </tbody>
             </table>
 
-            {/* Real-time Dynamic Total Box */}
+            {/* Real-time Subtotal & Due Box */}
             <div className={styles.billTotalBox}>
               <div>
                 <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'block' }}>
-                  Total Charges ({billRows.length} item{billRows.length > 1 ? 's' : ''})
+                  Subtotal ({billRows.length} item{billRows.length > 1 ? 's' : ''})
                 </span>
-                <span className={styles.billTotalBig}>₹{totalBillAmount.toFixed(2)}</span>
+                <span className={styles.billTotalBig}>₹{subtotalAmount.toFixed(2)}</span>
               </div>
               <div style={{ textAlign: 'right' }}>
                 <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'block' }}>
@@ -2223,11 +2019,131 @@ const PatientRegistration: React.FC = () => {
                   style={{
                     fontSize: '1.2rem',
                     fontWeight: 700,
-                    color: totalBillAmount - (parseFloat(String(billAmountReceived)) || 0) > 0 ? '#dc2626' : '#059669'
+                    color: dueAmount > 0 ? '#dc2626' : '#059669'
                   }}
                 >
-                  ₹{Math.max(0, totalBillAmount - (parseFloat(String(billAmountReceived)) || 0)).toFixed(2)}
+                  ₹{dueAmount.toFixed(2)}
                 </span>
+              </div>
+            </div>
+
+            {/* Discount Configuration Card */}
+            <div className={styles.billDiscountCard}>
+              <div className={styles.billSectionHeader} style={{ marginBottom: '0.5rem' }}>
+                <span className={styles.billSectionTitle} style={{ fontSize: '0.88rem' }}>
+                  Discount Details (Optional)
+                </span>
+                {calculatedDiscountAmount > 0 && (
+                  <span style={{ fontSize: '0.8rem', color: '#059669', fontWeight: 600 }}>
+                    Discount Applied: -₹{calculatedDiscountAmount.toFixed(2)}
+                  </span>
+                )}
+              </div>
+
+              <div className={styles.billDiscountGrid}>
+                <div>
+                  <label className={styles.label}>Discount Type</label>
+                  <select
+                    className={styles.select}
+                    value={billDiscountType}
+                    onChange={e => {
+                      setBillDiscountType(e.target.value as 'percentage' | 'fixed');
+                      setDiscountError('');
+                    }}
+                  >
+                    <option value="percentage">Percentage (%)</option>
+                    <option value="fixed">Fixed Amount (₹)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className={styles.label}>
+                    {billDiscountType === 'percentage' ? 'Discount (%)' : 'Discount Amount (₹)'}
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    max={billDiscountType === 'percentage' ? 100 : subtotalAmount}
+                    step={billDiscountType === 'percentage' ? '0.1' : '1'}
+                    className={styles.input}
+                    value={billDiscountValue}
+                    onChange={e => {
+                      setBillDiscountValue(e.target.value);
+                      setDiscountError('');
+                    }}
+                    placeholder={billDiscountType === 'percentage' ? 'e.g. 10' : 'e.g. 100'}
+                  />
+                </div>
+
+                <div>
+                  <label className={styles.label}>Calculated Discount (₹)</label>
+                  <input
+                    type="text"
+                    className={`${styles.input} ${styles.discountAmountDisplay}`}
+                    value={`₹${calculatedDiscountAmount.toFixed(2)}`}
+                    readOnly
+                    tabIndex={-1}
+                  />
+                </div>
+              </div>
+
+              <div className={styles.billDiscountFullRow}>
+                <div>
+                  <label className={styles.label}>
+                    Discount Authorizing Doctor {calculatedDiscountAmount > 0 && <span className={styles.required}>*</span>}
+                  </label>
+                  <select
+                    className={styles.select}
+                    value={billDiscountDoctor}
+                    onChange={e => {
+                      setBillDiscountDoctor(e.target.value);
+                      setDiscountError('');
+                    }}
+                  >
+                    {AVAILABLE_DOCTORS.map(doc => (
+                      <option key={doc} value={doc}>
+                        {doc}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className={styles.label}>
+                    Discount Remark / Reason {calculatedDiscountAmount > 0 && <span className={styles.required}>*</span>}
+                  </label>
+                  <input
+                    type="text"
+                    className={styles.input}
+                    placeholder="e.g. Staff relative, special concession, senior citizen"
+                    value={billDiscountRemark}
+                    onChange={e => {
+                      setBillDiscountRemark(e.target.value);
+                      setDiscountError('');
+                    }}
+                  />
+                </div>
+              </div>
+
+              {discountError && (
+                <div className={styles.discountValidationError} role="alert">
+                  ⚠️ {discountError}
+                </div>
+              )}
+            </div>
+
+            {/* Net Payable Highlighted Box */}
+            <div className={styles.netPayableBox}>
+              <div>
+                <span className={styles.netPayableLabel}>Net Amount Payable</span>
+                <span style={{ fontSize: '0.8rem', color: '#047857', display: 'block' }}>
+                  {calculatedDiscountAmount > 0
+                    ? `Subtotal ₹${subtotalAmount.toFixed(2)} minus Discount ₹${calculatedDiscountAmount.toFixed(2)}`
+                    : 'No discount applied'}
+                </span>
+              </div>
+              <div className={styles.netPayableVal}>
+                ₹{netPayable.toFixed(2)}
               </div>
             </div>
 
@@ -2264,9 +2180,9 @@ const PatientRegistration: React.FC = () => {
                   type="button"
                   className={`${styles.btn} ${styles.btnSecondary}`}
                   style={{ width: '100%', height: '38px', fontSize: '0.82rem' }}
-                  onClick={() => setBillAmountReceived(totalBillAmount)}
+                  onClick={() => setBillAmountReceived(netPayable)}
                 >
-                  Paid in Full (₹{totalBillAmount.toFixed(0)})
+                  Paid in Full (₹{netPayable.toFixed(0)})
                 </button>
               </div>
             </div>

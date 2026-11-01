@@ -303,34 +303,79 @@ export function generatePatientBillPdfBlob(bill: PatientBillRecord): Blob {
   doc.text(receivedStr, recBoxX + 43.0, rowRecY + 13.0, { align: 'right' });
 
   // Right Totals
-  const totalVal = Number(bill.totalAmount || 0);
+  const totalVal = Number(bill.totalAmount || bill.netPayable || 0);
+  const subtotalVal = Number(bill.subtotal || totalVal);
+  const discountVal = Number(bill.discountAmount || 0);
+  const discountType = String(bill.discountType || 'percentage').toLowerCase();
+  const discountValue = Number(bill.discountValue || 0);
+  const discountDoctor = String(bill.discountDoctor || '').trim();
+  const discountRemark = String(bill.discountRemark || '').trim();
   const dueVal = Number(bill.dueAmount || 0);
+
   const totalStr = Number.isInteger(totalVal) ? totalVal.toFixed(0) : totalVal.toFixed(2);
+  const subtotalStr = Number.isInteger(subtotalVal) ? subtotalVal.toFixed(0) : subtotalVal.toFixed(2);
+  const discountStr = Number.isInteger(discountVal) ? discountVal.toFixed(0) : discountVal.toFixed(2);
   const dueStr = Number.isInteger(dueVal) ? dueVal.toFixed(0) : dueVal.toFixed(2);
 
-  const totLabelX = boxX + 138.0;
+  const totLabelX = boxX + 132.0;
   const totValX = boxX + 165.0;
-  let totY = totalsStartY + 4.5;
+  let totY = totalsStartY + 3.5;
 
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(8.2);
-  doc.text('Total', totLabelX, totY);
-  doc.text(':', totValX - 3.0, totY);
-  doc.text(totalStr, totValX + 18.0, totY, { align: 'right' });
+  doc.setFontSize(7.8);
 
-  totY += 5.0;
+  if (discountVal > 0) {
+    // Subtotal
+    doc.text('Subtotal', totLabelX, totY);
+    doc.text(':', totValX - 3.0, totY);
+    doc.text(subtotalStr, totValX + 18.0, totY, { align: 'right' });
+
+    // Discount
+    totY += 4.0;
+    const discValStr = Number.isInteger(discountValue) ? discountValue.toFixed(0) : discountValue.toFixed(1);
+    const discLabel = discountType === 'percentage' ? `Disc. (${discValStr}%)` : 'Discount';
+    doc.text(discLabel, totLabelX, totY);
+    doc.text(':', totValX - 3.0, totY);
+    doc.text(`-${discountStr}`, totValX + 18.0, totY, { align: 'right' });
+
+    // Net Payable
+    totY += 4.0;
+    doc.text('Net Payable', totLabelX, totY);
+    doc.text(':', totValX - 3.0, totY);
+    doc.text(totalStr, totValX + 18.0, totY, { align: 'right' });
+  } else {
+    // Total
+    doc.text('Total', totLabelX, totY);
+    doc.text(':', totValX - 3.0, totY);
+    doc.text(totalStr, totValX + 18.0, totY, { align: 'right' });
+  }
+
+  // Received
+  totY += 4.2;
   doc.text('Received', totLabelX, totY);
   doc.text(':', totValX - 3.0, totY);
   doc.text(receivedStr, totValX + 18.0, totY, { align: 'right' });
 
-  totY += 12.0;
-  doc.setFontSize(9.0);
+  // Due
+  totY += 4.8;
+  doc.setFontSize(8.8);
   doc.text('Due', totLabelX, totY);
   doc.text(':', totValX - 3.0, totY);
   doc.text(dueStr, totValX + 18.0, totY, { align: 'right' });
 
-  // 6. Footer Section
-  const footerY = recBoxY + recBoxH + 4.0;
+  // 6. Footer Section & Discount Authorization Note
+  let footerY = recBoxY + recBoxH + 2.5;
+  if (discountVal > 0 && (discountDoctor || discountRemark)) {
+    const docPart = discountDoctor ? `Discount Given By: ${discountDoctor}` : '';
+    const remPart = discountRemark ? `Remark: ${discountRemark}` : '';
+    const combinedNote = [docPart, remPart].filter(Boolean).join(' | ');
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(6.8);
+    doc.setTextColor(70, 70, 70);
+    doc.text(combinedNote.substring(0, 95), boxX + 3.0, footerY);
+    footerY += 3.5;
+  }
+
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7.0);
   doc.setTextColor(50, 50, 50);
