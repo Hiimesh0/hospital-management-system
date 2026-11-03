@@ -1,0 +1,43 @@
+import{S as e,n as t}from"./index-ColcKaXN.js";import{t as n}from"./jspdf.es.min-CLA4-Ta9.js";var r={name:`arrow-left`,size:24,node:[[`path`,{d:`m12 19-7-7 7-7`,key:`1l729n`}],[`path`,{d:`M19 12H5`,key:`x3x0zl`}]]};r.node;var i=e(r),a={widthMm:210,heightMm:297,marginLeftMm:10,marginTopMm:10,marginRightMm:10,boxWidthMm:190,boxHeightMm:152};function o(e,t=!1){if(!e)return s(new Date,t);try{let n=new Date(e);return isNaN(n.getTime())?e:s(n,t)}catch{return e}}function s(e,t){let n=`${String(e.getDate()).padStart(2,`0`)}-${[`Jan`,`Feb`,`Mar`,`Apr`,`May`,`Jun`,`Jul`,`Aug`,`Sep`,`Oct`,`Nov`,`Dec`][e.getMonth()]}-${e.getFullYear()}`;if(!t)return n;let r=e.getHours(),i=String(e.getMinutes()).padStart(2,`0`),a=String(e.getSeconds()).padStart(2,`0`),o=r>=12?`PM`:`AM`;return r%=12,r||=12,`${n} ${String(r).padStart(2,`0`)}:${i}:${a} ${o}`}function c(e){let r=new n({orientation:`portrait`,unit:`mm`,format:`a4`}),i=a.marginLeftMm,s=a.marginTopMm,c=a.boxWidthMm,l=a.boxHeightMm;r.setDrawColor(50,50,50),r.setLineWidth(.35),r.rect(i,s,c,l);let u=s+7;r.setFont(`helvetica`,`bold`),r.setFontSize(16),r.setTextColor(25,25,25),r.text(t.name||`XYZ`,i+c/2,u,{align:`center`}),t.subTitle&&(u+=4.5,r.setFont(`helvetica`,`bold`),r.setFontSize(8.5),r.setTextColor(40,40,40),r.text(t.subTitle,i+c/2,u,{align:`center`})),t.managedBy&&(u+=3.8,r.setFont(`helvetica`,`normal`),r.setFontSize(7.5),r.setTextColor(60,60,60),r.text(t.managedBy,i+c/2,u,{align:`center`})),t.cinNo&&(u+=3.5,r.setFontSize(7),r.text(`CIN No. - ${t.cinNo}`,i+c/2,u,{align:`center`})),u+=4,r.setFont(`helvetica`,`normal`),r.setFontSize(7.2),r.setTextColor(50,50,50),r.text(t.address||`XYZ`,i+c/2,u,{align:`center`}),u+=3.2,r.text(`Ph: ${t.phone||`XYZ`}  |  E-mail: ${t.email||`XYZ`}`,i+c/2,u,{align:`center`}),u+=4.2,r.setDrawColor(60,60,60),r.setLineWidth(.3),r.line(i,u,i+c,u);let d=6.2;r.setFillColor(225,228,232),r.rect(i,u,c,d,`F`),r.setFont(`helvetica`,`bold`),r.setFontSize(10.5),r.setTextColor(20,20,20),r.text(`BILL CUM RECEIPT`,i+c/2,u+4.5,{align:`center`}),u+=d,r.line(i,u,i+c,u);let f=i+3,p=i+27,m=i+138,h=i+160,g=(e.patientName||`UNKNOWN PATIENT`).toUpperCase(),_=(e.age||``).trim(),ee=(e.ageUnit||`Yrs.`).trim(),te=_?`${_} ${ee}`:`N/A`,ne=(e.sex||`N/A`).trim(),v=(e.mobile||``).trim()||`N/A`,y=(e.treatingDoctor||`Dr. NILESH MAHALE`).toUpperCase(),b=(e.referenceDoctor||`---`).toUpperCase()||`---`,x=e.uhid||e.patientId||``,S=e.invoiceNo||``,C=o(e.billDate||e.createdAt),w=u+4;r.setFont(`helvetica`,`bold`),r.setFontSize(8),r.setTextColor(30,30,30),r.text(`Name`,f,w),r.text(`:`,p-3,w),r.setFont(`helvetica`,`bold`),r.setFontSize(8.2),r.text(g.substring(0,52),p,w),r.setFont(`helvetica`,`bold`),r.setFontSize(8),r.text(`UHID`,m,w),r.text(`:`,h-3,w),r.text(x,h,w),w+=4.5,r.text(`Age / Sex`,f,w),r.text(`:`,p-3,w),r.setFont(`helvetica`,`normal`),r.text(`${te} / ${ne}`,p,w),r.setFont(`helvetica`,`bold`),r.text(`Mobile :`,p+34,w),r.setFont(`helvetica`,`normal`),r.text(v,p+48,w),r.setFont(`helvetica`,`bold`),r.text(`Invoice No.`,m,w),r.text(`:`,h-3,w),r.text(S,h,w),w+=4.5,r.text(`Treating Dr`,f,w),r.text(`:`,p-3,w),r.setFont(`helvetica`,`normal`),r.setFontSize(7.8),r.text(y.substring(0,52),p,w),r.setFont(`helvetica`,`bold`),r.setFontSize(8),r.text(`Date`,m,w),r.text(`:`,h-3,w),r.setFont(`helvetica`,`normal`),r.text(C,h,w),w+=4.5,r.setFont(`helvetica`,`bold`),r.text(`Reference Dr`,f,w),r.text(`:`,p-3,w),r.setFont(`helvetica`,`normal`),r.setFontSize(7.8),r.text(b.substring(0,52),p,w),u=w+5.5,r.line(i,u,i+c,u);let T=u;r.setFont(`helvetica`,`bold`),r.setFontSize(8.2),r.text(`Sr. No.`,i+9,T+4,{align:`center`}),r.text(` Details`,i+18,T+4),r.text(`Rate   `,i+c-3,T+4,{align:`right`}),T+=5.5,r.line(i,T,i+c,T);let re=e.items&&e.items.length>0?e.items:[{srNo:1,details:`OPD Consultation / Registration Charge`,rate:500,amount:500}];r.setFont(`helvetica`,`normal`),r.setFontSize(8);for(let e of re){let t=Number(e.rate||e.amount||0),n=Number.isInteger(t)?t.toFixed(0):t.toFixed(2);r.text(String(e.srNo||1),i+9,T+4,{align:`center`}),r.text(` ${e.details}`,i+18,T+4),r.text(`${n}   `,i+c-3,T+4,{align:`right`}),T+=5.2}T=Math.max(T,u+16),r.line(i,T,i+c,T);let E=T+1.5,D=i+3,O=E,k=24.5;r.rect(D,O,126,k),r.setFont(`helvetica`,`bold`),r.setFontSize(7.2),r.text(` Rec.Date`,D+1,O+3.5),r.text(`Receipt No`,D+19,O+3.5),r.text(`Amt.`,D+43,O+3.5,{align:`right`}),r.text(`Payment Type`,D+56,O+3.5,{align:`center`}),r.text(`User`,D+78,O+3.5);let A=o(e.billDate||e.createdAt),j=Number(e.amountReceived||0),M=Number.isInteger(j)?j.toFixed(0):j.toFixed(2),N=e.paymentType||`Cash`,P=e.entryBy||`Jenil Bundela`,F=e.pcName||`RECEPTION1`,I=o(e.billDate||e.createdAt,!0),L=O+7.5;r.setFont(`helvetica`,`normal`),r.setFontSize(7),r.text(` ${A}`,D+1,L),r.text(e.receiptNo||S,D+19,L),r.text(M,D+43,L,{align:`right`}),r.text(N,D+56,L,{align:`center`}),r.text(`EntryBy:${P},`,D+78,L),r.text(`PCName:${F},`,D+78,L+3.2),r.text(`At:${I}.`,D+78,L+6.4),r.line(D+30,L+9.5,D+45,L+9.5),r.setFont(`helvetica`,`bold`),r.setFontSize(7.5),r.text(M,D+43,L+13,{align:`right`});let R=Number(e.totalAmount||e.netPayable||0),z=Number(e.subtotal||R),B=Number(e.discountAmount||0),V=String(e.discountType||`percentage`).toLowerCase(),H=Number(e.discountValue||0),U=String(e.discountDoctor||``).trim(),W=String(e.discountRemark||``).trim(),G=Number(e.dueAmount||0),K=Number.isInteger(R)?R.toFixed(0):R.toFixed(2),q=Number.isInteger(z)?z.toFixed(0):z.toFixed(2),J=Number.isInteger(B)?B.toFixed(0):B.toFixed(2),Y=Number.isInteger(G)?G.toFixed(0):G.toFixed(2),X=i+132,Z=i+165,Q=E+3.5;if(r.setFont(`helvetica`,`bold`),r.setFontSize(7.8),B>0){r.text(`Subtotal`,X,Q),r.text(`:`,Z-3,Q),r.text(q,Z+18,Q,{align:`right`}),Q+=4;let e=Number.isInteger(H)?H.toFixed(0):H.toFixed(1),t=V===`percentage`?`Disc. (${e}%)`:`Discount`;r.text(t,X,Q),r.text(`:`,Z-3,Q),r.text(`-${J}`,Z+18,Q,{align:`right`}),Q+=4,r.text(`Net Payable`,X,Q),r.text(`:`,Z-3,Q),r.text(K,Z+18,Q,{align:`right`})}else r.text(`Total`,X,Q),r.text(`:`,Z-3,Q),r.text(K,Z+18,Q,{align:`right`});Q+=4.2,r.text(`Received`,X,Q),r.text(`:`,Z-3,Q),r.text(M,Z+18,Q,{align:`right`}),Q+=4.8,r.setFontSize(8.8),r.text(`Due`,X,Q),r.text(`:`,Z-3,Q),r.text(Y,Z+18,Q,{align:`right`});let $=O+k+2.5;if(B>0&&(U||W)){let e=[U?`Discount Given By: ${U}`:``,W?`Remark: ${W}`:``].filter(Boolean).join(` | `);r.setFont(`helvetica`,`italic`),r.setFontSize(6.8),r.setTextColor(70,70,70),r.text(e.substring(0,95),i+3,$),$+=3.5}return r.setFont(`helvetica`,`normal`),r.setFontSize(7),r.setTextColor(50,50,50),r.text(`Subject to SURAT Jurisdiction`,i+3,$),r.text(`Payment by cheque Subject To Realization`,i+3,$+3.5),r.text(`EntryBy:${P}, PCName:${F}, At:${I}.`,i+3,$+7),r.setFont(`helvetica`,`bold`),r.setFontSize(7.5),r.text(`Authorized Signatory`,i+c-25,$+6,{align:`center`}),r.output(`blob`)}async function l(e,t){let n=window.open(`about:blank`,`_blank`);n&&n.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Generating Bill - ${e.invoiceNo}</title>
+          <style>
+            body {
+              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              height: 100vh;
+              margin: 0;
+              background-color: #f8fafc;
+              color: #334155;
+            }
+            .spinner {
+              width: 38px;
+              height: 38px;
+              border: 3px solid #cbd5e1;
+              border-top-color: #0d9488;
+              border-radius: 50%;
+              animation: spin 0.8s linear infinite;
+              margin-bottom: 16px;
+            }
+            @keyframes spin {
+              to { transform: rotate(360deg); }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="spinner"></div>
+          <p style="font-weight: 600; font-size: 1.05rem; margin-bottom: 4px;">Preparing Bill & Receipt (${e.invoiceNo})...</p>
+          <p style="font-size: 0.85rem; color: #64748b;">Generating printable A4 bill for ${e.patientName} (${e.uhid})</p>
+        </body>
+      </html>
+    `);try{let r=``;if(t)try{(await fetch(t,{method:`HEAD`})).ok&&(r=t)}catch{}if(!r){let t=c(e);r=URL.createObjectURL(t)}n?n.location.href=r:window.open(r,`_blank`)}catch(e){n&&(n.document.body.innerHTML=`
+        <div style="padding: 24px; text-align: center; color: #b91c1c; font-family: sans-serif;">
+          <h3>Failed to Generate Bill PDF</h3>
+          <p>${e instanceof Error?e.message:`An unexpected error occurred.`}</p>
+        </div>
+      `)}}export{l as n,i as r,o as t};

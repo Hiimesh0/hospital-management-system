@@ -1,0 +1,49 @@
+{
+  "templates": [
+    {
+      "id": "TPL-001",
+      "groupName": "Sonography",
+      "templateName": "COLOR DOPPLER BOTH UPPER LIMB",
+      "reportHeader": "BILATERAL UPPER LIMB DOPPLER",
+      "department": "Radiology & Imaging",
+      "details": "Both subclavian, brachial and axillary artery appear normal in course and caliber on both sides. No e/o thrombosis / Atherosclerosis / Stenosis / Aneurysm. On CDI and spectral waveform, they show normal flow and velocity.\nBoth subclavian & axillary veins show normal flow pattern.\n\nBoth ulnar and radial vessels appear normal in course and caliber on both sides. No e/o thrombosis / Atherosclerosis / Stenosis / Aneurysm. On CDI and spectral waveform, they show normal flow and velocity.\nVeins show normal compressibility.\n\nSuperficial veins of both upper limbs show normal course and flow pattern.\n\nCOMMENTS: Normal Bilateral Upper Limb Doppler.",
+      "status": "active"
+    },
+    {
+      "id": "TPL-002",
+      "groupName": "Sonography",
+      "templateName": "ULTRASOUND WHOLE ABDOMEN & PELVIS",
+      "reportHeader": "USG WHOLE ABDOMEN & PELVIS EXAMINATION",
+      "department": "Radiology & Imaging",
+      "details": "LIVER: Normal in size and shape. Normal parenchymal echotexture. No focal lesion seen. Intrahepatic biliary radicals are not dilated.\nGALL BLADDER: Well distended. Wall thickness is normal. No calculus or mass lesion seen.\nCOMMON BILE DUCT & PORTAL VEIN: Normal in caliber.\nPANCREAS: Visualized head, body, and tail appear normal in size and echotexture. No focal lesion or calcification.\nSPLEEN: Normal in size with homogeneous echotexture. No focal lesion seen.\nKIDNEYS: Both kidneys are normal in size, shape, position, and cortical echotexture. Cortico-medullary differentiation is well maintained. No calculus or hydronephrosis seen.\nURINARY BLADDER: Well distended, wall thickness is normal. No calculus or mass lesion seen.\nPROSTATE / UTERUS & ADNEXA: Normal for age.\n\nIMPRESSION: No significant sonological abnormality detected in whole abdomen and pelvis.",
+      "status": "active"
+    },
+    {
+      "id": "TPL-003",
+      "groupName": "Radiology",
+      "templateName": "CHEST X-RAY PA VIEW",
+      "reportHeader": "DIGITAL CHEST RADIOGRAPH (PA VIEW)",
+      "department": "Radiology",
+      "details": "Both lung fields appear clear with normal vascular markings.\nNo focal parenchymal consolidation, cavitation, or mass lesion seen.\nHilar shadows are within normal limits.\nCardiac size and configuration are within normal limits (Cardiothoracic ratio normal).\nBoth costophrenic and cardiophrenic angles are clear.\nBony thorax and surrounding soft tissue structures appear intact.\n\nIMPRESSION: Normal Chest Radiograph (PA View).",
+      "status": "active"
+    },
+    {
+      "id": "TPL-004",
+      "groupName": "Cardiology",
+      "templateName": "2D TRANSTHORACIC ECHOCARDIOGRAPHY",
+      "reportHeader": "2D ECHOCARDIOGRAPHY WITH COLOR DOPPLER REPORT",
+      "department": "Cardiology",
+      "details": "AORTIC ROOT & VALVE: Trileaflet aortic valve with normal opening and closure. No AS / AR.\nMITRAL VALVE: Normal leaflets and subvalvular apparatus. No MS / MR.\nTRICUSPID VALVE: Structurally normal. Trivial TR. Estimated PASP within normal limits.\nPULMONIC VALVE: Normal.\nCHAMBERS: Normal LV, RV, LA, and RA cavity dimensions. No thrombus or vegetations.\nLV FUNCTION: Normal LV systolic function. LVEF = 60-65%. No regional wall motion abnormality (RWMA) at rest.\nPERICARDIUM: Normal, no pericardial effusion.\n\nCONCLUSION: Normal resting 2D Transthoracic Echocardiogram. Good LV systolic function.",
+      "status": "active"
+    },
+    {
+      "id": "TPL-005",
+      "groupName": "Pathology",
+      "templateName": "COMPLETE BLOOD COUNT (CBC)",
+      "reportHeader": "HEMATOLOGY - COMPLETE BLOOD PICTURE REPORT",
+      "department": "Pathology",
+      "details": "HAEMOGLOBIN: 14.2 g/dL (Reference: Male 13.0 - 17.0, Female 12.0 - 15.0)\nTOTAL RBC COUNT: 4.8 mill/cu.mm (Reference: 4.5 - 5.5)\nTOTAL LEUCOCYTE COUNT (WBC): 7,400 /cu.mm (Reference: 4,000 - 11,000)\n\nDIFFERENTIAL LEUCOCYTE COUNT:\n- Polymorphs (Neutrophils): 64 % (Reference: 40 - 70)\n- Lymphocytes: 28 % (Reference: 20 - 40)\n- Eosinophils: 04 % (Reference: 01 - 06)\n- Monocytes: 04 % (Reference: 02 - 08)\n- Basophils: 00 % (Reference: 00 - 01)\n\nPLATELET COUNT: 2.40 Lakhs/cu.mm (Reference: 1.50 - 4.50 Lakhs)\nPERIPHERAL SMEAR: Normocytic normochromic RBCs. Normal WBC distribution and adequate platelets.",
+      "status": "active"
+    }
+  ]
+}
