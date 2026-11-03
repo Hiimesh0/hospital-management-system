@@ -1,3 +1,4 @@
+export * from './masterApi';
 export interface PatientRecord {
   id: string;
   uhid: string;

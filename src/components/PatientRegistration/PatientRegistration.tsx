@@ -26,6 +26,7 @@ import {
   Users
 } from 'lucide-react';
 import { patientApi } from '../../api/patientApi';
+import { doctorApi } from '../../api/masterApi';
 import type { PatientRecord, PatientFormData, PatientBillRecord, ChargeItem } from '../../api/patientApi';
 import { useAutoDismissNotification } from '../../hooks/useAutoDismissNotification';
 import { useFormKeyboardNavigation } from '../../hooks/useFormKeyboardNavigation';
@@ -149,6 +150,20 @@ const PatientRegistration: React.FC = () => {
 
   // Dynamic Billing States
   const [chargeMaster, setChargeMaster] = useState<ChargeItem[]>([]);
+  const [dynamicDoctors, setDynamicDoctors] = useState<string[]>(AVAILABLE_DOCTORS);
+
+  // Dynamic authoritative doctor list from Doctor Master
+  useEffect(() => {
+    doctorApi
+      .getDoctors({ active_only: true })
+      .then(res => {
+        if (res.doctors && res.doctors.length > 0) {
+          const names = res.doctors.map(d => `${d.title} ${d.drName}`.trim());
+          setDynamicDoctors(prev => Array.from(new Set([...names, ...prev])));
+        }
+      })
+      .catch(() => {});
+  }, []);
   const [isGeneratingBill, setIsGeneratingBill] = useState<boolean>(false);
   const [isBillCardOpen, setIsBillCardOpen] = useState<boolean>(false);
   const [billPaymentType, setBillPaymentType] = useState<string>('Cash');
@@ -989,12 +1004,12 @@ const PatientRegistration: React.FC = () => {
 
   // Doctors list for history filter
   const historyAvailableDoctors = useMemo(() => {
-    const docs = new Set<string>(AVAILABLE_DOCTORS);
+    const docs = new Set<string>(dynamicDoctors);
     lookupPatients.forEach(p => {
       if (p.hospitalDoctor) docs.add(p.hospitalDoctor);
     });
     return Array.from(docs).sort();
-  }, [lookupPatients]);
+  }, [lookupPatients, dynamicDoctors]);
 
   // Real-time instant search & combined filtering for Patient History
   const filteredHistoryPatients = useMemo(() => {
@@ -1439,7 +1454,7 @@ const PatientRegistration: React.FC = () => {
                     onChange={handleInputChange}
                     disabled={isLocked || isSubmitting}
                   >
-                    {AVAILABLE_DOCTORS.map(doc => (
+                    {dynamicDoctors.map(doc => (
                       <option key={doc} value={doc}>{doc}</option>
                     ))}
                   </select>
@@ -1515,7 +1530,7 @@ const PatientRegistration: React.FC = () => {
                         <option value="DR. NIKUNJ VITHALANI">DR. NIKUNJ VITHALANI</option>
                         <option value="DR. ANAND SHAH">DR. ANAND SHAH</option>
                         <option value="SELF">SELF</option>
-                        {AVAILABLE_DOCTORS.map(doc => (
+                        {dynamicDoctors.map(doc => (
                           <option key={doc} value={doc}>{doc}</option>
                         ))}
                       </select>
@@ -2644,7 +2659,7 @@ const PatientRegistration: React.FC = () => {
                       setDiscountError('');
                     }}
                   >
-                    {AVAILABLE_DOCTORS.map(doc => (
+                    {dynamicDoctors.map(doc => (
                       <option key={doc} value={doc}>
                         {doc}
                       </option>
