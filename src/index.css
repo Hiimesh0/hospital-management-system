@@ -39,7 +39,7 @@
   --sidebar-collapsed-width: 72px;
   --sidebar-actual-width: 270px;
   --mobile-header-height: 56px;
-  --watermark-url: url('/assets/mixu-infosystem-logo.png');
+  --watermark-url: url('/assets/mixu-logo-clean.png');
 }
 
 /* ==========================================================================
@@ -414,21 +414,22 @@ button {
   position: fixed;
   inset: 0;
   left: var(--sidebar-actual-width, 270px);
-  background-image: var(--watermark-url, url('/assets/mixu-infosystem-logo.png'));
+  background-image: var(--watermark-url, url('/assets/mixu-logo-clean.png'));
   background-repeat: no-repeat;
-  background-position: center;
-  background-size: min(50vw, 560px);
-  opacity: 0.13;
+  background-position: right 32px bottom 32px;
+  background-size: min(24vw, 240px);
+  opacity: 0.025;
   pointer-events: none;
-  z-index: 1;
+  z-index: 0;
   user-select: none;
   mix-blend-mode: multiply;
   transition: left 0.24s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Transparent page containers allow watermark to shine through */
+/* Page containers maintain clean solid background to prevent watermark overlap on form fields */
 [class*="pageContainer"] {
-  background-color: transparent !important;
+  position: relative;
+  z-index: 1;
 }
 
 /* Responsive Table scroll container utility */

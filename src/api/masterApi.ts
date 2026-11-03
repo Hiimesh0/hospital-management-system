@@ -785,3 +785,4 @@ export const reportTemplateApi = {
     }
   },
 };
+

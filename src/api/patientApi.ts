@@ -525,8 +525,49 @@ export const patientApi = {
   },
 
   /**
-   * Fetch latest issued bill for a patient (or null if none issued yet)
+   * Fetch all billing encounters in the hospital system
    */
+  async getAllBills(): Promise<PatientBillRecord[]> {
+    try {
+      const res = await fetch(`${API_BASE_URL}/bills/`, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && Array.isArray(data.bills)) {
+          return data.bills;
+        }
+      }
+    } catch {
+      // Backend not running -> Fallback to client storage
+    }
+
+    const localBills = getFallbackBillsStorage();
+    if (localBills.length > 0) {
+      return localBills;
+    }
+
+    // Try fetching bundled static bills.json for static builds (e.g. GitHub Pages)
+    try {
+      const baseUrl = import.meta.env.BASE_URL || '/';
+      const jsonUrl = `${baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`}data/bills.json`;
+      const res = await fetch(jsonUrl);
+      if (res.ok) {
+        const data = await res.json();
+        const list = data.bills || [];
+        if (Array.isArray(list) && list.length > 0) {
+          saveFallbackBillsStorage(list);
+          return list;
+        }
+      }
+    } catch {
+      // Ignore static fetch error
+    }
+
+    return [];
+  },
+
   async getPatientBill(patientId: string): Promise<PatientBillRecord | null> {
     try {
       const res = await fetch(`${API_BASE_URL}/patients/${encodeURIComponent(patientId)}/bill/`, {

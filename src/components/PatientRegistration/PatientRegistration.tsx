@@ -23,7 +23,10 @@ import {
   ChevronUp,
   UserPlus,
   UserCheck,
-  Users
+  Users,
+  Activity,
+  Clock,
+  History
 } from 'lucide-react';
 import { patientApi } from '../../api/patientApi';
 import { doctorApi } from '../../api/masterApi';
@@ -89,7 +92,7 @@ const AVAILABLE_DOCTORS = [
 /**
  * Accurately calculates Years, Months, and Days from Birth Date.
  */
-export const calculateAgeFromBirthDate = (birthDateStr: string) => {
+const calculateAgeFromBirthDate = (birthDateStr: string) => {
   if (!birthDateStr) return { years: '', months: '', days: '' };
   const birth = new Date(birthDateStr);
   const today = new Date();
@@ -114,6 +117,84 @@ export const calculateAgeFromBirthDate = (birthDateStr: string) => {
     months: String(Math.max(0, months)),
     days: String(Math.max(0, days))
   };
+};
+
+interface PatientEncounter {
+  id: string;
+  date: string;
+  type: string;
+  doctor: string;
+  department: string;
+  reference: string;
+  amount?: number;
+  rawDate: Date;
+}
+
+const formatEncounterDate = (dateStr: string): string => {
+  if (!dateStr) return 'Recently';
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return dateStr;
+  const day = String(d.getDate()).padStart(2, '0');
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const month = months[d.getMonth()];
+  const year = d.getFullYear();
+  return `${day}-${month}-${year}`;
+};
+
+const getTodayFormattedExample = (): string => {
+  const d = new Date();
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const year = d.getFullYear();
+  return `${day}-${month}-${year}`;
+};
+
+const getPatientEncounters = (
+  patient: PatientRecord,
+  bills: PatientBillRecord[]
+): PatientEncounter[] => {
+  const encounters: PatientEncounter[] = [];
+  const cleanUhid = (patient.uhid || patient.id || '').trim().toUpperCase();
+
+  // 1. Initial OPD Registration Encounter
+  const regDateStr = patient.createdAt || '';
+  const regDateObj = regDateStr ? new Date(regDateStr) : new Date();
+  encounters.push({
+    id: `ENC-REG-${cleanUhid}`,
+    date: regDateStr,
+    type: 'OPD Registration',
+    doctor: patient.hospitalDoctor || 'General OPD',
+    department: 'OPD / General',
+    reference: `UHID: ${cleanUhid}`,
+    rawDate: isNaN(regDateObj.getTime()) ? new Date() : regDateObj,
+  });
+
+  // 2. Billing / Service Encounters
+  const patientBills = bills.filter(b => {
+    const bUhid = (b.uhid || b.patientId || '').trim().toUpperCase();
+    return bUhid === cleanUhid;
+  });
+
+  patientBills.forEach((b, idx) => {
+    const bDateStr = b.billDate || b.createdAt || '';
+    const bDateObj = bDateStr ? new Date(bDateStr) : new Date();
+    const itemDesc = b.items && b.items.length > 0 ? b.items[0].details : 'OPD Consultation / Billing';
+    encounters.push({
+      id: b.id || `ENC-BILL-${idx}-${cleanUhid}`,
+      date: bDateStr,
+      type: itemDesc,
+      doctor: b.treatingDoctor || patient.hospitalDoctor || 'Consulting Physician',
+      department: 'OPD Billing',
+      reference: `Invoice ${b.invoiceNo || b.receiptNo || 'OPD'} (₹${b.totalAmount || 0})`,
+      amount: b.totalAmount,
+      rawDate: isNaN(bDateObj.getTime()) ? new Date() : bDateObj,
+    });
+  });
+
+  // Sort newest encounters first
+  encounters.sort((a, b) => b.rawDate.getTime() - a.rawDate.getTime());
+
+  return encounters;
 };
 
 const PatientRegistration: React.FC = () => {
@@ -193,13 +274,19 @@ const PatientRegistration: React.FC = () => {
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
   const [lookupQuery, setLookupQuery] = useState<string>('');
   const [lookupPatients, setLookupPatients] = useState<PatientRecord[]>([]);
+  const [allBills, setAllBills] = useState<PatientBillRecord[]>([]);
+  const [isHistoryModalOpen, setIsHistoryModalOpen] = useState<boolean>(false);
+  const [selectedHistoryPatient, setSelectedHistoryPatient] = useState<PatientRecord | null>(null);
 
-  // Load record count & initial preview UHID from backend
+  // Load record count, initial preview UHID, and hospital bills from backend
   const fetchBackendMeta = useCallback(async () => {
     try {
-      const data = await patientApi.getPatients();
-      const list = data.patients || [];
-      setLookupPatients(list);
+      const [patientData, billsData] = await Promise.all([
+        patientApi.getPatients(),
+        patientApi.getAllBills(),
+      ]);
+      setLookupPatients(patientData.patients || []);
+      setAllBills(billsData || []);
     } catch {
       // Backend offline fallback handled gracefully
     }
@@ -302,6 +389,16 @@ const PatientRegistration: React.FC = () => {
     const todayStr = new Date().toISOString().split('T')[0];
     if (dateVal && dateVal > todayStr) {
       setNotification({ type: 'error', message: 'Birth Date cannot be in the future.' });
+      return;
+    }
+    if (!dateVal) {
+      setFormData(prev => ({
+        ...prev,
+        birthDate: '',
+        age: '',
+        ageMonths: '',
+        ageDays: '',
+      }));
       return;
     }
     const { years, months, days } = calculateAgeFromBirthDate(dateVal);
@@ -1117,16 +1214,13 @@ const PatientRegistration: React.FC = () => {
               </>
             )}
           </span>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
           <button
             type="button"
-            className={`${styles.btn} ${styles.btnScanCamera} ${styles.headerScanBtn}`}
-            onClick={() => setIsCameraModalOpen(true)}
-            title="Scan patient sticker barcode using device camera or webcam"
+            className={styles.btnCompactNew}
+            onClick={handleSwitchToCreateMode}
+            title="Start New Patient Registration"
           >
-            <Camera size={15} style={{ marginRight: '6px' }} />
-            Scan Patient Barcode
+            <UserPlus size={13} /> New Registration
           </button>
         </div>
       </header>
@@ -1194,50 +1288,50 @@ const PatientRegistration: React.FC = () => {
         </div>
       )}
 
-      {/* Barcode Scanner / UHID Quick Lookup Toolbar */}
+      {/* Compact Barcode Scanner / UHID Quick Lookup Section */}
       <div className={styles.barcodeScanBar}>
-        <div className={styles.barcodeScanGroup}>
-          <div className={styles.barcodeInputWrapper}>
-            <ScanLine size={18} className={styles.barcodeInputIcon} />
-            <input
-              type="text"
-              className={styles.barcodeInput}
-              placeholder="Scan Patient Barcode or Type UHID (e.g. UHID-1001) & press Enter..."
-              value={scannedBarcode}
-              onChange={e => setScannedBarcode(e.target.value)}
-              onKeyDown={e => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  handleBarcodeScan();
-                }
-              }}
-              aria-label="Scan patient barcode or lookup UHID"
-            />
-          </div>
-          <div className={styles.barcodeActionButtons}>
-            <button
-              type="button"
-              className={`${styles.btn} ${styles.btnSecondary} ${styles.barcodeLookupBtn}`}
-              onClick={() => handleBarcodeScan()}
-            >
-              Lookup
-            </button>
-            <button
-              type="button"
-              className={`${styles.btn} ${styles.btnScanCamera} ${styles.barcodeScanBtn}`}
-              onClick={() => setIsCameraModalOpen(true)}
-              title="Scan patient sticker barcode using device camera"
-            >
-              <Camera size={15} />
-              <span>Scan Patient Barcode</span>
-            </button>
-          </div>
+        <div className={styles.barcodeInputWrapper}>
+          <ScanLine size={16} className={styles.barcodeInputIcon} />
+          <input
+            type="text"
+            className={styles.barcodeInput}
+            placeholder="Enter UHID or scan barcode"
+            value={scannedBarcode}
+            onChange={e => setScannedBarcode(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                e.stopPropagation();
+                handleBarcodeScan();
+              }
+            }}
+            aria-label="Enter UHID or scan barcode"
+          />
+          <span 
+            className={styles.barcodeStatusTooltipIcon}
+            title="USB Keyboard Wedge & Camera Barcode Scanner Ready (Code 128)"
+            aria-label="USB & Camera Barcode Scanner Ready"
+          >
+            <Barcode size={15} />
+          </span>
         </div>
-        <div className={styles.barcodeBadge}>
-          <Barcode size={15} />
-          <span>USB & Camera Barcode Scanner Ready (Code 128)</span>
-        </div>
+        <button
+          type="button"
+          className={`${styles.btn} ${styles.btnSecondary} ${styles.barcodeLookupBtn}`}
+          onClick={() => handleBarcodeScan()}
+          title="Lookup patient by UHID or barcode"
+        >
+          Lookup
+        </button>
+        <button
+          type="button"
+          className={`${styles.btn} ${styles.btnScanCamera} ${styles.barcodeScanBtn}`}
+          onClick={() => setIsCameraModalOpen(true)}
+          title="Scan patient sticker barcode using device camera"
+        >
+          <Camera size={14} />
+          <span>Scan</span>
+        </button>
       </div>
 
       {/* Main Registration Layout (100% Full Width) */}
@@ -1360,7 +1454,15 @@ const PatientRegistration: React.FC = () => {
 
                 {/* Birth Date */}
                 <div className={`${styles.formGroup} ${styles.colSpan3}`}>
-                  <label className={styles.label}>Birth Date</label>
+                  <div className={styles.labelWithHint}>
+                    <label className={styles.label}>Birth Date</label>
+                    <span
+                      className={styles.dobFormatHint}
+                      title={`Expected date format: DD-MM-YYYY (e.g. ${getTodayFormattedExample()})`}
+                    >
+                      DD-MM-YYYY (e.g. {getTodayFormattedExample()})
+                    </span>
+                  </div>
                   <input
                     type="date"
                     name="birthDate"
@@ -1369,6 +1471,7 @@ const PatientRegistration: React.FC = () => {
                     value={formData.birthDate}
                     onChange={handleBirthDateChange}
                     disabled={isLocked || isSubmitting}
+                    placeholder="DD-MM-YYYY"
                   />
                 </div>
 
@@ -2159,75 +2262,159 @@ const PatientRegistration: React.FC = () => {
                   <tr>
                     <th style={{ width: '110px' }}>UHID</th>
                     <th>Patient Name</th>
-                    <th style={{ width: '130px' }}>Age / Sex</th>
-                    <th style={{ width: '120px' }}>Mobile</th>
-                    <th>Hospital Doctor</th>
-                    <th style={{ width: '110px' }}>Reg Date</th>
-                    <th style={{ textAlign: 'center', width: '170px' }}>Actions</th>
+                    <th style={{ width: '125px' }}>Age / Sex</th>
+                    <th style={{ width: '115px' }}>Mobile</th>
+                    <th style={{ width: '125px' }}>Total Visits</th>
+                    <th style={{ width: '115px' }}>Last Visit</th>
+                    <th style={{ textAlign: 'center', width: '220px' }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {paginatedHistoryPatients.map(p => (
-                    <tr key={p.uhid}>
-                      <td className={styles.historyUhidCell}>{p.uhid}</td>
-                      <td>
-                        <div className={styles.historyNameCell}>
-                          <span>{p.firstName} {p.middleName ? `${p.middleName} ` : ''}{p.lastName}</span>
-                          <span className={styles.historyCategoryBadge}>{p.category}</span>
-                        </div>
-                      </td>
-                      <td>
-                        {p.age} {p.ageUnit || 'Years'} • {p.sex}
-                      </td>
-                      <td>
-                        <a
-                          href={`tel:${p.mobile}`}
-                          style={{ color: 'var(--text-main)', textDecoration: 'none', fontWeight: 500 }}
-                        >
-                          {p.mobile}
-                        </a>
-                      </td>
-                      <td style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
-                        {p.hospitalDoctor}
-                      </td>
-                      <td style={{ fontSize: '0.8rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
-                        {p.createdAt
-                          ? new Date(p.createdAt).toLocaleDateString('en-GB')
-                          : 'Recently'}
-                      </td>
-                      <td>
-                        <div className={styles.historyTableActions}>
-                          <button
-                            type="button"
-                            className={styles.btnLoadPatient}
-                            onClick={() => handleLoadExistingPatient(p)}
-                            title="Load this patient into registration form"
+                  {paginatedHistoryPatients.map(p => {
+                    const encounters = getPatientEncounters(p, allBills);
+                    const totalVisits = encounters.length;
+                    const lastVisitDate = encounters.length > 0 ? formatEncounterDate(encounters[0].date) : 'Recently';
+
+                    return (
+                      <tr key={p.uhid}>
+                        <td className={styles.historyUhidCell}>{p.uhid}</td>
+                        <td>
+                          <div className={styles.historyNameCell}>
+                            <span>{p.firstName} {p.middleName ? `${p.middleName} ` : ''}{p.lastName}</span>
+                            <span className={styles.historyCategoryBadge}>{p.category}</span>
+                          </div>
+                        </td>
+                        <td>
+                          {p.age} {p.ageUnit || 'Years'} • {p.sex}
+                        </td>
+                        <td>
+                          <a
+                            href={`tel:${p.mobile}`}
+                            style={{ color: 'var(--text-main)', textDecoration: 'none', fontWeight: 500 }}
                           >
-                            <UserCheck size={14} />
-                            Load Patient
-                          </button>
-                          <button
-                            type="button"
-                            className={styles.historyActionIconBtn}
-                            onClick={() => openPatientStickerPdf(p, patientApi.getStickerPdfUrl(p.uhid))}
-                            title="Print Patient Sticker"
-                          >
-                            <Printer size={14} />
-                          </button>
-                          <button
-                            type="button"
-                            className={styles.historyActionIconBtn}
-                            onClick={() => handleOpenSavedPatientBill(p.uhid)}
-                            title="Open Patient Bill"
-                          >
-                            <Receipt size={14} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                            {p.mobile}
+                          </a>
+                        </td>
+                        <td>
+                          <span className={styles.historyVisitCountBadge}>
+                            <Activity size={12} style={{ marginRight: '4px' }} />
+                            {totalVisits} {totalVisits === 1 ? 'Visit' : 'Visits'}
+                          </span>
+                        </td>
+                        <td style={{ fontSize: '0.8rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
+                          <Clock size={12} style={{ marginRight: '4px', verticalAlign: 'middle', opacity: 0.7 }} />
+                          {lastVisitDate}
+                        </td>
+                        <td>
+                          <div className={styles.historyTableActions}>
+                            <button
+                              type="button"
+                              className={styles.btnLoadPatient}
+                              onClick={() => handleLoadExistingPatient(p)}
+                              title="Load this patient into registration form"
+                            >
+                              <UserCheck size={13} />
+                              Load Patient
+                            </button>
+                            <button
+                              type="button"
+                              className={styles.btnViewHistory}
+                              onClick={() => {
+                                setSelectedHistoryPatient(p);
+                                setIsHistoryModalOpen(true);
+                              }}
+                              title="View complete encounter and visit history"
+                            >
+                              <History size={13} />
+                              View History
+                            </button>
+                            <button
+                              type="button"
+                              className={styles.historyActionIconBtn}
+                              onClick={() => openPatientStickerPdf(p, patientApi.getStickerPdfUrl(p.uhid))}
+                              title="Print Patient Sticker"
+                            >
+                              <Printer size={13} />
+                            </button>
+                            <button
+                              type="button"
+                              className={styles.historyActionIconBtn}
+                              onClick={() => handleOpenSavedPatientBill(p.uhid)}
+                              title="Open Patient Bill"
+                            >
+                              <Receipt size={13} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
+            </div>
+
+            {/* PART 4: Responsive Mobile Cards (< 768px) */}
+            <div className={styles.historyMobileList}>
+              {paginatedHistoryPatients.map(p => {
+                const encounters = getPatientEncounters(p, allBills);
+                const totalVisits = encounters.length;
+                const lastVisitDate = encounters.length > 0 ? formatEncounterDate(encounters[0].date) : 'Recently';
+
+                return (
+                  <div key={p.uhid} className={styles.historyMobileCard}>
+                    <div className={styles.historyMobileRow}>
+                      <span className={styles.historyMobileLabel}>Patient Name:</span>
+                      <span className={styles.historyMobileValue}>
+                        <strong>{p.firstName} {p.middleName ? `${p.middleName} ` : ''}{p.lastName}</strong>
+                      </span>
+                    </div>
+                    <div className={styles.historyMobileRow}>
+                      <span className={styles.historyMobileLabel}>UHID:</span>
+                      <span className={styles.historyUhidCell}>{p.uhid}</span>
+                    </div>
+                    <div className={styles.historyMobileRow}>
+                      <span className={styles.historyMobileLabel}>Age / Sex:</span>
+                      <span className={styles.historyMobileValue}>{p.age} {p.ageUnit || 'Years'} / {p.sex}</span>
+                    </div>
+                    <div className={styles.historyMobileRow}>
+                      <span className={styles.historyMobileLabel}>Mobile:</span>
+                      <span className={styles.historyMobileValue}>{p.mobile}</span>
+                    </div>
+                    <div className={styles.historyMobileRow}>
+                      <span className={styles.historyMobileLabel}>Total Visits:</span>
+                      <span className={styles.historyVisitCountBadge}>
+                        <Activity size={12} style={{ marginRight: '4px' }} />
+                        {totalVisits}
+                      </span>
+                    </div>
+                    <div className={styles.historyMobileRow}>
+                      <span className={styles.historyMobileLabel}>Last Visit:</span>
+                      <span className={styles.historyMobileValue}>{lastVisitDate}</span>
+                    </div>
+                    <div className={styles.historyMobileActions}>
+                      <button
+                        type="button"
+                        className={styles.btnLoadPatient}
+                        onClick={() => handleLoadExistingPatient(p)}
+                      >
+                        <UserCheck size={14} />
+                        Load Patient
+                      </button>
+                      <button
+                        type="button"
+                        className={styles.btnViewHistory}
+                        onClick={() => {
+                          setSelectedHistoryPatient(p);
+                          setIsHistoryModalOpen(true);
+                        }}
+                      >
+                        <History size={14} />
+                        View History
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
 
             {/* Pagination Controls */}
@@ -2765,6 +2952,135 @@ const PatientRegistration: React.FC = () => {
                 {isGeneratingBill ? 'Processing Bill...' : 'Print Bill (A4 PDF)'}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* PART 4: Patient Encounter & Visit History Modal */}
+      {isHistoryModalOpen && selectedHistoryPatient && (
+        <div
+          className={styles.modalOverlay}
+          role="dialog"
+          aria-modal="true"
+          onClick={() => {
+            setIsHistoryModalOpen(false);
+            setSelectedHistoryPatient(null);
+          }}
+        >
+          <div
+            className={styles.historyModalCard}
+            onClick={e => e.stopPropagation()}
+          >
+            <div className={styles.historyModalHeader}>
+              <div>
+                <h3 className={styles.historyModalTitle}>
+                  <History size={20} color="var(--primary)" />
+                  Patient Encounter & Visit History
+                </h3>
+                <p className={styles.historyModalSubtitle}>
+                  {selectedHistoryPatient.firstName} {selectedHistoryPatient.middleName ? `${selectedHistoryPatient.middleName} ` : ''}{selectedHistoryPatient.lastName} • UHID: <strong>{selectedHistoryPatient.uhid}</strong> • Mobile: {selectedHistoryPatient.mobile}
+                </p>
+              </div>
+              <button
+                type="button"
+                className={styles.modalCloseBtn}
+                onClick={() => {
+                  setIsHistoryModalOpen(false);
+                  setSelectedHistoryPatient(null);
+                }}
+                aria-label="Close encounter history"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {(() => {
+              const encounters = getPatientEncounters(selectedHistoryPatient, allBills);
+              return (
+                <div className={styles.historyModalContent}>
+                  {/* Summary KPI Badges */}
+                  <div className={styles.historyModalSummaryRow}>
+                    <div className={styles.historySummaryPill}>
+                      <span className={styles.historySummaryLabel}>Total Visits / Reports</span>
+                      <span className={styles.historySummaryValue}>{encounters.length}</span>
+                    </div>
+                    <div className={styles.historySummaryPill}>
+                      <span className={styles.historySummaryLabel}>Last Visit Date</span>
+                      <span className={styles.historySummaryValue}>
+                        {encounters[0]?.date ? formatEncounterDate(encounters[0].date) : 'Recently'}
+                      </span>
+                    </div>
+                    <div className={styles.historySummaryPill}>
+                      <span className={styles.historySummaryLabel}>Registration Date</span>
+                      <span className={styles.historySummaryValue}>
+                        {formatEncounterDate(selectedHistoryPatient.createdAt || '')}
+                      </span>
+                    </div>
+                    <div className={styles.historySummaryPill}>
+                      <span className={styles.historySummaryLabel}>Primary Hospital Doctor</span>
+                      <span className={styles.historySummaryValue}>
+                        {selectedHistoryPatient.hospitalDoctor || 'General OPD'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Encounters Timeline / Table */}
+                  <div className={styles.historyTimelineWrapper}>
+                    <table className={styles.historyEncountersTable}>
+                      <thead>
+                        <tr>
+                          <th style={{ width: '40px' }}>#</th>
+                          <th style={{ width: '115px' }}>Date</th>
+                          <th>Visit / Service Type</th>
+                          <th>Doctor</th>
+                          <th>Department</th>
+                          <th>Billing / Reference</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {encounters.map((enc, idx) => (
+                          <tr key={enc.id}>
+                            <td style={{ fontWeight: 600, color: 'var(--text-muted)' }}>{idx + 1}</td>
+                            <td style={{ whiteSpace: 'nowrap', fontWeight: 600 }}>{formatEncounterDate(enc.date)}</td>
+                            <td>
+                              <span className={styles.encounterTypeBadge}>{enc.type}</span>
+                            </td>
+                            <td>{enc.doctor}</td>
+                            <td>{enc.department}</td>
+                            <td style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>{enc.reference}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div className={styles.historyModalFooter}>
+                    <button
+                      type="button"
+                      className={styles.btnLoadPatient}
+                      onClick={() => {
+                        handleLoadExistingPatient(selectedHistoryPatient);
+                        setIsHistoryModalOpen(false);
+                      }}
+                      title="Load patient details into registration form"
+                    >
+                      <UserCheck size={14} />
+                      Load This Patient
+                    </button>
+                    <button
+                      type="button"
+                      className={`${styles.btn} ${styles.btnSecondary}`}
+                      onClick={() => {
+                        setIsHistoryModalOpen(false);
+                        setSelectedHistoryPatient(null);
+                      }}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </div>
       )}

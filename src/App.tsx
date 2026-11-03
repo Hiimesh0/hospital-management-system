@@ -51,7 +51,8 @@ import {
   Contact,
   Radio
 } from 'lucide-react';
-import mixuLogo from './assets/mixu-infosystem-logo.png';
+import mixuEmblem from './assets/mixu-emblem.png';
+import mixuLogoClean from './assets/mixu-logo-clean.png';
 import { HOSPITAL_CONFIG } from './config/hospitalConfig';
 
 // Lazy load the components
@@ -900,11 +901,11 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
           <>
             <div className="sidebarTitle">
               <img
-                src={mixuLogo}
-                alt="Mixu Infosystem Logo"
+                src={mixuEmblem}
+                alt="Mixu Infosystem Emblem"
                 style={{
-                  width: '28px',
-                  height: '28px',
+                  width: '30px',
+                  height: '30px',
                   objectFit: 'contain',
                   flexShrink: 0,
                   borderRadius: '4px'
@@ -912,7 +913,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
               />
               <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>
                 <span style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-main)' }}>{HOSPITAL_CONFIG.name}</span>
-                <span style={{ fontSize: '10.5px', fontWeight: 500, color: 'var(--text-muted)', letterSpacing: '0.02em' }}>Mixu Infosystem</span>
+                <span style={{ fontSize: '10.5px', fontWeight: 600, color: 'var(--text-muted)', letterSpacing: '0.02em' }}>Mixu Infosystem</span>
               </div>
             </div>
             <button
@@ -928,11 +929,11 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', gap: '8px' }}>
             <img
-              src={mixuLogo}
-              alt="Mixu Infosystem Logo"
+              src={mixuEmblem}
+              alt="Mixu Infosystem Emblem"
               style={{
-                width: '30px',
-                height: '30px',
+                width: '32px',
+                height: '32px',
                 objectFit: 'contain',
                 borderRadius: '4px'
               }}
@@ -1072,7 +1073,7 @@ function App() {
           '--sidebar-width': '270px',
           '--sidebar-collapsed-width': '72px',
           '--sidebar-actual-width': !isAuthenticated ? '0px' : isSidebarCollapsed ? '72px' : '270px',
-          '--watermark-url': `url(${mixuLogo})`
+          '--watermark-url': `url(${mixuLogoClean})`
         } as React.CSSProperties}
       >
         {/* Mobile Top Header */}
@@ -1089,11 +1090,11 @@ function App() {
             </button>
             <div className="mobileTopBrand">
               <img
-                src={mixuLogo}
+                src={mixuEmblem}
                 alt="Mixu Infosystem Emblem"
                 style={{
-                  width: '24px',
-                  height: '24px',
+                  width: '26px',
+                  height: '26px',
                   objectFit: 'contain',
                   flexShrink: 0
                 }}
