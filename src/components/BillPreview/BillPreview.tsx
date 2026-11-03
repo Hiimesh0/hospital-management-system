@@ -21,28 +21,34 @@ export const BillPreview: React.FC = () => {
     const params = new URLSearchParams(location.search);
     const idParam = params.get('id') || params.get('uhid');
 
-    if (!idParam) {
-      setError('No patient specified. Please provide a valid patient UHID to preview bill.');
-      setIsLoading(false);
-      return;
-    }
-
     const loadData = async () => {
       try {
         setIsLoading(true);
         setError(null);
 
+        let targetId = idParam;
+        if (!targetId) {
+          const listRes = await patientApi.getPatients();
+          if (listRes.patients && listRes.patients.length > 0) {
+            targetId = listRes.patients[0].uhid;
+          } else {
+            setError('No patients registered in the system yet. Please register a patient first.');
+            setIsLoading(false);
+            return;
+          }
+        }
+
         // Fetch patient
-        const pRes = await patientApi.getPatientById(idParam);
+        const pRes = await patientApi.getPatientById(targetId);
         if (!pRes.patient) {
-          throw new Error(`Patient '${idParam}' could not be found.`);
+          throw new Error(`Patient '${targetId}' could not be found.`);
         }
         setPatient(pRes.patient);
 
         // Fetch or create bill
-        let b = await patientApi.getPatientBill(idParam);
+        let b = await patientApi.getPatientBill(targetId);
         if (!b) {
-          b = await patientApi.createOrGetPatientBill(idParam);
+          b = await patientApi.createOrGetPatientBill(targetId);
         }
         setBill(b);
       } catch (err) {

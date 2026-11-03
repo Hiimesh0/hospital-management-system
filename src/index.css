@@ -295,6 +295,42 @@ button {
   -webkit-overflow-scrolling: touch;
 }
 
+/* Sidebar Section Headers (Working Modules vs Other Modules) */
+.sidebarSectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px 4px 10px;
+  user-select: none;
+}
+
+.sidebarSectionTitle {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.sidebarSectionBadge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background-color: rgba(16, 185, 129, 0.12);
+  color: #059669;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.sidebarCollapsedDivider {
+  width: 32px;
+  height: 1px;
+  background-color: var(--border);
+  margin: 10px auto;
+  opacity: 0.8;
+}
+
 .sidebarFooter {
   padding: 12px 14px;
   border-top: 1px solid var(--border);

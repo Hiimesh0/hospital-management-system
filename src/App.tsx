@@ -112,37 +112,52 @@ interface NavItemConfig {
   children?: NavItemConfig[];
 }
 
-// Complete Navigation Tree discovered from the application
-const NAVIGATION_TREE: NavItemConfig[] = [
-  // 18 Primary Single Items
+interface NavSection {
+  id: string;
+  title: string;
+  badge?: string;
+  items: NavItemConfig[];
+}
+
+// 1. Working Modules: Verified fully working modules with functional CRUD operations and active APIs
+const WORKING_NAV_ITEMS: NavItemConfig[] = [
   { id: 'patient-registration', title: 'Patient Registration', icon: UserPlus, to: '/patient-registration' },
-  { id: 'patient-registration-list', title: 'Patient Registration List', icon: Users, to: '/patient-registration-list' },
+  { id: 'patient-registration-list', title: 'Patient History', icon: History, to: '/patient-registration-list' },
+  { id: 'doctor-master', title: 'Doctor Master', icon: UserCheck, to: '/doctor-master' },
+  { id: 'medicine-master', title: 'Medicine Master', icon: Pill, to: '/medicine-master' },
+  { id: 'report-template', title: 'Report Template', icon: LayoutTemplate, to: '/report-template' }
+];
+
+// 2. Other Modules: Remaining modules organized in natural hospital workflow order
+const OTHER_NAV_ITEMS: NavItemConfig[] = [
+  // Clinical Care & Inpatient Operations
   { id: 'patient-past-info', title: 'Patient Past Info', icon: History, to: '/patient-past-info' },
-  { id: 'part-payment', title: 'Part Payment', icon: CreditCard, to: '/part-payment' },
-  { id: 'room-charges', title: 'Room Charges', icon: BedDouble, to: '/room-charges' },
+  { id: 'dr-visit-procedure', title: 'Dr. Visit & Procedure', icon: Stethoscope, to: '/dr-visit-procedure' },
+  { id: 'investigation-ordered', title: 'Investigation Ordered', icon: Microscope, to: '/investigation-ordered' },
+  { id: 'indoor-register', title: 'Indoor Register', icon: Hospital, to: '/indoor-register' },
   { id: 'room-status', title: 'Room Status', icon: DoorOpen, to: '/room-status' },
+  { id: 'room-charges', title: 'Room Charges', icon: BedDouble, to: '/room-charges' },
   { id: 'ot-entry', title: 'OT Entry', icon: HeartPulse, to: '/ot-entry' },
   { id: 'operation-charges', title: 'Operation Charges', icon: BadgeDollarSign, to: '/operation-charges' },
   { id: 'indoor-summary', title: 'Indoor Summary', icon: FileSpreadsheet, to: '/indoor-summary' },
   { id: 'indoor-option', title: 'Indoor Option', icon: Layers, to: '/indoor-option' },
-  { id: 'inpatient-receipt', title: 'Inpatient Receipt', icon: Receipt, to: '/inpatient-receipt' },
-  { id: 'inpatient-bill', title: 'Inpatient Bill', icon: FileText, to: '/inpatient-bill' },
   { id: 'discharge-card', title: 'Discharge Card', icon: LogOut, to: '/discharge-card' },
-  { id: 'deposit-entry', title: 'Deposit Entry', icon: Wallet, to: '/deposit-entry' },
-  { id: 'billing', title: 'Billing', icon: Calculator, to: '/billing' },
-  { id: 'dr-visit-procedure', title: 'Dr. Visit & Procedure', icon: Stethoscope, to: '/dr-visit-procedure' },
-  { id: 'investigation-ordered', title: 'Investigation Ordered', icon: Microscope, to: '/investigation-ordered' },
-  { id: 'indoor-register', title: 'Indoor Register', icon: Hospital, to: '/indoor-register' },
 
-  // Master with 3 Leaf Items + 2 Nested Groups (IPD Master & OPD Master)
+  // Billing & Finance
+  { id: 'billing', title: 'Billing', icon: Calculator, to: '/billing' },
+  { id: 'inpatient-bill', title: 'Inpatient Bill', icon: FileText, to: '/inpatient-bill' },
+  { id: 'inpatient-receipt', title: 'Inpatient Receipt', icon: Receipt, to: '/inpatient-receipt' },
+  { id: 'part-payment', title: 'Part Payment', icon: CreditCard, to: '/part-payment' },
+  { id: 'deposit-entry', title: 'Deposit Entry', icon: Wallet, to: '/deposit-entry' },
+
+  // Master with Leaf Items + 2 Nested Groups (IPD Master & OPD Master)
   {
     id: 'master',
     title: 'Master',
     icon: FolderPlus,
     children: [
-      { id: 'patient-history', title: 'Clinical / Patient History', icon: History, to: '/patient-history' },
-      { id: 'medicine-master', title: 'Medicine Master', icon: Pill, to: '/medicine-master' },
       { id: 'standard-prescription-master', title: 'Standard Prescription Master', icon: FileSignature, to: '/standard-prescription-master' },
+      { id: 'patient-history', title: 'Clinical Notes (Template)', icon: History, to: '/patient-history' },
       {
         id: 'ipd-master',
         title: 'IPD Master',
@@ -164,7 +179,6 @@ const NAVIGATION_TREE: NavItemConfig[] = [
           { id: 'opd-patient-category', title: 'OPD Patient Category', icon: Users, to: '/opd-patient-category' },
           { id: 'opd-charges-master', title: 'OPD Charges Master', icon: BadgeDollarSign, to: '/opd-charges-master' },
           { id: 'department-master', title: 'Department Master', icon: Building2, to: '/department-master' },
-          { id: 'doctor-master', title: 'Doctor Master', icon: UserCheck, to: '/doctor-master' },
           { id: 'insurance-company-master', title: 'Insurance Company Master', icon: ShieldCheck, to: '/insurance-company-master' },
           { id: 'opd-charges-profile', title: 'OPD Charges Profile', icon: UserCog, to: '/opd-charges-profile' },
         ]
@@ -172,7 +186,7 @@ const NAVIGATION_TREE: NavItemConfig[] = [
     ]
   },
 
-  // Diagnostics Report (4 Leaf Items)
+  // Diagnostics Report
   {
     id: 'diagnostics-report',
     title: 'Diagnostics Report',
@@ -180,12 +194,11 @@ const NAVIGATION_TREE: NavItemConfig[] = [
     children: [
       { id: 'echo-report', title: 'Echo Report', icon: HeartPulse, to: '/echo-report' },
       { id: 'short-form-master', title: 'Short Form Master', icon: FileCode, to: '/short-form-master' },
-      { id: 'report-template', title: 'Report Template', icon: LayoutTemplate, to: '/report-template' },
       { id: 'today-report-dashboard', title: 'Today Report Dashboard', icon: LayoutDashboard, to: '/today-report-dashboard' },
     ]
   },
 
-  // Certificate (4 Leaf Items)
+  // Certificate
   {
     id: 'certificate',
     title: 'Certificate',
@@ -198,7 +211,7 @@ const NAVIGATION_TREE: NavItemConfig[] = [
     ]
   },
 
-  // Utility (2 Leaf Items)
+  // Utility
   {
     id: 'utility',
     title: 'Utility',
@@ -209,6 +222,24 @@ const NAVIGATION_TREE: NavItemConfig[] = [
     ]
   }
 ];
+
+// Structured Navigation Sections for UI rendering
+const NAVIGATION_SECTIONS: NavSection[] = [
+  {
+    id: 'working-modules',
+    title: 'Working Modules',
+    badge: '5 Active',
+    items: WORKING_NAV_ITEMS
+  },
+  {
+    id: 'other-modules',
+    title: 'Other Modules',
+    items: OTHER_NAV_ITEMS
+  }
+];
+
+// Unified navigation tree export for path checking, auto-expanding parent groups, and backward compatibility
+export const NAVIGATION_TREE: NavItemConfig[] = [...WORKING_NAV_ITEMS, ...OTHER_NAV_ITEMS];
 
 // Helper: Recursively test if item or any of its descendants matches the current path
 const isNavItemActive = (item: NavItemConfig, currentPath: string): boolean => {
@@ -960,24 +991,44 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
         </button>
       </div>
 
-      {/* Sidebar Links Scroll Area - Rendered Recursively */}
+      {/* Sidebar Links Scroll Area - Rendered by Sections */}
       <div className="sidebarLinks" role="navigation" aria-label="Hospital modules">
-        {NAVIGATION_TREE.map(item => (
-          <RecursiveNavItem
-            key={item.id}
-            item={item}
-            nestedLevel={0}
-            isCollapsed={isCollapsed}
-            isInFlyout={false}
-            openGroupIds={openGroupIds}
-            hoveredRootGroupId={hoveredRootGroupId}
-            onToggleGroup={handleToggleGroup}
-            onRootGroupMouseEnter={handleRootGroupMouseEnter}
-            onRootGroupMouseLeave={handleRootGroupMouseLeave}
-            onCloseMobile={onCloseMobile}
-            onHoverTooltip={handleHoverTooltip}
-            onLeaveTooltip={handleLeaveTooltip}
-          />
+        {NAVIGATION_SECTIONS.map((section, sIdx) => (
+          <React.Fragment key={section.id}>
+            {!isCollapsed ? (
+              <div
+                className="sidebarSectionHeader"
+                style={{ marginTop: sIdx > 0 ? '14px' : '2px' }}
+                role="heading"
+                aria-level={2}
+              >
+                <span className="sidebarSectionTitle">{section.title}</span>
+                {section.badge && (
+                  <span className="sidebarSectionBadge">{section.badge}</span>
+                )}
+              </div>
+            ) : (
+              sIdx > 0 && <div className="sidebarCollapsedDivider" aria-hidden="true" />
+            )}
+
+            {section.items.map(item => (
+              <RecursiveNavItem
+                key={item.id}
+                item={item}
+                nestedLevel={0}
+                isCollapsed={isCollapsed}
+                isInFlyout={false}
+                openGroupIds={openGroupIds}
+                hoveredRootGroupId={hoveredRootGroupId}
+                onToggleGroup={handleToggleGroup}
+                onRootGroupMouseEnter={handleRootGroupMouseEnter}
+                onRootGroupMouseLeave={handleRootGroupMouseLeave}
+                onCloseMobile={onCloseMobile}
+                onHoverTooltip={handleHoverTooltip}
+                onLeaveTooltip={handleLeaveTooltip}
+              />
+            ))}
+          </React.Fragment>
         ))}
       </div>
 
