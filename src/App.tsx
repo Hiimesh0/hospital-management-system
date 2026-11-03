@@ -125,7 +125,8 @@ const WORKING_NAV_ITEMS: NavItemConfig[] = [
   { id: 'patient-registration-list', title: 'Patient History', icon: History, to: '/patient-registration-list' },
   { id: 'doctor-master', title: 'Doctor Master', icon: UserCheck, to: '/doctor-master' },
   { id: 'medicine-master', title: 'Medicine Master', icon: Pill, to: '/medicine-master' },
-  { id: 'report-template', title: 'Report Template', icon: LayoutTemplate, to: '/report-template' }
+  { id: 'report-template', title: 'Report Template', icon: LayoutTemplate, to: '/report-template' },
+  { id: 'echo-report', title: 'Echo Report', icon: HeartPulse, to: '/echo-report' }
 ];
 
 // 2. Other Modules: Remaining modules organized in natural hospital workflow order
@@ -192,7 +193,6 @@ const OTHER_NAV_ITEMS: NavItemConfig[] = [
     title: 'Diagnostics Report',
     icon: BarChart3,
     children: [
-      { id: 'echo-report', title: 'Echo Report', icon: HeartPulse, to: '/echo-report' },
       { id: 'short-form-master', title: 'Short Form Master', icon: FileCode, to: '/short-form-master' },
       { id: 'today-report-dashboard', title: 'Today Report Dashboard', icon: LayoutDashboard, to: '/today-report-dashboard' },
     ]
@@ -228,7 +228,7 @@ const NAVIGATION_SECTIONS: NavSection[] = [
   {
     id: 'working-modules',
     title: 'Working Modules',
-    badge: '5 Active',
+    badge: '6 Active',
     items: WORKING_NAV_ITEMS
   },
   {

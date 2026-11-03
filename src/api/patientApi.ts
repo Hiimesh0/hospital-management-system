@@ -1,4 +1,5 @@
 export * from './masterApi';
+export * from './echoReportApi';
 export interface PatientRecord {
   id: string;
   uhid: string;
